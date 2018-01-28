@@ -2,4 +2,3 @@ src
 .gitignore
 tsconfig.json
 dist/test
-README.MD
