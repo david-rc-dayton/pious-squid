@@ -1,6 +1,5 @@
 import { Vector } from '../vector'
 import * as assert from 'assert'
-import { deepEqual } from 'assert';
 
 describe("Vector", function () {
     let vecA = new Vector([1, 2, 3])
