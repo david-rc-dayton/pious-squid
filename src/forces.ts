@@ -83,7 +83,7 @@ export function gravitySun(epoch: Epoch, position: Vector): Vector {
     return grav.scale(SUN_MU)
 }
 
-export function shadowFactor(rSat: Vector, rSun: Vector): number {
+function shadowFactor(rSat: Vector, rSun: Vector): number {
     let n = Math.pow(rSat.magnitude(), 2) - rSat.dot(rSun)
     let d = (Math.pow(rSat.magnitude(), 2)
         + Math.pow(rSun.magnitude(), 2) - 2 * rSat.dot(rSun))
@@ -122,10 +122,10 @@ export function atmosphericDrag(position: Vector, velocity: Vector,
     return vel_vec.scale(f_scale / 1000)
 }
 
-export function derivative(j2k_state: J2000): Vector {
-    let epoch = j2k_state.epoch
-    let position = j2k_state.position
-    let velocity = j2k_state.velocity
+export function derivative(j2kState: J2000): Vector {
+    let epoch = j2kState.epoch
+    let position = j2kState.position
+    let velocity = j2kState.velocity
     let acceleration = gravityEarth(position)
         .add(j2Effect(position))
         .add(j3Effect(position))

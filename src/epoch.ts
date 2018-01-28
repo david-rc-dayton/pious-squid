@@ -4,16 +4,12 @@ import { evalPoly } from "./operations"
 export class Epoch {
     public epoch: number
 
-    constructor(date: Date) {
-        this.epoch = date.getTime() / 1000
+    constructor(ms: number) {
+        this.epoch = ms / 1000
     }
 
     public static now(): Epoch {
-        return new Epoch(new Date())
-    }
-
-    public static fromUnixTimestamp(seconds: number): Epoch {
-        return new Epoch(new Date(seconds * 1000))
+        return new Epoch(new Date().getTime())
     }
 
     public toString(): string {
@@ -21,7 +17,7 @@ export class Epoch {
     }
 
     public roll(seconds: number): Epoch {
-        return Epoch.fromUnixTimestamp(this.epoch + seconds)
+        return new Epoch((this.epoch + seconds) * 1000)
     }
 
     public toJulianDate(): number {
