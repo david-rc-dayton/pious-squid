@@ -1,21 +1,21 @@
 export function factorial(n: number): number {
-    let output = 1
+    let output = 1;
     for (let i = n; i > 1; i--) {
-        output *= i
+        output *= i;
     }
-    return output
+    return output;
 }
 
 export function evalPoly(x: number, coeffs: number[]) {
-    let output = 0
+    let output = 0;
     for (let n = 0; n < coeffs.length; n++) {
-        output += coeffs[n] * Math.pow(x, n)
+        output += coeffs[n] * Math.pow(x, n);
     }
-    return output
+    return output;
 }
 
 export function sign(n: number): number {
-    if (n < 0) return -1
-    if (n > 0) return 1
-    return 0
+    if (n < 0) { return -1; }
+    if (n > 0) { return 1; }
+    return 0;
 }

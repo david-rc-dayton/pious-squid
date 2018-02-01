@@ -1,73 +1,73 @@
-import { Vector } from './vector'
+import { Vector } from "./vector";
 
 /** Type representation for a line of IAU 1980 coefficients. */
 export type IAU_COEFF = [
   number, number, number, number, number, number, number, number, number
-]
+];
 
 /**  Unit for converting degrees to radians. */
-export const DEG2RAD = Math.PI / 180
+export const DEG2RAD = Math.PI / 180;
 
 /**  Unit for converting radians to degrees. */
-export const RAD2DEG = 180 / Math.PI
+export const RAD2DEG = 180 / Math.PI;
 
 /**  Unit for converting 0.0001 minutes to radians. */
-export const MM2R = (1 / 60 / 60 / 10000) * DEG2RAD
+export const MM2R = (1 / 60 / 60 / 10000) * DEG2RAD;
 
 /** Astronomical Unit, in kilometers. */
-export const ASTRONOMICAL_UNIT = 149597870.0
+export const ASTRONOMICAL_UNIT = 149597870.0;
 
 /** Earth equatorial radius, in kilometers. */
-export const EARTH_RAD_EQ = 6378.1363
+export const EARTH_RAD_EQ = 6378.1363;
 
 /** Earth coefficient of flattening. */
-export const EARTH_FLAT = 1 / 298.257223563
+export const EARTH_FLAT = 1 / 298.257223563;
 
 /** Earth polar radius, in kilometers. */
-export const EARTH_RAD_POL = EARTH_RAD_EQ * (1 - EARTH_FLAT)
+export const EARTH_RAD_POL = EARTH_RAD_EQ * (1 - EARTH_FLAT);
 
 /** Earth eccentricity, squared. */
 export const EARTH_ECC_SQ = (Math.pow(EARTH_RAD_EQ, 2)
-  - Math.pow(EARTH_RAD_POL, 2)) / Math.pow(EARTH_RAD_EQ, 2)
+  - Math.pow(EARTH_RAD_POL, 2)) / Math.pow(EARTH_RAD_EQ, 2);
 
 /** Earth J2 coefficient. */
-export const EARTH_J2 = 0.001082627
+export const EARTH_J2 = 0.001082627;
 
 /** Earth J3 coefficient. */
-export const EARTH_J3 = -0.000002532
+export const EARTH_J3 = -0.000002532;
 
 /** Earth J4 coefficient. */
-export const EARTH_J4 = -0.000001620
+export const EARTH_J4 = -0.000001620;
 
 /** Earth gravitational parameter, in km^3/s^2. */
-export const EARTH_MU = 398600.4415
+export const EARTH_MU = 398600.4415;
 
 /** Earth rotation vector, in radians per second. */
-export const EARTH_ROTATION = new Vector([0, 0, 7.29211514670698e-5])
+export const EARTH_ROTATION = new Vector([0, 0, 7.29211514670698e-5]);
 
 /** Moon gravitational parameter, in km^3/s^2. */
-export const MOON_MU = 4902.801
+export const MOON_MU = 4902.801;
 
 /** Sun gravitational parameter, in km^3/s^2. */
-export const SUN_MU = 132712440017.987
+export const SUN_MU = 132712440017.987;
 
 /**  Unit for converting seconds to days. */
-export const SEC2DAY = 1 / 60 / 60 / 24
+export const SEC2DAY = 1 / 60 / 60 / 24;
 
 /**  Unit for converting seconds to degrees. */
-export const SEC2DEG = 1 / 60 / 60
+export const SEC2DEG = 1 / 60 / 60;
 
 /** Solar flux constant, in watts/km^2. */
-export const SOLAR_FLUX = 1.358
+export const SOLAR_FLUX = 1.358;
 
 /** Speed of light, in kilometers per second. */
-export const SPEED_OF_LIGHT = 299792.458
+export const SPEED_OF_LIGHT = 299792.458;
 
-/** 
+/**
  * Coefficients for the exponential atmospheric density model. Contains the
  * base altitude (km), nominal density (kg/m^3), and scale height (km).
- * */
-export const EXP_ATMOSPHERE: [number, number, number][] = [
+ */
+export const EXP_ATMOSPHERE: Array<[number, number, number]> = [
   [0, 1.225, 7.249],
   [25, 3.899e-2, 6.349],
   [30, 1.774e-2, 6.682],
@@ -95,8 +95,8 @@ export const EXP_ATMOSPHERE: [number, number, number][] = [
   [700, 3.614e-14, 88.667],
   [800, 1.170e-14, 124.64],
   [900, 5.245e-15, 181.05],
-  [1000, 3.019e-15, 268.0]
-]
+  [1000, 3.019e-15, 268.0],
+];
 
 /** Coefficients for calculating Earth nutation. */
 export const IAU_1980: IAU_COEFF[] = [
@@ -119,14 +119,14 @@ export const IAU_1980: IAU_COEFF[] = [
   [-1, 0, 0, 0, 1, -58.0, -0.1, 32.0, 0.0],
   [1, 0, 2, 0, 1, -51.0, 0.0, 27.0, 0.0],
   [2, 0, 0, -2, 0, 48.0, 0.0, 1.0, 0.0],
-  [-2, 0, 2, 0, 1, 46.0, 0.0, -24.0, 0.0]
-]
+  [-2, 0, 2, 0, 1, 46.0, 0.0, -24.0, 0.0],
+];
 
-/** 
+/**
  * Historical list of leap seconds. Contains a tuple of the Julian Date, and
  * seconds offset.
- * */
-export const LEAP_SECONDS: [number, number][] = [
+ */
+export const LEAP_SECONDS: Array<[number, number]> = [
   [2437300.5, 1.4228180],
   [2437512.5, 1.3728180],
   [2437665.5, 1.8458580],
@@ -167,5 +167,5 @@ export const LEAP_SECONDS: [number, number][] = [
   [2454832.5, 34.0],
   [2456109.5, 35.0],
   [2457204.5, 36.0],
-  [2457754.5, 37.0]
-]
+  [2457754.5, 37.0],
+];
