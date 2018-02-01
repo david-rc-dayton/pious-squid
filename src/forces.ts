@@ -1,7 +1,16 @@
 import { atmosphericDensity, moonPosition, sunPosition } from "./bodies";
 import {
-    ASTRONOMICAL_UNIT, EARTH_J2, EARTH_J3, EARTH_J4, EARTH_MU, EARTH_RAD_EQ, EARTH_ROTATION,
-    MOON_MU, SOLAR_FLUX, SPEED_OF_LIGHT, SUN_MU,
+    ASTRONOMICAL_UNIT,
+    EARTH_J2,
+    EARTH_J3,
+    EARTH_J4,
+    EARTH_MU,
+    EARTH_RAD_EQ,
+    EARTH_ROTATION,
+    MOON_MU,
+    SOLAR_FLUX,
+    SPEED_OF_LIGHT,
+    SUN_MU,
 } from "./constants";
 import { J2000 } from "./coordinates/j2000";
 import { Epoch } from "./epoch";
@@ -31,7 +40,8 @@ export function j3Effect(position: Vector): Vector {
     const aPre = -((5 * EARTH_J3 * EARTH_MU
         * Math.pow(EARTH_RAD_EQ, 3)) / (2 * Math.pow(r, 7)));
     const aijPost = (3 * k) - ((7 * Math.pow(k, 3)) / Math.pow(r, 2));
-    const akPost = ((6 * Math.pow(k, 2)) - ((7 * Math.pow(k, 4)) / Math.pow(r, 2))
+    const akPost = ((6 * Math.pow(k, 2))
+        - ((7 * Math.pow(k, 4)) / Math.pow(r, 2))
         - ((3 / 5) * Math.pow(r, 2)));
     return new Vector([
         aPre * i * aijPost,
@@ -88,7 +98,8 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
     const d = (Math.pow(rSat.magnitude(), 2)
         + Math.pow(rSun.magnitude(), 2) - 2 * rSat.dot(rSun));
     const tMin = (n / d);
-    const c = (1 - tMin) * Math.pow(rSat.magnitude(), 2) + rSat.dot(rSun) * tMin;
+    const c = ((1 - tMin) * Math.pow(rSat.magnitude(), 2)
+        + rSat.dot(rSun) * tMin);
     if (tMin < 0 || tMin > 1) {
         return 1;
     }
@@ -99,14 +110,17 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
 }
 
 export function solarRadiation(epoch: Epoch, position: Vector,
-                               mass = 1000.0, area = 1.0, reflect = 1.4): Vector {
+                               mass = 1000.0, area = 1.0,
+                               reflect = 1.4): Vector {
     const rSat = position;
     const rSun = sunPosition(epoch);
     const sFactor = shadowFactor(rSat, rSun);
     const rDist = rSat.add(rSun.scale(-1));
-    const fScale =
-        (SOLAR_FLUX * Math.pow(ASTRONOMICAL_UNIT, 2) * reflect * (area / 1000.0)) /
-        (mass * Math.pow(rDist.magnitude(), 2) * SPEED_OF_LIGHT);
+    const fScale = (
+        (SOLAR_FLUX * Math.pow(ASTRONOMICAL_UNIT, 2)
+            * reflect * (area / 1000.0)) /
+        (mass * Math.pow(rDist.magnitude(), 2) * SPEED_OF_LIGHT)
+    );
     const unitVec = rDist.normalize();
     return unitVec.scale(sFactor * fScale);
 }
