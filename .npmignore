@@ -1,5 +1,6 @@
-src
 .gitignore
-tsconfig.json
+.vscode
 dist/test
+src
+tsconfig.json
 tslint.json
