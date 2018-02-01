@@ -5,14 +5,15 @@ import { Vector } from "../vector";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
 import { Geodetic } from "./geodetic";
 import { Spherical } from "./spherical";
+import { Topocentric } from "./topocentric";
 
 export class EarthCenteredFixed {
     public position: Vector;
     public velocity: Vector;
 
-    constructor(position: Vector, velocity: Vector) {
+    constructor(position: Vector, velocity?: Vector) {
         this.position = position;
-        this.velocity = velocity;
+        this.velocity = velocity || Vector.origin(3);
     }
 
     public toECI(epoch: Epoch): EarthCenteredInertial {
@@ -51,5 +52,23 @@ export class EarthCenteredFixed {
         const inclination = Math.acos(z / radius);
         const azimuth = Math.atan(y / x);
         return new Spherical(radius, inclination, azimuth);
+    }
+
+    public toTopocentric(observer: Geodetic): Topocentric {
+        const { latitude, longitude, altitude } = observer;
+        const [oX, oY, oZ] = observer.toECEF().position.state;
+        const [tX, tY, tZ] = this.position.state;
+        const [rX, rY, rZ] = [tX - oX, tY - oY, tZ - oZ];
+        const s = ((Math.sin(latitude) * Math.cos(longitude) * rX) +
+            (Math.sin(latitude) * Math.sin(longitude) * rY)) -
+            (Math.cos(latitude) * rZ);
+        const e =
+            (-Math.sin(longitude) * rX) +
+            (Math.cos(longitude) * rY);
+        const z =
+            (Math.cos(latitude) * Math.cos(longitude) * rX) +
+            (Math.cos(latitude) * Math.sin(longitude) * rY) +
+            (Math.sin(latitude) * rZ);
+        return new Topocentric(s, e, z);
     }
 }

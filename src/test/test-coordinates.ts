@@ -1,7 +1,10 @@
 import * as assert from "assert";
 import { DEG2RAD, RAD2DEG } from "../constants";
+import { EarthCenteredFixed } from "../coordinates/earth-centered-fixed";
+import { Geodetic } from "../coordinates/geodetic";
 import { J2000 } from "../coordinates/j2000";
 import { Keplerian } from "../coordinates/keplerian";
+import { Topocentric } from "../coordinates/topocentric";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 
@@ -35,13 +38,45 @@ describe("J2000", () => {
 });
 
 describe("Keplerian", () => {
-    describe("#.toJ2K", () => {
+    describe("#.toJ2K()", () => {
         it("should convert to J2000 cartesian coordinates", () => {
             const { epoch, position, velocity } = TEST_KEPLER.toJ2K();
             assert.equal(epoch.epoch, TEST_KEPLER.epoch.epoch);
             assert.deepEqual(position.state, [
                 8228, 389.0000000000039, 6888.000000000001,
             ]);
+        });
+    });
+});
+
+describe("Topocentric", () => {
+    describe("#.toLookAngle()", () => {
+        it("should convert to look angles", () => {
+            const center = new EarthCenteredFixed(new Vector([42164, 0, 0]))
+                .toTopocentric(new Geodetic(0, 0, 0)).toLookAngle();
+            assert.equal(center.azimuth * RAD2DEG, 180);
+            assert.equal(center.elevation * RAD2DEG, 90);
+            assert.equal(center.range, 35785.8637);
+            const north = new EarthCenteredFixed(new Vector([42164, 0, 0]))
+                .toTopocentric(new Geodetic(45 * DEG2RAD, 0, 0)).toLookAngle();
+            assert.equal(north.azimuth * RAD2DEG, 180);
+            assert.equal(north.elevation * RAD2DEG, 38.20257303057648);
+            assert.equal(north.range, 37912.906092388876);
+            const south = new EarthCenteredFixed(new Vector([42164, 0, 0]))
+                .toTopocentric(new Geodetic(-45 * DEG2RAD, 0, 0)).toLookAngle();
+            assert.equal(south.azimuth * RAD2DEG, 0);
+            assert.equal(south.elevation * RAD2DEG, 38.20257303057648);
+            assert.equal(south.range, 37912.906092388876);
+            const east = new EarthCenteredFixed(new Vector([42164, 0, 0]))
+                .toTopocentric(new Geodetic(0, 45 * DEG2RAD, 0)).toLookAngle();
+            assert.equal(east.azimuth * RAD2DEG, 270);
+            assert.equal(east.elevation * RAD2DEG, 38.16990789263988);
+            assert.equal(east.range, 37923.10987953692);
+            const west = new EarthCenteredFixed(new Vector([42164, 0, 0]))
+                .toTopocentric(new Geodetic(0, -45 * DEG2RAD, 0)).toLookAngle();
+            assert.equal(west.azimuth * RAD2DEG, 90);
+            assert.equal(west.elevation * RAD2DEG, 38.16990789263988);
+            assert.equal(west.range, 37923.10987953692);
         });
     });
 });
