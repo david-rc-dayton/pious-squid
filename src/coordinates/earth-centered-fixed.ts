@@ -55,7 +55,7 @@ export class EarthCenteredFixed {
     }
 
     public toTopocentric(observer: Geodetic): Topocentric {
-        const { latitude, longitude, altitude } = observer;
+        const { latitude, longitude } = observer;
         const [oX, oY, oZ] = observer.toECEF().position.state;
         const [tX, tY, tZ] = this.position.state;
         const [rX, rY, rZ] = [tX - oX, tY - oY, tZ - oZ];

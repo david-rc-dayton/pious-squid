@@ -4,7 +4,6 @@ import { EarthCenteredFixed } from "../coordinates/earth-centered-fixed";
 import { Geodetic } from "../coordinates/geodetic";
 import { J2000 } from "../coordinates/j2000";
 import { Keplerian } from "../coordinates/keplerian";
-import { Topocentric } from "../coordinates/topocentric";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 
@@ -44,6 +43,9 @@ describe("Keplerian", () => {
             assert.equal(epoch.epoch, TEST_KEPLER.epoch.epoch);
             assert.deepEqual(position.state, [
                 8228, 389.0000000000039, 6888.000000000001,
+            ]);
+            assert.deepEqual(velocity.state, [
+                -0.7000000000000014, 6.6000000000000005, -0.6000000000000014,
             ]);
         });
     });
