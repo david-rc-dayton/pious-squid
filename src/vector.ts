@@ -5,7 +5,7 @@ export class Vector {
      *
      * @param values vector elements
      */
-    public static fromArray(values: number[]) {
+    public static fromArray(values: number[]): Vector {
         const output = new Vector();
         output.state = values;
         return output;
@@ -154,7 +154,7 @@ export class Vector {
      *
      * @param theta rotation angle, in radians
      */
-    public rot1(theta: number) {
+    public rot1(theta: number): Vector {
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
@@ -170,7 +170,7 @@ export class Vector {
      *
      * @param theta rotation angle, in radians
      */
-    public rot2(theta: number) {
+    public rot2(theta: number): Vector {
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
@@ -186,7 +186,7 @@ export class Vector {
      *
      * @param theta rotation angle, in radians
      */
-    public rot3(theta: number) {
+    public rot3(theta: number): Vector {
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;

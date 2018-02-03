@@ -12,7 +12,7 @@ export class Geodetic {
         this.altitude = altitude;
     }
 
-    public toECEF() {
+    public toECEF(): EarthCenteredFixed {
         const { latitude, longitude, altitude } = this;
         const sLat = Math.sin(latitude);
         const cLat = Math.cos(latitude);

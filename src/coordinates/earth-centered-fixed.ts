@@ -36,7 +36,7 @@ export class EarthCenteredFixed {
         return new EarthCenteredInertial(millis, ri, rj, rk, vi, vj, vk);
     }
 
-    public toGeodetic() {
+    public toGeodetic(): Geodetic {
         const [x, y, z] = this.position.state;
         const sma = EARTH_RAD_EQ;
         const esq = EARTH_ECC_SQ;
@@ -55,7 +55,7 @@ export class EarthCenteredFixed {
         return new Geodetic(lat, lon, alt);
     }
 
-    public toSpherical() {
+    public toSpherical(): Spherical {
         const [x, y, z] = this.position.state;
         const radius = Math.sqrt(x * x + y * y + z * z);
         const inclination = Math.acos(z / radius);

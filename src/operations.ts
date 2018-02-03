@@ -18,7 +18,7 @@ export function factorial(n: number): number {
  * @param x variable
  * @param coeffs coefficients, from lowest to highest
  */
-export function evalPoly(x: number, coeffs: number[]) {
+export function evalPoly(x: number, coeffs: number[]): number {
     let output = 0;
     for (let n = 0; n < coeffs.length; n++) {
         output += coeffs[n] * Math.pow(x, n);
