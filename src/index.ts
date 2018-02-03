@@ -19,6 +19,8 @@ export { J2000 } from "./coordinates/j2000";
 
 export { Keplerian } from "./coordinates/keplerian";
 
+export { LookAngle } from "./coordinates/look-angle";
+
 import * as operationsImport from "./operations";
 export const operations = operationsImport;
 
