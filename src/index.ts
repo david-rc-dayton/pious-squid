@@ -24,4 +24,6 @@ export { LookAngle } from "./coordinates/look-angle";
 import * as operationsImport from "./operations";
 export const operations = operationsImport;
 
+export { Spherical } from "./coordinates/spherical";
+
 export { Vector } from "./vector";
