@@ -5,11 +5,23 @@ import { Vector } from "../vector";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 import { J2000 } from "./j2000";
 
+/** Class representing Earth Centered Inertial (ECI) coordinates. */
 export class EarthCenteredInertial {
     public epoch: Epoch;
     public position: Vector;
     public velocity: Vector;
 
+    /**
+     * Create a new EarthCenteredFixed object.
+     *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
+     * @param ri i-axis position, in kilometers
+     * @param rj j-axis position, in kilometers
+     * @param rk k-axis position, in kilometers
+     * @param vi i-axis velocity, in kilometers per second
+     * @param vj j-axis velocity, in kilometers per second
+     * @param vk k-axis velocity, in kilometers per second
+     */
     constructor(millis: number, ri: number, rj: number, rk: number,
                 vi: number, vj: number, vk: number) {
         this.epoch = new Epoch(millis);
@@ -17,6 +29,7 @@ export class EarthCenteredInertial {
         this.velocity = new Vector(vi, vj, vk);
     }
 
+    /** Convert to the Earth Centered Earth Fixed (ECEF) coordinate frame. */
     public toECEF(): EarthCenteredFixed {
         const { epoch, position, velocity } = this;
         const [dLon, dObliq, mObliq] = nutation(epoch);
@@ -30,6 +43,7 @@ export class EarthCenteredInertial {
         return new EarthCenteredFixed(rx, ry, rz, vx, vy, vz);
     }
 
+    /** Convert to the J2000 (J2K) inertial coordinate frame. */
     public toJ2K(): J2000 {
         const { epoch, position, velocity } = this;
         const [zeta, theta, zed] = precession(epoch);
