@@ -2,8 +2,11 @@ import { EarthCenteredFixed } from "./earth-centered-fixed";
 
 /** Class representing spherical coordinates. */
 export class Spherical {
+    /** Distance from origin, in kilometers. */
     public radius: number;
+    /** Inclination angle, in radians. */
     public inclination: number;
+    /** Azimuth angle, in radians. */
     public azimuth: number;
 
     /**

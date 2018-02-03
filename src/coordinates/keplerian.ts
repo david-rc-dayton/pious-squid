@@ -5,12 +5,19 @@ import { J2000 } from "./j2000";
 
 /** Class representing Keplerian elements. */
 export class Keplerian {
+    /** Satellite state epoch. */
     public epoch: Epoch;
+    /** Semimajor axis, in kilometers. */
     public a: number;
+    /** Orbit eccentricity (unitless). */
     public e: number;
+    /** Inclination, in radians. */
     public i: number;
+    /** Right ascension of the ascending node, in radians. */
     public o: number;
+    /** Argument of perigee, in radians. */
     public w: number;
+    /** True anomaly, in radians. */
     public v: number;
 
     /**
@@ -18,7 +25,7 @@ export class Keplerian {
      *
      * @param millis milliseconds since 1 January 1970, 00:00 UTC
      * @param a semimajor axis, in kilometers
-     * @param e eccentricity
+     * @param e orbit eccentricity (unitless)
      * @param i inclination, in radians
      * @param o right ascension of the ascending node, in radians
      * @param w argument of perigee, in radians

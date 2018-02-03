@@ -2,8 +2,11 @@ import { LookAngle } from "./look-angle";
 
 /** Class representing topocentric-horizon coordinates. */
 export class Topocentric {
+    /** South component, in kilometers. */
     public s: number;
+    /** East component, in kilometers. */
     public e: number;
+    /** Surface-normal component, in kilometers. */
     public z: number;
 
     /**

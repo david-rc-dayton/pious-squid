@@ -1,7 +1,10 @@
 /** Class representing look angles. */
 export class LookAngle {
+    /** Azimuth angle, in radians. */
     public azimuth: number;
+    /** Elevation angle, in radians. */
     public elevation: number;
+    /** Slant range, in kilometers. */
     public range: number;
 
     /**
