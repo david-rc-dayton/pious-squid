@@ -4,12 +4,11 @@ import { EarthCenteredFixed } from "../coordinates/earth-centered-fixed";
 import { Geodetic } from "../coordinates/geodetic";
 import { J2000 } from "../coordinates/j2000";
 import { Keplerian } from "../coordinates/keplerian";
-import { Epoch } from "../epoch";
 
 const TEST_J2K = new J2000(0, 8228, 389, 6888, -0.7, 6.6, -0.6);
 
 const TEST_KEPLER = new Keplerian(
-    new Epoch(0),
+    0,
     13360.642770119148,
     0.22049791840816513,
     DEG2RAD * 39.93754927254844,

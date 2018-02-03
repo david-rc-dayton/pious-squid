@@ -3,6 +3,7 @@ import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { J2000 } from "./j2000";
 
+/** Class representing Keplerian elements. */
 export class Keplerian {
     public epoch: Epoch;
     public a: number;
@@ -12,9 +13,20 @@ export class Keplerian {
     public w: number;
     public v: number;
 
-    constructor(epoch: Epoch, a: number, e: number, i: number,
+    /**
+     * Create a new Keplerian object.
+     *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
+     * @param a semimajor axis, in kilometers
+     * @param e eccentricity
+     * @param i inclination, in radians
+     * @param o right ascension of the ascending node, in radians
+     * @param w argument of perigee, in radians
+     * @param v true anomaly, in radians
+     */
+    constructor(millis: number, a: number, e: number, i: number,
                 o: number, w: number, v: number) {
-        this.epoch = epoch;
+        this.epoch = new Epoch(millis);
         this.a = a;
         this.e = e;
         this.i = i;
@@ -23,6 +35,7 @@ export class Keplerian {
         this.v = v;
     }
 
+    /** Convert to the J2000 (J2K) inertial coordinate frame. */
     public toJ2K(): J2000 {
         const { epoch, a, e, i, o, w, v } = this;
         const { cos, sin, pow, sqrt } = Math;

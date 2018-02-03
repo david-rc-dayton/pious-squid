@@ -44,7 +44,7 @@ export class J2000 {
             ri, rj, rk, vi, vj, vk);
     }
 
-    /** Convert to the Keplerian coordinate frame. */
+    /** Convert to Keplerian elements. */
     public toKeplerian(): Keplerian {
         const { epoch, position, velocity } = this;
         const [R, V] = [position.magnitude(), velocity.magnitude()];
@@ -69,6 +69,6 @@ export class J2000 {
         if (position.dot(velocity) < 0) {
             v = 2 * Math.PI - v;
         }
-        return new Keplerian(epoch, a, e, i, o, w, v);
+        return new Keplerian(epoch.toMillis(), a, e, i, o, w, v);
     }
 }
