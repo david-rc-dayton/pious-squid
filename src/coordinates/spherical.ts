@@ -13,11 +13,11 @@ export class Spherical {
     }
 
     public toECEF(): EarthCenteredFixed {
-        const pVec = new Vector([
+        const [rx, ry, rz] = new Vector([
             this.radius * Math.sin(this.inclination) * Math.cos(this.azimuth),
             this.radius * Math.sin(this.inclination) * Math.sin(this.azimuth),
             this.radius * Math.cos(this.inclination),
-        ]);
-        return new EarthCenteredFixed(pVec, Vector.origin(3));
+        ]).state;
+        return new EarthCenteredFixed(rx, ry, rz);
     }
 }

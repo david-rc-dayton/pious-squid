@@ -17,11 +17,11 @@ export class Geodetic {
         const sLat = Math.sin(this.latitude);
         const cLat = Math.cos(this.latitude);
         const nVal = EARTH_RAD_EQ / Math.sqrt(1 - EARTH_ECC_SQ * sLat * sLat);
-        const pVec = new Vector([
+        const [rx, ry, rz] = new Vector([
             (nVal + this.altitude) * cLat * Math.cos(this.longitude),
             (nVal + this.altitude) * cLat * Math.sin(this.longitude),
             (nVal * (1 - EARTH_ECC_SQ) + this.altitude) * sLat,
-        ]);
-        return new EarthCenteredFixed(pVec, Vector.origin(3));
+        ]).state;
+        return new EarthCenteredFixed(rx, ry, rz);
     }
 }

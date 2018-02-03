@@ -1,5 +1,4 @@
 import * as assert from "assert";
-import { J2000 } from "../coordinates/j2000";
 import { Epoch } from "../epoch";
 import * as forces from "../forces";
 import { Vector } from "../vector";
@@ -105,10 +104,8 @@ describe("forces", () => {
 
     describe("#derivative()", () => {
         it("should compute position and velocity derivative", () => {
-            const j2kState = new J2000(
-                TEST_EPOCH, TEST_POSITION, TEST_VELOCITY,
-            );
-            const deriv = forces.derivative(j2kState);
+            const testPosVel = TEST_POSITION.concat(TEST_VELOCITY);
+            const deriv = forces.derivative(TEST_EPOCH, testPosVel);
             assert.deepEqual(deriv.state, [
                 -0.53281,
                 3.030355,

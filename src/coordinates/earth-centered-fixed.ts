@@ -11,12 +11,18 @@ export class EarthCenteredFixed {
     public position: Vector;
     public velocity: Vector;
 
-    constructor(position: Vector, velocity?: Vector) {
-        this.position = position;
-        this.velocity = velocity || Vector.origin(3);
+    constructor(rx: number, ry: number, rz: number,
+                vx = 0, vy = 0, vz = 0) {
+        this.position = new Vector([rx, ry, rz]);
+        this.velocity = new Vector([vx, vy, vz]);
     }
 
-    public toECI(epoch: Epoch): EarthCenteredInertial {
+    public getState(): number[] {
+        return this.position.concat(this.velocity).state;
+    }
+
+    public toECI(millis: number): EarthCenteredInertial {
+        const epoch = new Epoch(millis);
         const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
         const ast = epoch.getGMSTAngle() + dLon * Math.cos(obliq);
@@ -24,7 +30,8 @@ export class EarthCenteredFixed {
         const vpef = this.velocity.add(rotVec);
         const rtod = this.position.rot3(-ast);
         const vtod = vpef.rot3(-ast);
-        return new EarthCenteredInertial(epoch, rtod, vtod);
+        const [ri, rj, rk, vi, vj, vk] = rtod.concat(vtod).state;
+        return new EarthCenteredInertial(millis, ri, rj, rk, vi, vj, vk);
     }
 
     public toGeodetic() {

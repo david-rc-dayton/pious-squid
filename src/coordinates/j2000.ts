@@ -10,10 +10,15 @@ export class J2000 {
     public position: Vector;
     public velocity: Vector;
 
-    constructor(epoch: Epoch, position: Vector, velocity: Vector) {
-        this.epoch = epoch;
-        this.position = position;
-        this.velocity = velocity;
+    constructor(millis: number, ri: number, rj: number, rk: number,
+                vi: number, vj: number, vk: number) {
+        this.epoch = new Epoch(millis);
+        this.position = new Vector([ri, rj, rk]);
+        this.velocity = new Vector([vi, vj, vk]);
+    }
+
+    public getState(): number[] {
+        return this.position.concat(this.velocity).state;
     }
 
     public toECI(): EarthCenteredInertial {
@@ -24,7 +29,9 @@ export class J2000 {
         const vmod = this.velocity.rot3(-zeta).rot2(theta).rot3(-zed);
         const rtod = rmod.rot1(mObliq).rot3(-dLon).rot1(-obliq);
         const vtod = vmod.rot1(mObliq).rot3(-dLon).rot1(-obliq);
-        return new EarthCenteredInertial(this.epoch, rtod, vtod);
+        const [ri, rj, rk, vi, vj, vk] = rtod.concat(vtod).state;
+        return new EarthCenteredInertial(this.epoch.toMillis(),
+            ri, rj, rk, vi, vj, vk);
     }
 
     /**

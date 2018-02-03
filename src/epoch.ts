@@ -8,12 +8,20 @@ export class Epoch {
 
     public epoch: number;
 
-    constructor(ms: number) {
-        this.epoch = ms / 1000;
+    constructor(millis: number) {
+        this.epoch = millis / 1000;
+    }
+
+    public toDate(): Date {
+        return new Date(this.epoch * 1000);
+    }
+
+    public toMillis(): number {
+        return this.toDate().getTime();
     }
 
     public toString(): string {
-        return new Date(this.epoch * 1000).toUTCString();
+        return this.toDate().toUTCString();
     }
 
     public roll(seconds: number): Epoch {

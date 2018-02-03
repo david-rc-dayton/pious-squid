@@ -33,6 +33,7 @@ export class Keplerian {
         ]).scale(Math.sqrt(EARTH_MU / (this.a * (1 - Math.pow(this.e, 2)))));
         const rJ2k = rPqw.rot3(-this.w).rot1(-this.i).rot3(-this.o);
         const vJ2k = vPqw.rot3(-this.w).rot1(-this.i).rot3(-this.o);
-        return new J2000(this.epoch, rJ2k, vJ2k);
+        const [ri, rj, rk, vi, vj, vk] = rJ2k.concat(vJ2k).state;
+        return new J2000(this.epoch.toMillis(), ri, rj, rk, vi, vj, vk);
     }
 }

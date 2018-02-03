@@ -12,7 +12,6 @@ import {
     SPEED_OF_LIGHT,
     SUN_MU,
 } from "./constants";
-import { J2000 } from "./coordinates/j2000";
 import { Epoch } from "./epoch";
 import { Vector } from "./vector";
 
@@ -136,10 +135,9 @@ export function atmosphericDrag(position: Vector, velocity: Vector,
     return velVec.scale(fScale / 1000);
 }
 
-export function derivative(j2kState: J2000): Vector {
-    const epoch = j2kState.epoch;
-    const position = j2kState.position;
-    const velocity = j2kState.velocity;
+export function derivative(epoch: Epoch, posVel: Vector): Vector {
+    const position = posVel.slice(0, 3);
+    const velocity = posVel.slice(3, 6);
     const acceleration = gravityEarth(position)
         .add(j2Effect(position))
         .add(j3Effect(position))
