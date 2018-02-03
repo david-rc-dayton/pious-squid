@@ -1,3 +1,6 @@
+import * as bodiesImport from "./bodies";
+export const bodies = bodiesImport;
+
 import * as constantsImport from "./constants";
 export const constants = constantsImport;
 

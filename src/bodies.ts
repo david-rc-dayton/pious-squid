@@ -3,6 +3,11 @@ import { Epoch } from "./epoch";
 import { evalPoly } from "./operations";
 import { Vector } from "./vector";
 
+/**
+ * Calculate the [zeta, theta, zed] angles of precession, in radians.
+ *
+ * @param epoch satellite state epoch
+ */
 export function precession(epoch: Epoch): [number, number, number] {
     const t = epoch.toTerrestrialCenturies();
     const zeta = evalPoly(t,
@@ -14,6 +19,12 @@ export function precession(epoch: Epoch): [number, number, number] {
     return [zeta, theta, zed];
 }
 
+/**
+ * Calculate the [deltaPsi, deltaEpsilon, meanEpsilon] angles of nutation,
+ * in radians.
+ *
+ * @param epoch satellite state epoch
+ */
 export function nutation(epoch: Epoch): [number, number, number] {
     const degRev = 360;
     const t = epoch.toTerrestrialCenturies();
@@ -54,6 +65,12 @@ export function nutation(epoch: Epoch): [number, number, number] {
     return [deltaPsi, deltaEpsilon, meanEpsilon];
 }
 
+/**
+ * Calculate the density of the Earth's atmosphere, in kg/m^3, for a given
+ * position using the exponential atmospheric density model.
+ *
+ * @param position satellite position 3-vector, in kilometers
+ */
 export function atmosphericDensity(position: Vector): number {
     const rDist = position.magnitude() - c.EARTH_RAD_EQ;
     let fields = [0.0, 0.0, 0.0];
@@ -75,6 +92,11 @@ export function atmosphericDensity(position: Vector): number {
     return density * Math.exp(-(rDist - base) / height);
 }
 
+/**
+ * Calculate the J2000 position of the Moon, in kilometers, at a given epoch.
+ *
+ * @param epoch satellite state epoch
+ */
 export function moonPosition(epoch: Epoch): Vector {
     const { sin, cos } = Math;
     const jCent = epoch.toJulianCenturies();
@@ -107,6 +129,11 @@ export function moonPosition(epoch: Epoch): Vector {
     return new Vector(rI, rJ, rK);
 }
 
+/**
+ * Calculate the J2000 position of the Sun, in kilometers, at a given epoch.
+ *
+ * @param epoch satellite state epoch
+ */
 export function sunPosition(epoch: Epoch): Vector {
     const { sin, cos } = Math;
     const jCent = epoch.toJulianCenturies();
