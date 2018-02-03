@@ -24,11 +24,11 @@ export function j2Effect(position: Vector): Vector {
         * Math.pow(EARTH_RAD_EQ, 2)) / (2 * Math.pow(r, 5)));
     const aijPost = 1 - ((5 * Math.pow(k, 2)) / Math.pow(r, 2));
     const akPost = 3 - ((5 * Math.pow(k, 2)) / Math.pow(r, 2));
-    return new Vector([
+    return new Vector(
         aPre * i * aijPost,
         aPre * j * aijPost,
         aPre * k * akPost,
-    ]);
+    );
 }
 
 export function j3Effect(position: Vector): Vector {
@@ -42,11 +42,11 @@ export function j3Effect(position: Vector): Vector {
     const akPost = ((6 * Math.pow(k, 2))
         - ((7 * Math.pow(k, 4)) / Math.pow(r, 2))
         - ((3 / 5) * Math.pow(r, 2)));
-    return new Vector([
+    return new Vector(
         aPre * i * aijPost,
         aPre * j * aijPost,
         aPre * akPost,
-    ]);
+    );
 }
 
 export function j4Effect(position: Vector): Vector {
@@ -60,11 +60,11 @@ export function j4Effect(position: Vector): Vector {
         + ((21 * Math.pow(k, 4)) / Math.pow(r, 4)));
     const akPost = (5 - ((70 * Math.pow(k, 2)) / (3 * Math.pow(r, 2))) +
         ((21 * Math.pow(k, 4)) / Math.pow(r, 4)));
-    return new Vector([
+    return new Vector(
         aPre * i * aijPost,
         aPre * j * aijPost,
         aPre * k * akPost,
-    ]);
+    );
 }
 
 export function gravityEarth(position: Vector): Vector {

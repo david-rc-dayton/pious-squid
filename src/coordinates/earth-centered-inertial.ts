@@ -13,8 +13,8 @@ export class EarthCenteredInertial {
     constructor(millis: number, ri: number, rj: number, rk: number,
                 vi: number, vj: number, vk: number) {
         this.epoch = new Epoch(millis);
-        this.position = new Vector([ri, rj, rk]);
-        this.velocity = new Vector([vi, vj, vk]);
+        this.position = new Vector(ri, rj, rk);
+        this.velocity = new Vector(vi, vj, vk);
     }
 
     public getState(): number[] {

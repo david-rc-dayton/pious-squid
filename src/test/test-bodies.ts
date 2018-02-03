@@ -5,9 +5,9 @@ import { Vector } from "../vector";
 
 describe("bodies", () => {
     const testEpoch = new Epoch(Date.UTC(2017, 5, 27, 7, 6, 33, 584));
-    const testPosition = new Vector([
+    const testPosition = new Vector(
         4.12853342060e4, 7.43471681700e3, -3.67624010600e3,
-    ]);
+    );
 
     describe("#precession()", () => {
         it("should calculate precession angles", () => {

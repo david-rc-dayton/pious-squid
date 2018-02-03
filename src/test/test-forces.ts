@@ -5,13 +5,13 @@ import { Vector } from "../vector";
 
 const TEST_EPOCH = new Epoch(Date.UTC(2017, 5, 27, 7, 6, 33, 584));
 
-const TEST_POSITION = new Vector([
+const TEST_POSITION = new Vector(
     4.12853342060e4, 7.43471681700e3, -3.67624010600e3,
-]);
+);
 
-const TEST_VELOCITY = new Vector([
+const TEST_VELOCITY = new Vector(
     -5.32810000000e-1, 3.03035500000e0, 1.05016000000e-1,
-]);
+);
 
 describe("forces", () => {
     describe("#j2Effect()", () => {

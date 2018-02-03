@@ -13,8 +13,8 @@ export class J2000 {
     constructor(millis: number, ri: number, rj: number, rk: number,
                 vi: number, vj: number, vk: number) {
         this.epoch = new Epoch(millis);
-        this.position = new Vector([ri, rj, rk]);
-        this.velocity = new Vector([vi, vj, vk]);
+        this.position = new Vector(ri, rj, rk);
+        this.velocity = new Vector(vi, vj, vk);
     }
 
     public getState(): number[] {
@@ -47,7 +47,7 @@ export class J2000 {
         const e = eVec.magnitude();
         const h = this.position.cross(this.velocity);
         const i = Math.acos(h.state[2] / h.magnitude()) % 180;
-        const n = new Vector([0, 0, 1]).cross(h);
+        const n = new Vector(0, 0, 1).cross(h);
         let o = Math.acos(n.state[0] / n.magnitude());
         if (n.state[1] < 0) {
             o = 2 * Math.PI - o;

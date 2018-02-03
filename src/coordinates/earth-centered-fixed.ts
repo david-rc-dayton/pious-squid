@@ -13,8 +13,8 @@ export class EarthCenteredFixed {
 
     constructor(rx: number, ry: number, rz: number,
                 vx = 0, vy = 0, vz = 0) {
-        this.position = new Vector([rx, ry, rz]);
-        this.velocity = new Vector([vx, vy, vz]);
+        this.position = new Vector(rx, ry, rz);
+        this.velocity = new Vector(vx, vy, vz);
     }
 
     public getState(): number[] {

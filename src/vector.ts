@@ -2,6 +2,15 @@
  * Class representing an arbitrary length vector.
  */
 export class Vector {
+    /**
+     * Create a new Vector object, using the elements of an Array as
+     * @param values vector elements
+     */
+    public static fromArray(values: number[]) {
+        const output = new Vector();
+        output.state = values;
+        return output;
+    }
 
     /**
      * Create a new Vector object, containing zero for each state element.
@@ -12,7 +21,7 @@ export class Vector {
         for (let i = 0; i < Math.floor(Math.abs(n)); i++) {
             output.push(0);
         }
-        return new Vector(output);
+        return Vector.fromArray(output);
     }
 
     /** Vector state elements. */
@@ -22,7 +31,7 @@ export class Vector {
      * Create a new Vector object.
      * @param values vector elements
      */
-    constructor(values: number[]) {
+    constructor(...values: number[]) {
         this.state = values;
     }
 
@@ -40,7 +49,7 @@ export class Vector {
      * @param end integer specifying where to end the selection
      */
     public slice(start: number, end: number): Vector {
-        return new Vector(this.state.slice(start, end));
+        return Vector.fromArray(this.state.slice(start, end));
     }
 
     /**
@@ -75,7 +84,7 @@ export class Vector {
         for (let i = 0; i < this.state.length; i++) {
             output.push(this.state[i] + v.state[i]);
         }
-        return new Vector(output);
+        return Vector.fromArray(output);
     }
 
     /**
@@ -87,7 +96,7 @@ export class Vector {
         let output: number[] = [];
         output = output.concat(this.state);
         output = output.concat(v.state);
-        return new Vector(output);
+        return Vector.fromArray(output);
     }
 
     /**
@@ -96,7 +105,7 @@ export class Vector {
      * @param n a scalar value
      */
     public scale(n: number): Vector {
-        return new Vector(this.state.map((x) => x * n));
+        return Vector.fromArray(this.state.map((x) => x * n));
     }
 
     /**
@@ -105,7 +114,7 @@ export class Vector {
      */
     public normalize(): Vector {
         const m = this.magnitude();
-        return new Vector(this.state.map((x) => x / m));
+        return Vector.fromArray(this.state.map((x) => x / m));
     }
 
     /**
@@ -116,11 +125,11 @@ export class Vector {
     public cross(v: Vector): Vector {
         const [x, y, z] = this.state;
         const [vx, vy, vz] = v.state;
-        return new Vector([
+        return new Vector(
             y * vz - z * vy,
             z * vx - x * vz,
             x * vy - y * vx,
-        ]);
+        );
     }
 
     /**
@@ -144,11 +153,11 @@ export class Vector {
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
-        return new Vector([
+        return new Vector(
             1 * x + 0 * y + 0 * z,
             0 * x + cosT * y + sinT * z,
             0 * x + -sinT * y + cosT * z,
-        ]);
+        );
     }
 
     /**
@@ -159,11 +168,11 @@ export class Vector {
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
-        return new Vector([
+        return new Vector(
             cosT * x + 0 * y + -sinT * z,
             0 * x + 1 * y + 0 * z,
             sinT * x + 0 * y + cosT * z,
-        ]);
+        );
     }
 
     /**
@@ -174,10 +183,10 @@ export class Vector {
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
-        return new Vector([
+        return new Vector(
             cosT * x + sinT * y + 0 * z,
             -sinT * x + cosT * y + 0 * z,
             0 * x + 0 * y + 1 * z,
-        ]);
+        );
     }
 }

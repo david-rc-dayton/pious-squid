@@ -43,7 +43,7 @@ export const EARTH_J4 = -0.000001620;
 export const EARTH_MU = 398600.4415;
 
 /** Earth rotation vector, in radians per second. */
-export const EARTH_ROTATION = new Vector([0, 0, 7.29211514670698e-5]);
+export const EARTH_ROTATION = new Vector(0, 0, 7.29211514670698e-5);
 
 /** Moon gravitational parameter, in km^3/s^2. */
 export const MOON_MU = 4902.801;

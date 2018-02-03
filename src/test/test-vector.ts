@@ -2,9 +2,9 @@ import * as assert from "assert";
 import { Vector } from "../vector";
 
 describe("Vector", () => {
-    const vecA = new Vector([1, 2, 3]);
-    const vecB = new Vector([4, 5, 6]);
-    const vecR = new Vector([1, 1, 1]);
+    const vecA = new Vector(1, 2, 3);
+    const vecB = new Vector(4, 5, 6);
+    const vecR = new Vector(1, 1, 1);
 
     describe("#slice()", () => {
         const vecASlice = vecA.slice(1, 3);
@@ -84,7 +84,7 @@ describe("Vector", () => {
     describe("#rot1()", () => {
         const vecRot1 = vecR.rot1(Math.PI);
         it("should rotate the vector along the x-axis", () => {
-            assert.deepEqual(vecRot1.state.map((x) => Math.round(x)),
+            assert.deepEqual(vecRot1.state.map(Math.round),
                 [1, -1, -1]);
         });
     });
@@ -92,7 +92,7 @@ describe("Vector", () => {
     describe("#rot2()", () => {
         const vecRot2 = vecR.rot2(Math.PI);
         it("should rotate the vector along the y-axis", () => {
-            assert.deepEqual(vecRot2.state.map((x) => Math.round(x)),
+            assert.deepEqual(vecRot2.state.map(Math.round),
                 [-1, 1, -1]);
         });
     });
@@ -100,7 +100,7 @@ describe("Vector", () => {
     describe("#rot3()", () => {
         const vecRot3 = vecR.rot3(Math.PI);
         it("should rotate the vector along the z-axis", () => {
-            assert.deepEqual(vecRot3.state.map((x) => Math.round(x)),
+            assert.deepEqual(vecRot3.state.map(Math.round),
                 [-1, -1, 1]);
         });
     });

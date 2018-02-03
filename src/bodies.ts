@@ -104,7 +104,7 @@ export function moonPosition(epoch: Epoch): Vector {
         - (sin(obq) * sin(phiEcl)))) * EARTH_RAD_EQ;
     const rK = (rMag * (sin(obq) * cos(phiEcl) * sin(lamEcl)
         + (cos(obq) * sin(phiEcl)))) * EARTH_RAD_EQ;
-    return new Vector([rI, rJ, rK]);
+    return new Vector(rI, rJ, rK);
 }
 
 export function sunPosition(epoch: Epoch): Vector {
@@ -117,9 +117,9 @@ export function sunPosition(epoch: Epoch): Vector {
     const obliq = (23.439291 - 0.0130042 * jCent) * DEG2RAD;
     const rMag =
         (1.000140612 - 0.016708617 * cos(mSun) - 0.000139589 * cos(2 * mSun));
-    return new Vector([
+    return new Vector(
         rMag * cos(lamEc) * ASTRONOMICAL_UNIT,
         rMag * cos(obliq) * sin(lamEc) * ASTRONOMICAL_UNIT,
         rMag * sin(obliq) * sin(lamEc) * ASTRONOMICAL_UNIT,
-    ]);
+    );
 }
