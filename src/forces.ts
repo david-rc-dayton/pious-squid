@@ -3,6 +3,10 @@ import * as c from "./constants";
 import { Epoch } from "./epoch";
 import { Vector } from "./vector";
 
+/**
+ * Calculate acceleration in km/s^2 due to J2 effect.
+ * @param position satellite J2000 position 3-vector, in kilometers
+ */
 export function j2Effect(position: Vector): Vector {
     const pow = Math.pow;
     const [i, j, k] = position.state;
@@ -18,6 +22,10 @@ export function j2Effect(position: Vector): Vector {
     );
 }
 
+/**
+ * Calculate acceleration in km/s^2 due to J3 effect.
+ * @param position satellite J2000 position 3-vector, in kilometers
+ */
 export function j3Effect(position: Vector): Vector {
     const pow = Math.pow;
     const [i, j, k] = position.state;
@@ -34,6 +42,10 @@ export function j3Effect(position: Vector): Vector {
     );
 }
 
+/**
+ * Calculate acceleration in km/s^2 due to J4 effect.
+ * @param position satellite J2000 position 3-vector, in kilometers
+ */
 export function j4Effect(position: Vector): Vector {
     const pow = Math.pow;
     const [i, j, k] = position.state;
@@ -51,11 +63,20 @@ export function j4Effect(position: Vector): Vector {
     );
 }
 
+/**
+ * Calculate acceleration in km/s^2 due Earth's gravity.
+ * @param position satellite J2000 position 3-vector, in kilometers
+ */
 export function gravityEarth(position: Vector): Vector {
     const dist = position.magnitude();
     return position.scale(-c.EARTH_MU / Math.pow(dist, 3));
 }
 
+/**
+ * Calculate acceleration in km/s^2 due the Moon's gravity.
+ * @param epoch satellite state epoch
+ * @param position satellite J2000 position 3-vector, in kilometers
+ */
 export function gravityMoon(epoch: Epoch, position: Vector): Vector {
     const rMoon = moonPosition(epoch);
     const aNum = rMoon.add(position.scale(-1));
@@ -66,6 +87,11 @@ export function gravityMoon(epoch: Epoch, position: Vector): Vector {
     return grav.scale(c.MOON_MU);
 }
 
+/**
+ * Calculate satellite acceleration in km/s^2 due the Sun's gravity.
+ * @param epoch satellite state epoch
+ * @param position satellite J2000 position 3-vector, in kilometers
+ */
 export function gravitySun(epoch: Epoch, position: Vector): Vector {
     const rSun = sunPosition(epoch);
     const aNum = rSun.add(position.scale(-1));
@@ -76,6 +102,12 @@ export function gravitySun(epoch: Epoch, position: Vector): Vector {
     return grav.scale(c.SUN_MU);
 }
 
+/**
+ * Return 1 if the the satellite has line of sight with the Sun, otherwise
+ * return 0.
+ * @param rSat satellite J2000 position 3-vector, in kilometers
+ * @param rSun Sun J2000 position 3-vector, in kilometers
+ */
 function shadowFactor(rSat: Vector, rSun: Vector): number {
     const n = Math.pow(rSat.magnitude(), 2) - rSat.dot(rSun);
     const d = (Math.pow(rSat.magnitude(), 2)
@@ -92,6 +124,14 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
     return 0;
 }
 
+/**
+ * Calculate acceleration in km/s^2 due to solar radiation pressure.
+ * @param epoch satellite state epoch
+ * @param position satellite J2000 position 3-vector, in kilometers
+ * @param mass satellite mass, in kilograms
+ * @param area satellite surface area, in meters squared
+ * @param reflect satellite reflectivity coefficient
+ */
 export function solarRadiation(epoch: Epoch, position: Vector,
                                mass = 1000.0, area = 1.0,
                                reflect = 1.4): Vector {
@@ -108,6 +148,14 @@ export function solarRadiation(epoch: Epoch, position: Vector,
     return unitVec.scale(sFactor * fScale);
 }
 
+/**
+ * Calculate acceleration in km/s^2 due to atmospheric drag.
+ * @param position satellite J2000 position 3-vector, in kilometers
+ * @param velocity satellite J2000 velocity 3-vector, in kilometers per second
+ * @param mass satellite mass, in kilograms
+ * @param area satellite surface area, in meters squared
+ * @param drag satellite drag coefficient
+ */
 export function atmosphericDrag(position: Vector, velocity: Vector,
                                 mass = 1000.0, area = 1.0, drag = 2.2): Vector {
     const rotVel = c.EARTH_ROTATION.cross(position);
@@ -119,6 +167,12 @@ export function atmosphericDrag(position: Vector, velocity: Vector,
     return velVec.scale(fScale / 1000);
 }
 
+/**
+ * Calculate the velocity and acceleration, in km/s and km/s^2 of a satellite
+ * due to orbital perturbations.
+ * @param epoch satellite state epoch
+ * @param posVel satellite J2000 position and velocity 6-vector, in km and km/s
+ */
 export function derivative(epoch: Epoch, posVel: Vector): Vector {
     const position = posVel.slice(0, 3);
     const velocity = posVel.slice(3, 6);
