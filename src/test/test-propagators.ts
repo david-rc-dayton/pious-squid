@@ -13,7 +13,7 @@ describe("RungeKutta4", () => {
     describe("#.propagate()", () => {
         it("should propagate geosynchronous satellites", () => {
             const rk4 = new RungeKutta4(GEO_STATE_1, 300);
-            const { epoch, position, velocity } = rk4.propagate(
+            const { position } = rk4.propagate(
                 Date.UTC(2017, 5, 28, 7, 6, 33, 584),
             );
             const dist = position.distance(

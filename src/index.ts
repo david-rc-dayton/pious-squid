@@ -24,6 +24,8 @@ export { LookAngle } from "./coordinates/look-angle";
 import * as operationsImport from "./operations";
 export const operations = operationsImport;
 
+export { RungeKutta4 } from "./propagators/runge-kutta-4";
+
 export { Spherical } from "./coordinates/spherical";
 
 export { TopocentricHorizon } from "./coordinates/topocentric-horizon";
