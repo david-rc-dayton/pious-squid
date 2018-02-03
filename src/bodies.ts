@@ -77,26 +77,22 @@ export function atmosphericDensity(position: Vector): number {
 export function moonPosition(epoch: Epoch): Vector {
     const { sin, cos } = Math;
     const jCent = epoch.toJulianCenturies();
-    const lamEcl = ((218.32 +
-        481267.883 * jCent +
-        6.29 * sin((134.9 + 477198.85 * jCent) * DEG2RAD) -
-        1.27 * sin((259.2 - 413335.38 * jCent) * DEG2RAD) +
-        0.66 * sin((235.7 + 890534.23 * jCent) * DEG2RAD) +
-        0.21 * sin((269.9 + 954397.70 * jCent) * DEG2RAD) -
-        0.19 * sin((357.5 + 35999.05 * jCent) * DEG2RAD) -
-        0.11 * sin((186.6 + 966404.05 * jCent) * DEG2RAD))
-        % 360) * DEG2RAD;
-    const phiEcl = ((5.13 * sin((93.3 + 483202.03 * jCent) * DEG2RAD) +
-        0.28 * sin((228.2 + 960400.87 * jCent) * DEG2RAD) -
-        0.28 * sin((318.3 + 6003.18 * jCent) * DEG2RAD) -
-        0.17 * sin((217.6 - 407332.20 * jCent) * DEG2RAD))
-        % 360) * DEG2RAD;
-    const pllx = ((0.9508 +
-        0.0518 * cos((134.9 + 477198.85 * jCent) * DEG2RAD) +
-        0.0095 * cos((259.2 - 413335.38 * jCent) * DEG2RAD) +
-        0.0078 * cos((235.7 + 890534.23 * jCent) * DEG2RAD) +
-        0.0028 * cos((269.9 + 954397.70 * jCent) * DEG2RAD))
-        % 360) * DEG2RAD;
+    const lamEcl = ((218.32 + 481267.883 * jCent
+        + 6.29 * sin((134.9 + 477198.85 * jCent) * DEG2RAD)
+        - 1.27 * sin((259.2 - 413335.38 * jCent) * DEG2RAD)
+        + 0.66 * sin((235.7 + 890534.23 * jCent) * DEG2RAD)
+        + 0.21 * sin((269.9 + 954397.70 * jCent) * DEG2RAD)
+        - 0.19 * sin((357.5 + 35999.05 * jCent) * DEG2RAD)
+        - 0.11 * sin((186.6 + 966404.05 * jCent) * DEG2RAD)) % 360) * DEG2RAD;
+    const phiEcl = ((5.13 * sin((93.3 + 483202.03 * jCent) * DEG2RAD)
+        + 0.28 * sin((228.2 + 960400.87 * jCent) * DEG2RAD)
+        - 0.28 * sin((318.3 + 6003.18 * jCent) * DEG2RAD)
+        - 0.17 * sin((217.6 - 407332.20 * jCent) * DEG2RAD)) % 360) * DEG2RAD;
+    const pllx = ((0.9508
+        + 0.0518 * cos((134.9 + 477198.85 * jCent) * DEG2RAD)
+        + 0.0095 * cos((259.2 - 413335.38 * jCent) * DEG2RAD)
+        + 0.0078 * cos((235.7 + 890534.23 * jCent) * DEG2RAD)
+        + 0.0028 * cos((269.9 + 954397.70 * jCent) * DEG2RAD)) % 360) * DEG2RAD;
     const obq = ((23.439291 - 0.0130042 * jCent) % 360) * DEG2RAD;
     const rMag = 1.0 / sin(pllx);
     const rI = rMag * (cos(phiEcl) * cos(lamEcl)) * EARTH_RAD_EQ;

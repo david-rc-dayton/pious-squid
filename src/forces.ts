@@ -1,17 +1,5 @@
 import { atmosphericDensity, moonPosition, sunPosition } from "./bodies";
-import {
-    ASTRONOMICAL_UNIT,
-    EARTH_J2,
-    EARTH_J3,
-    EARTH_J4,
-    EARTH_MU,
-    EARTH_RAD_EQ,
-    EARTH_ROTATION,
-    MOON_MU,
-    SOLAR_FLUX,
-    SPEED_OF_LIGHT,
-    SUN_MU,
-} from "./constants";
+import * as c from "./constants";
 import { Epoch } from "./epoch";
 import { Vector } from "./vector";
 
@@ -19,8 +7,8 @@ export function j2Effect(position: Vector): Vector {
     const pow = Math.pow;
     const [i, j, k] = position.state;
     const r = position.magnitude();
-    const aPre = -((3 * EARTH_J2 * EARTH_MU
-        * pow(EARTH_RAD_EQ, 2)) / (2 * pow(r, 5)));
+    const aPre = -((3 * c.EARTH_J2 * c.EARTH_MU
+        * pow(c.EARTH_RAD_EQ, 2)) / (2 * pow(r, 5)));
     const aijPost = 1 - ((5 * pow(k, 2)) / pow(r, 2));
     const akPost = 3 - ((5 * pow(k, 2)) / pow(r, 2));
     return new Vector(
@@ -34,8 +22,8 @@ export function j3Effect(position: Vector): Vector {
     const pow = Math.pow;
     const [i, j, k] = position.state;
     const r = position.magnitude();
-    const aPre = -((5 * EARTH_J3 * EARTH_MU
-        * pow(EARTH_RAD_EQ, 3)) / (2 * pow(r, 7)));
+    const aPre = -((5 * c.EARTH_J3 * c.EARTH_MU
+        * pow(c.EARTH_RAD_EQ, 3)) / (2 * pow(r, 7)));
     const aijPost = (3 * k) - ((7 * pow(k, 3)) / pow(r, 2));
     const akPost = ((6 * pow(k, 2)) - ((7 * pow(k, 4)) / pow(r, 2))
         - ((3 / 5) * pow(r, 2)));
@@ -50,8 +38,8 @@ export function j4Effect(position: Vector): Vector {
     const pow = Math.pow;
     const [i, j, k] = position.state;
     const r = position.magnitude();
-    const aPre = (15 * EARTH_J4 * EARTH_MU
-        * pow(EARTH_RAD_EQ, 4)) / (8 * pow(r, 7));
+    const aPre = (15 * c.EARTH_J4 * c.EARTH_MU
+        * pow(c.EARTH_RAD_EQ, 4)) / (8 * pow(r, 7));
     const aijPost = (1 - ((14 * pow(k, 2)) / pow(r, 2))
         + ((21 * pow(k, 4)) / pow(r, 4)));
     const akPost = (5 - ((70 * pow(k, 2)) / (3 * pow(r, 2))) +
@@ -65,7 +53,7 @@ export function j4Effect(position: Vector): Vector {
 
 export function gravityEarth(position: Vector): Vector {
     const dist = position.magnitude();
-    return position.scale(-EARTH_MU / Math.pow(dist, 3));
+    return position.scale(-c.EARTH_MU / Math.pow(dist, 3));
 }
 
 export function gravityMoon(epoch: Epoch, position: Vector): Vector {
@@ -75,7 +63,7 @@ export function gravityMoon(epoch: Epoch, position: Vector): Vector {
     const bNum = rMoon;
     const bDen = Math.pow(rMoon.magnitude(), 3);
     const grav = aNum.scale(1 / aDen).add(bNum.scale(-1 / bDen));
-    return grav.scale(MOON_MU);
+    return grav.scale(c.MOON_MU);
 }
 
 export function gravitySun(epoch: Epoch, position: Vector): Vector {
@@ -85,7 +73,7 @@ export function gravitySun(epoch: Epoch, position: Vector): Vector {
     const bNum = rSun;
     const bDen = Math.pow(rSun.magnitude(), 3);
     const grav = aNum.scale(1 / aDen).add(bNum.scale(-1 / bDen));
-    return grav.scale(SUN_MU);
+    return grav.scale(c.SUN_MU);
 }
 
 function shadowFactor(rSat: Vector, rSun: Vector): number {
@@ -93,12 +81,12 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
     const d = (Math.pow(rSat.magnitude(), 2)
         + Math.pow(rSun.magnitude(), 2) - 2 * rSat.dot(rSun));
     const tMin = (n / d);
-    const c = ((1 - tMin) * Math.pow(rSat.magnitude(), 2)
+    const cVal = ((1 - tMin) * Math.pow(rSat.magnitude(), 2)
         + rSat.dot(rSun) * tMin);
     if (tMin < 0 || tMin > 1) {
         return 1;
     }
-    if (c >= Math.pow(EARTH_RAD_EQ, 2)) {
+    if (cVal >= Math.pow(c.EARTH_RAD_EQ, 2)) {
         return 1;
     }
     return 0;
@@ -112,9 +100,9 @@ export function solarRadiation(epoch: Epoch, position: Vector,
     const sFactor = shadowFactor(rSat, rSun);
     const rDist = rSat.add(rSun.scale(-1));
     const fScale = (
-        (SOLAR_FLUX * Math.pow(ASTRONOMICAL_UNIT, 2)
+        (c.SOLAR_FLUX * Math.pow(c.ASTRONOMICAL_UNIT, 2)
             * reflect * (area / 1000.0)) /
-        (mass * Math.pow(rDist.magnitude(), 2) * SPEED_OF_LIGHT)
+        (mass * Math.pow(rDist.magnitude(), 2) * c.SPEED_OF_LIGHT)
     );
     const unitVec = rDist.normalize();
     return unitVec.scale(sFactor * fScale);
@@ -122,7 +110,7 @@ export function solarRadiation(epoch: Epoch, position: Vector,
 
 export function atmosphericDrag(position: Vector, velocity: Vector,
                                 mass = 1000.0, area = 1.0, drag = 2.2): Vector {
-    const rotVel = EARTH_ROTATION.cross(position);
+    const rotVel = c.EARTH_ROTATION.cross(position);
     const vRel = velocity.add(rotVel.scale(-1)).scale(1000);
     const vMag = vRel.magnitude();
     const density = atmosphericDensity(position);
