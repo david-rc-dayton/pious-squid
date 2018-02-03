@@ -1,5 +1,6 @@
 .gitignore
 .vscode
+bundle
 dist/test
 src
 tsconfig.json

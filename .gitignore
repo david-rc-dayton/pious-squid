@@ -1,4 +1,5 @@
 .vscode
+bundle
 dist
 node_modules
 unholy-octopus-*.tgz
