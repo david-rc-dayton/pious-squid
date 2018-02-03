@@ -1,17 +1,26 @@
 import { EARTH_ECC_SQ, EARTH_RAD_EQ } from "../constants";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 
+/** Class representing Geodetic (LLA) coordinates. */
 export class Geodetic {
     public latitude: number;
     public longitude: number;
     public altitude: number;
 
+    /**
+     * Create a new Geodetic object.
+     *
+     * @param latitude geodetic latitude, in radians
+     * @param longitude geodetic longitude, in radians
+     * @param altitude geodetic altitude, in kilometers
+     */
     constructor(latitude: number, longitude: number, altitude: number) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
     }
 
+    /** Convert to the Earth Centered Earth Fixed (ECEF) coordinate frame. */
     public toECEF(): EarthCenteredFixed {
         const { latitude, longitude, altitude } = this;
         const sLat = Math.sin(latitude);

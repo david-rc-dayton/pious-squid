@@ -13,6 +13,8 @@ export { Epoch } from "./epoch";
 import * as forcesImport from "./forces";
 export const forces = forcesImport;
 
+export { Geodetic } from "./coordinates/geodetic";
+
 import * as operationsImport from "./operations";
 export const operations = operationsImport;
 
