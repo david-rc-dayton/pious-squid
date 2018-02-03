@@ -15,6 +15,8 @@ export const forces = forcesImport;
 
 export { Geodetic } from "./coordinates/geodetic";
 
+export { J2000 } from "./coordinates/j2000";
+
 import * as operationsImport from "./operations";
 export const operations = operationsImport;
 

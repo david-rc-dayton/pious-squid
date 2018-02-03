@@ -5,11 +5,23 @@ import { Vector } from "../vector";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
 import { Keplerian } from "./keplerian";
 
+/** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 {
     public epoch: Epoch;
     public position: Vector;
     public velocity: Vector;
 
+    /**
+     * Create a new J2000 object.
+     *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
+     * @param ri i-axis position, in kilometers
+     * @param rj j-axis position, in kilometers
+     * @param rk j-axis position, in kilometers
+     * @param vi i-axis velocity, in kilometers per second
+     * @param vj j-axis velocity, in kilometers per second
+     * @param vk k-axis velocity, in kilometers per second
+     */
     constructor(millis: number, ri: number, rj: number, rk: number,
                 vi: number, vj: number, vk: number) {
         this.epoch = new Epoch(millis);
@@ -17,6 +29,7 @@ export class J2000 {
         this.velocity = new Vector(vi, vj, vk);
     }
 
+    /** Convert to the Earth Centered Inertial (ECI) coordinate frame. */
     public toECI(): EarthCenteredInertial {
         const { epoch, position, velocity } = this;
         const [zeta, theta, zed] = precession(epoch);
@@ -31,9 +44,7 @@ export class J2000 {
             ri, rj, rk, vi, vj, vk);
     }
 
-    /**
-     * Convert the J2000 coordinate object to a new Keplerian coordinate object.
-     */
+    /** Convert to the Keplerian coordinate frame. */
     public toKeplerian(): Keplerian {
         const { epoch, position, velocity } = this;
         const [R, V] = [position.magnitude(), velocity.magnitude()];
