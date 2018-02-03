@@ -1,9 +1,12 @@
-import * as operationsImport from "./operations";
-export const operations = operationsImport;
+import * as constantsImport from "./constants";
+export const constants = constantsImport;
+
+export { Epoch } from "./epoch";
 
 import * as forcesImport from "./forces";
 export const forces = forcesImport;
 
-export { Vector } from "./vector";
+import * as operationsImport from "./operations";
+export const operations = operationsImport;
 
-export { Epoch } from "./epoch";
+export { Vector } from "./vector";
