@@ -5,7 +5,7 @@ import { Vector } from "../vector";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
 import { Geodetic } from "./geodetic";
 import { Spherical } from "./spherical";
-import { Topocentric } from "./topocentric";
+import { TopocentricHorizon } from "./topocentric-horizon";
 
 /** Class representing Earth Centered Earth Fixed (ECEF) coordinates. */
 export class EarthCenteredFixed {
@@ -83,7 +83,7 @@ export class EarthCenteredFixed {
      *
      * @param observer coordinate frame origin
      */
-    public toTopocentric(observer: Geodetic): Topocentric {
+    public toTopocentric(observer: Geodetic): TopocentricHorizon {
         const { latitude, longitude } = observer;
         const { sin, cos } = Math;
         const [oX, oY, oZ] = observer.toECEF().position.state;
@@ -94,6 +94,6 @@ export class EarthCenteredFixed {
         const e = (-sin(longitude) * rX) + (cos(longitude) * rY);
         const z = (cos(latitude) * cos(longitude) * rX)
             + (cos(latitude) * sin(longitude) * rY) + (sin(latitude) * rZ);
-        return new Topocentric(s, e, z);
+        return new TopocentricHorizon(s, e, z);
     }
 }

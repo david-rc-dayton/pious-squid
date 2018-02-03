@@ -26,6 +26,6 @@ export const operations = operationsImport;
 
 export { Spherical } from "./coordinates/spherical";
 
-export { Topocentric } from "./coordinates/topocentric";
+export { TopocentricHorizon } from "./coordinates/topocentric-horizon";
 
 export { Vector } from "./vector";
