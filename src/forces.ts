@@ -5,6 +5,7 @@ import { Vector } from "./vector";
 
 /**
  * Calculate acceleration in km/s^2 due to J2 effect.
+ *
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function j2Effect(position: Vector): Vector {
@@ -24,6 +25,7 @@ export function j2Effect(position: Vector): Vector {
 
 /**
  * Calculate acceleration in km/s^2 due to J3 effect.
+ *
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function j3Effect(position: Vector): Vector {
@@ -44,6 +46,7 @@ export function j3Effect(position: Vector): Vector {
 
 /**
  * Calculate acceleration in km/s^2 due to J4 effect.
+ *
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function j4Effect(position: Vector): Vector {
@@ -65,6 +68,7 @@ export function j4Effect(position: Vector): Vector {
 
 /**
  * Calculate acceleration in km/s^2 due Earth's gravity.
+ *
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function gravityEarth(position: Vector): Vector {
@@ -74,6 +78,7 @@ export function gravityEarth(position: Vector): Vector {
 
 /**
  * Calculate acceleration in km/s^2 due the Moon's gravity.
+ *
  * @param epoch satellite state epoch
  * @param position satellite J2000 position 3-vector, in kilometers
  */
@@ -89,6 +94,7 @@ export function gravityMoon(epoch: Epoch, position: Vector): Vector {
 
 /**
  * Calculate satellite acceleration in km/s^2 due the Sun's gravity.
+ *
  * @param epoch satellite state epoch
  * @param position satellite J2000 position 3-vector, in kilometers
  */
@@ -105,6 +111,7 @@ export function gravitySun(epoch: Epoch, position: Vector): Vector {
 /**
  * Return 1 if the the satellite has line of sight with the Sun, otherwise
  * return 0.
+ *
  * @param rSat satellite J2000 position 3-vector, in kilometers
  * @param rSun Sun J2000 position 3-vector, in kilometers
  */
@@ -126,6 +133,7 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
 
 /**
  * Calculate acceleration in km/s^2 due to solar radiation pressure.
+ *
  * @param epoch satellite state epoch
  * @param position satellite J2000 position 3-vector, in kilometers
  * @param mass satellite mass, in kilograms
@@ -150,6 +158,7 @@ export function solarRadiation(epoch: Epoch, position: Vector,
 
 /**
  * Calculate acceleration in km/s^2 due to atmospheric drag.
+ *
  * @param position satellite J2000 position 3-vector, in kilometers
  * @param velocity satellite J2000 velocity 3-vector, in kilometers per second
  * @param mass satellite mass, in kilograms
@@ -170,6 +179,7 @@ export function atmosphericDrag(position: Vector, velocity: Vector,
 /**
  * Calculate the velocity and acceleration, in km/s and km/s^2 of a satellite
  * due to orbital perturbations.
+ *
  * @param epoch satellite state epoch
  * @param posVel satellite J2000 position and velocity 6-vector, in km and km/s
  */

@@ -5,3 +5,5 @@ import * as forcesImport from "./forces";
 export const forces = forcesImport;
 
 export { Vector } from "./vector";
+
+export { Epoch } from "./epoch";

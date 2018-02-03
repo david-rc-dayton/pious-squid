@@ -1,5 +1,6 @@
 /**
  * Calculate the factorial of a number.
+ *
  * @param n a positive integer
  */
 export function factorial(n: number): number {
@@ -11,9 +12,11 @@ export function factorial(n: number): number {
 }
 
 /**
- * Evaluate a polynomial.
+ * Evaluate a polynomial given a variable and its coefficients. Exponents are
+ * implied to start at zero.
+ *
  * @param x variable
- * @param coeffs coefficients, from lowest to highest starting at exponent zero
+ * @param coeffs coefficients, from lowest to highest
  */
 export function evalPoly(x: number, coeffs: number[]) {
     let output = 0;
@@ -25,6 +28,7 @@ export function evalPoly(x: number, coeffs: number[]) {
 
 /**
  * Return the sign of the number, 1 if positive, -1 if negative, 0 if zero.
+ *
  * @param n a number
  */
 export function sign(n: number): number {
