@@ -14,7 +14,7 @@ export class Epoch {
     /**
      * Create a new Epoch object.
      *
-     * @param millis milliseconds since 1 January 1970, 00:00 UTC.
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
      */
     constructor(millis: number) {
         this.unix = millis / 1000;

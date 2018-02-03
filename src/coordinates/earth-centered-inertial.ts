@@ -17,11 +17,6 @@ export class EarthCenteredInertial {
         this.velocity = new Vector(vi, vj, vk);
     }
 
-    public getState(): number[] {
-        const { position, velocity } = this;
-        return position.concat(velocity).state;
-    }
-
     public toECEF(): EarthCenteredFixed {
         const { epoch, position, velocity } = this;
         const [dLon, dObliq, mObliq] = nutation(epoch);

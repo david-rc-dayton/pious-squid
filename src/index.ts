@@ -4,6 +4,8 @@ export const bodies = bodiesImport;
 import * as constantsImport from "./constants";
 export const constants = constantsImport;
 
+export { EarthCenteredFixed } from "./coordinates/earth-centered-fixed";
+
 export { Epoch } from "./epoch";
 
 import * as forcesImport from "./forces";

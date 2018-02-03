@@ -17,11 +17,6 @@ export class J2000 {
         this.velocity = new Vector(vi, vj, vk);
     }
 
-    public getState(): number[] {
-        const { position, velocity } = this;
-        return position.concat(velocity).state;
-    }
-
     public toECI(): EarthCenteredInertial {
         const { epoch, position, velocity } = this;
         const [zeta, theta, zed] = precession(epoch);

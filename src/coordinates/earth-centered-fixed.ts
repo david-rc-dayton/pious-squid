@@ -7,21 +7,32 @@ import { Geodetic } from "./geodetic";
 import { Spherical } from "./spherical";
 import { Topocentric } from "./topocentric";
 
+/** Class representing Earth Centered Earth Fixed (ECEF) coordinates. */
 export class EarthCenteredFixed {
     public position: Vector;
     public velocity: Vector;
 
+    /**
+     * Create a new EarthCenteredFixed object.
+     *
+     * @param rx x-axis position, in kilometers
+     * @param ry y-axis position, in kilometers
+     * @param rz z-axis position, in kilometers
+     * @param vx x-axis velocity, in kilometers per second
+     * @param vy x-axis velocity, in kilometers per second
+     * @param vz x-axis velocity, in kilometers per second
+     */
     constructor(rx: number, ry: number, rz: number,
                 vx = 0, vy = 0, vz = 0) {
         this.position = new Vector(rx, ry, rz);
         this.velocity = new Vector(vx, vy, vz);
     }
 
-    public getState(): number[] {
-        const { position, velocity } = this;
-        return position.concat(velocity).state;
-    }
-
+    /**
+     * Convert to the Earth Centered Inertial (ECI) coordinate frame.
+     *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
+     */
     public toECI(millis: number): EarthCenteredInertial {
         const { position, velocity } = this;
         const epoch = new Epoch(millis);
@@ -36,6 +47,7 @@ export class EarthCenteredFixed {
         return new EarthCenteredInertial(millis, ri, rj, rk, vi, vj, vk);
     }
 
+    /** Convert to the Geodetic (LLA) coordinate frame. */
     public toGeodetic(): Geodetic {
         const [x, y, z] = this.position.state;
         const sma = EARTH_RAD_EQ;
@@ -55,6 +67,7 @@ export class EarthCenteredFixed {
         return new Geodetic(lat, lon, alt);
     }
 
+    /** Convert to the Spherical coordinate frame. */
     public toSpherical(): Spherical {
         const [x, y, z] = this.position.state;
         const radius = Math.sqrt(x * x + y * y + z * z);
@@ -63,6 +76,11 @@ export class EarthCenteredFixed {
         return new Spherical(radius, inclination, azimuth);
     }
 
+    /**
+     * Convert to a Topocentric coordinate frame relative to an observer.
+     *
+     * @param observer coordinate frame origin
+     */
     public toTopocentric(observer: Geodetic): Topocentric {
         const { latitude, longitude } = observer;
         const { sin, cos } = Math;
