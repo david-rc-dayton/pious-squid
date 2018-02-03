@@ -6,14 +6,14 @@ export class Epoch {
         return new Epoch(new Date().getTime());
     }
 
-    public epoch: number;
+    public unix: number;
 
     constructor(millis: number) {
-        this.epoch = millis / 1000;
+        this.unix = millis / 1000;
     }
 
     public toDate(): Date {
-        return new Date(this.epoch * 1000);
+        return new Date(this.unix * 1000);
     }
 
     public toMillis(): number {
@@ -25,11 +25,11 @@ export class Epoch {
     }
 
     public roll(seconds: number): Epoch {
-        return new Epoch((this.epoch + seconds) * 1000);
+        return new Epoch((this.unix + seconds) * 1000);
     }
 
     public toJulianDate(): number {
-        return (this.epoch / 86400) + 2440587.5;
+        return (this.unix / 86400) + 2440587.5;
     }
 
     public getLeapSecondOffset(): number {

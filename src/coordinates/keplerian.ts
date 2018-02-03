@@ -24,14 +24,15 @@ export class Keplerian {
     }
 
     public toJ2K(): J2000 {
-        const { a, e, i, o, w, v } = this;
-        const rPqw = new Vector(Math.cos(v), Math.sin(v), 0)
-            .scale((a * (1 - Math.pow(e, 2))) / (1 + e * Math.cos(v)));
-        const vPqw = new Vector(-Math.sin(v), e + Math.cos(v), 0)
-            .scale(Math.sqrt(EARTH_MU / (a * (1 - Math.pow(e, 2)))));
+        const { epoch, a, e, i, o, w, v } = this;
+        const { cos, sin, pow, sqrt } = Math;
+        const rPqw = new Vector(cos(v), sin(v), 0)
+            .scale((a * (1 - pow(e, 2))) / (1 + e * cos(v)));
+        const vPqw = new Vector(-sin(v), e + cos(v), 0)
+            .scale(sqrt(EARTH_MU / (a * (1 - pow(e, 2)))));
         const rJ2k = rPqw.rot3(-w).rot1(-i).rot3(-o);
         const vJ2k = vPqw.rot3(-w).rot1(-i).rot3(-o);
         const [ri, rj, rk, vi, vj, vk] = rJ2k.concat(vJ2k).state;
-        return new J2000(this.epoch.toMillis(), ri, rj, rk, vi, vj, vk);
+        return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk);
     }
 }

@@ -16,14 +16,13 @@ import { Epoch } from "./epoch";
 import { Vector } from "./vector";
 
 export function j2Effect(position: Vector): Vector {
-    const i = position.state[0];
-    const j = position.state[1];
-    const k = position.state[2];
+    const pow = Math.pow;
+    const [i, j, k] = position.state;
     const r = position.magnitude();
     const aPre = -((3 * EARTH_J2 * EARTH_MU
-        * Math.pow(EARTH_RAD_EQ, 2)) / (2 * Math.pow(r, 5)));
-    const aijPost = 1 - ((5 * Math.pow(k, 2)) / Math.pow(r, 2));
-    const akPost = 3 - ((5 * Math.pow(k, 2)) / Math.pow(r, 2));
+        * pow(EARTH_RAD_EQ, 2)) / (2 * pow(r, 5)));
+    const aijPost = 1 - ((5 * pow(k, 2)) / pow(r, 2));
+    const akPost = 3 - ((5 * pow(k, 2)) / pow(r, 2));
     return new Vector(
         aPre * i * aijPost,
         aPre * j * aijPost,
@@ -32,16 +31,14 @@ export function j2Effect(position: Vector): Vector {
 }
 
 export function j3Effect(position: Vector): Vector {
-    const i = position.state[0];
-    const j = position.state[1];
-    const k = position.state[2];
+    const pow = Math.pow;
+    const [i, j, k] = position.state;
     const r = position.magnitude();
     const aPre = -((5 * EARTH_J3 * EARTH_MU
-        * Math.pow(EARTH_RAD_EQ, 3)) / (2 * Math.pow(r, 7)));
-    const aijPost = (3 * k) - ((7 * Math.pow(k, 3)) / Math.pow(r, 2));
-    const akPost = ((6 * Math.pow(k, 2))
-        - ((7 * Math.pow(k, 4)) / Math.pow(r, 2))
-        - ((3 / 5) * Math.pow(r, 2)));
+        * pow(EARTH_RAD_EQ, 3)) / (2 * pow(r, 7)));
+    const aijPost = (3 * k) - ((7 * pow(k, 3)) / pow(r, 2));
+    const akPost = ((6 * pow(k, 2)) - ((7 * pow(k, 4)) / pow(r, 2))
+        - ((3 / 5) * pow(r, 2)));
     return new Vector(
         aPre * i * aijPost,
         aPre * j * aijPost,
@@ -50,16 +47,15 @@ export function j3Effect(position: Vector): Vector {
 }
 
 export function j4Effect(position: Vector): Vector {
-    const i = position.state[0];
-    const j = position.state[1];
-    const k = position.state[2];
+    const pow = Math.pow;
+    const [i, j, k] = position.state;
     const r = position.magnitude();
     const aPre = (15 * EARTH_J4 * EARTH_MU
-        * Math.pow(EARTH_RAD_EQ, 4)) / (8 * Math.pow(r, 7));
-    const aijPost = (1 - ((14 * Math.pow(k, 2)) / Math.pow(r, 2))
-        + ((21 * Math.pow(k, 4)) / Math.pow(r, 4)));
-    const akPost = (5 - ((70 * Math.pow(k, 2)) / (3 * Math.pow(r, 2))) +
-        ((21 * Math.pow(k, 4)) / Math.pow(r, 4)));
+        * pow(EARTH_RAD_EQ, 4)) / (8 * pow(r, 7));
+    const aijPost = (1 - ((14 * pow(k, 2)) / pow(r, 2))
+        + ((21 * pow(k, 4)) / pow(r, 4)));
+    const akPost = (5 - ((70 * pow(k, 2)) / (3 * pow(r, 2))) +
+        ((21 * pow(k, 4)) / pow(r, 4)));
     return new Vector(
         aPre * i * aijPost,
         aPre * j * aijPost,

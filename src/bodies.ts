@@ -75,7 +75,7 @@ export function atmosphericDensity(position: Vector): number {
 }
 
 export function moonPosition(epoch: Epoch): Vector {
-    const [sin, cos] = [Math.sin, Math.cos];
+    const { sin, cos } = Math;
     const jCent = epoch.toJulianCenturies();
     const lamEcl = ((218.32 +
         481267.883 * jCent +
@@ -108,15 +108,15 @@ export function moonPosition(epoch: Epoch): Vector {
 }
 
 export function sunPosition(epoch: Epoch): Vector {
-    const [sin, cos] = [Math.sin, Math.cos];
+    const { sin, cos } = Math;
     const jCent = epoch.toJulianCenturies();
     const lamSun = (280.460 + 36000.770 * jCent) % 360;
     const mSun = ((357.5277233 + 35999.05034 * jCent) % 360) * DEG2RAD;
     const lamEc = ((lamSun + 1.914666471 * sin(mSun)
         + 0.019994643 * sin(2 * mSun)) % 360) * DEG2RAD;
     const obliq = (23.439291 - 0.0130042 * jCent) * DEG2RAD;
-    const rMag =
-        (1.000140612 - 0.016708617 * cos(mSun) - 0.000139589 * cos(2 * mSun));
+    const rMag = (1.000140612 - 0.016708617 * cos(mSun)
+        - 0.000139589 * cos(2 * mSun));
     return new Vector(
         rMag * cos(lamEc) * ASTRONOMICAL_UNIT,
         rMag * cos(obliq) * sin(lamEc) * ASTRONOMICAL_UNIT,

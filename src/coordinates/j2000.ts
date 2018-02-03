@@ -18,19 +18,21 @@ export class J2000 {
     }
 
     public getState(): number[] {
-        return this.position.concat(this.velocity).state;
+        const { position, velocity } = this;
+        return position.concat(velocity).state;
     }
 
     public toECI(): EarthCenteredInertial {
-        const [zeta, theta, zed] = precession(this.epoch);
-        const [dLon, dObliq, mObliq] = nutation(this.epoch);
+        const { epoch, position, velocity } = this;
+        const [zeta, theta, zed] = precession(epoch);
+        const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
-        const rmod = this.position.rot3(-zeta).rot2(theta).rot3(-zed);
-        const vmod = this.velocity.rot3(-zeta).rot2(theta).rot3(-zed);
+        const rmod = position.rot3(-zeta).rot2(theta).rot3(-zed);
+        const vmod = velocity.rot3(-zeta).rot2(theta).rot3(-zed);
         const rtod = rmod.rot1(mObliq).rot3(-dLon).rot1(-obliq);
         const vtod = vmod.rot1(mObliq).rot3(-dLon).rot1(-obliq);
         const [ri, rj, rk, vi, vj, vk] = rtod.concat(vtod).state;
-        return new EarthCenteredInertial(this.epoch.toMillis(),
+        return new EarthCenteredInertial(epoch.toMillis(),
             ri, rj, rk, vi, vj, vk);
     }
 
@@ -38,14 +40,15 @@ export class J2000 {
      * Convert the J2000 coordinate object to a new Keplerian coordinate object.
      */
     public toKeplerian(): Keplerian {
-        const [R, V] = [this.position.magnitude(), this.velocity.magnitude()];
+        const { epoch, position, velocity } = this;
+        const [R, V] = [position.magnitude(), velocity.magnitude()];
         const energy = ((V * V) / 2) - (EARTH_MU / R);
         const a = -(EARTH_MU / (2 * energy));
-        const eVecA = this.position.scale((V * V) - (EARTH_MU / R));
-        const eVecB = this.velocity.scale(this.position.dot(this.velocity));
+        const eVecA = position.scale((V * V) - (EARTH_MU / R));
+        const eVecB = velocity.scale(position.dot(velocity));
         const eVec = eVecA.add(eVecB.scale(-1)).scale(1 / EARTH_MU);
         const e = eVec.magnitude();
-        const h = this.position.cross(this.velocity);
+        const h = position.cross(velocity);
         const i = Math.acos(h.state[2] / h.magnitude()) % 180;
         const n = new Vector(0, 0, 1).cross(h);
         let o = Math.acos(n.state[0] / n.magnitude());
@@ -56,10 +59,10 @@ export class J2000 {
         if (eVec.state[2] < 0) {
             w = 2 * Math.PI - w;
         }
-        let v = Math.acos(eVec.dot(this.position) / (e * R));
-        if (this.position.dot(this.velocity) < 0) {
+        let v = Math.acos(eVec.dot(position) / (e * R));
+        if (position.dot(velocity) < 0) {
             v = 2 * Math.PI - v;
         }
-        return new Keplerian(this.epoch, a, e, i, o, w, v);
+        return new Keplerian(epoch, a, e, i, o, w, v);
     }
 }

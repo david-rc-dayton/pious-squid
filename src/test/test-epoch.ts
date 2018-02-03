@@ -7,7 +7,7 @@ describe("Epoch", () => {
     describe("#roll()", () => {
         it("should change the epoch time", () => {
             const epRoll = testEpoch.roll(86400);
-            assert.equal(epRoll.epoch, 1498633593.584);
+            assert.equal(epRoll.unix, 1498633593.584);
         });
     });
 

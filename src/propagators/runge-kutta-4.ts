@@ -17,8 +17,8 @@ function rungeKutta4(step: number, state: J2000): J2000 {
 
 export function propagate(state: J2000, epoch: Epoch, step = 60): J2000 {
     let outState = state;
-    while (outState.epoch.epoch !== epoch.epoch) {
-        const delta = epoch.epoch - state.epoch.epoch;
+    while (outState.epoch.unix !== epoch.unix) {
+        const delta = epoch.unix - state.epoch.unix;
         const s = sign(delta);
         const stepNorm = Math.min(Math.abs(delta), step) * s;
         outState = rungeKutta4(stepNorm, state);

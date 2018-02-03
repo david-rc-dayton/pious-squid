@@ -1,5 +1,4 @@
 import { EARTH_ECC_SQ, EARTH_RAD_EQ } from "../constants";
-import { Vector } from "../vector";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 
 export class Geodetic {
@@ -14,14 +13,13 @@ export class Geodetic {
     }
 
     public toECEF() {
-        const sLat = Math.sin(this.latitude);
-        const cLat = Math.cos(this.latitude);
+        const { latitude, longitude, altitude } = this;
+        const sLat = Math.sin(latitude);
+        const cLat = Math.cos(latitude);
         const nVal = EARTH_RAD_EQ / Math.sqrt(1 - EARTH_ECC_SQ * sLat * sLat);
-        const [rx, ry, rz] = new Vector(
-            (nVal + this.altitude) * cLat * Math.cos(this.longitude),
-            (nVal + this.altitude) * cLat * Math.sin(this.longitude),
-            (nVal * (1 - EARTH_ECC_SQ) + this.altitude) * sLat,
-        ).state;
+        const rx = (nVal + altitude) * cLat * Math.cos(longitude);
+        const ry = (nVal + altitude) * cLat * Math.sin(longitude);
+        const rz = (nVal * (1 - EARTH_ECC_SQ) + altitude) * sLat;
         return new EarthCenteredFixed(rx, ry, rz);
     }
 }

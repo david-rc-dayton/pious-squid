@@ -22,7 +22,7 @@ describe("J2000", () => {
     describe("#.toKeplerian()", () => {
         it("should convert to Keplerian elements", () => {
             const { epoch, a, e, i, o, w, v } = TEST_J2K.toKeplerian();
-            assert.equal(epoch.epoch, TEST_J2K.epoch.epoch);
+            assert.equal(epoch.unix, TEST_J2K.epoch.unix);
             assert.equal(a, 13360.642770119148);
             assert.equal(e, 0.22049791840816513);
             assert.equal(i * RAD2DEG, 39.93754927254844);
@@ -37,7 +37,7 @@ describe("Keplerian", () => {
     describe("#.toJ2K()", () => {
         it("should convert to J2000 cartesian coordinates", () => {
             const { epoch, position, velocity } = TEST_KEPLER.toJ2K();
-            assert.equal(epoch.epoch, TEST_KEPLER.epoch.epoch);
+            assert.equal(epoch.unix, TEST_KEPLER.epoch.unix);
             assert.deepEqual(position.state, [
                 8228, 389.0000000000039, 6888.000000000001,
             ]);

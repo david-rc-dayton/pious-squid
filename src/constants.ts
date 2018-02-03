@@ -1,10 +1,5 @@
 import { Vector } from "./vector";
 
-/** Type representation for a line of IAU 1980 coefficients. */
-export type IAU_COEFF = [
-  number, number, number, number, number, number, number, number, number
-];
-
 /**  Unit for converting degrees to radians. */
 export const DEG2RAD = Math.PI / 180;
 
@@ -67,7 +62,7 @@ export const SPEED_OF_LIGHT = 299792.458;
  * Coefficients for the exponential atmospheric density model. Contains the
  * base altitude (km), nominal density (kg/m^3), and scale height (km).
  */
-export const EXP_ATMOSPHERE: Array<[number, number, number]> = [
+export const EXP_ATMOSPHERE = [
   [0, 1.225, 7.249],
   [25, 3.899e-2, 6.349],
   [30, 1.774e-2, 6.682],
@@ -99,7 +94,7 @@ export const EXP_ATMOSPHERE: Array<[number, number, number]> = [
 ];
 
 /** Coefficients for calculating Earth nutation. */
-export const IAU_1980: IAU_COEFF[] = [
+export const IAU_1980 = [
   [0, 0, 0, 0, 1, -171996.0, -174.2, 92025.0, 8.9],
   [0, 0, 2, -2, 2, -13187.0, -1.6, 5736.0, -3.1],
   [0, 0, 2, 0, 2, -2274.0, -0.2, 977.0, -0.5],
@@ -126,7 +121,7 @@ export const IAU_1980: IAU_COEFF[] = [
  * Historical list of leap seconds. Contains a tuple of the Julian Date, and
  * seconds offset.
  */
-export const LEAP_SECONDS: Array<[number, number]> = [
+export const LEAP_SECONDS = [
   [2437300.5, 1.4228180],
   [2437512.5, 1.3728180],
   [2437665.5, 1.8458580],

@@ -18,15 +18,17 @@ export class EarthCenteredInertial {
     }
 
     public getState(): number[] {
-        return this.position.concat(this.velocity).state;
+        const { position, velocity } = this;
+        return position.concat(velocity).state;
     }
 
     public toECEF(): EarthCenteredFixed {
-        const [dLon, dObliq, mObliq] = nutation(this.epoch);
+        const { epoch, position, velocity } = this;
+        const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
-        const ast = this.epoch.getGMSTAngle() + dLon * Math.cos(obliq);
-        const rPef = this.position.rot3(ast);
-        let vPef = this.velocity.rot3(ast);
+        const ast = epoch.getGMSTAngle() + dLon * Math.cos(obliq);
+        const rPef = position.rot3(ast);
+        let vPef = velocity.rot3(ast);
         const rotVec = EARTH_ROTATION.cross(rPef);
         vPef = vPef.add(rotVec.scale(-1));
         const [rx, ry, rz, vx, vy, vz] = rPef.concat(vPef).state;
@@ -34,14 +36,15 @@ export class EarthCenteredInertial {
     }
 
     public toJ2K(): J2000 {
-        const [zeta, theta, zed] = precession(this.epoch);
-        const [dLon, dObliq, mObliq] = nutation(this.epoch);
+        const { epoch, position, velocity } = this;
+        const [zeta, theta, zed] = precession(epoch);
+        const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
-        const rmod = this.position.rot1(obliq).rot3(dLon).rot1(-mObliq);
-        const vmod = this.velocity.rot1(obliq).rot3(dLon).rot1(-mObliq);
+        const rmod = position.rot1(obliq).rot3(dLon).rot1(-mObliq);
+        const vmod = velocity.rot1(obliq).rot3(dLon).rot1(-mObliq);
         const rj2k = rmod.rot3(zed).rot2(-theta).rot3(zeta);
         const vj2k = vmod.rot3(zed).rot2(-theta).rot3(zeta);
         const [ri, rj, rk, vi, vj, vk] = rj2k.concat(vj2k).state;
-        return new J2000(this.epoch.toMillis(), ri, rj, rk, vi, vj, vk);
+        return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk);
     }
 }

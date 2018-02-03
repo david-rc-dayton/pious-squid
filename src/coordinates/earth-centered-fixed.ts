@@ -18,17 +18,19 @@ export class EarthCenteredFixed {
     }
 
     public getState(): number[] {
-        return this.position.concat(this.velocity).state;
+        const { position, velocity } = this;
+        return position.concat(velocity).state;
     }
 
     public toECI(millis: number): EarthCenteredInertial {
+        const { position, velocity } = this;
         const epoch = new Epoch(millis);
         const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
         const ast = epoch.getGMSTAngle() + dLon * Math.cos(obliq);
-        const rotVec = EARTH_ROTATION.cross(this.position);
-        const vpef = this.velocity.add(rotVec);
-        const rtod = this.position.rot3(-ast);
+        const rotVec = EARTH_ROTATION.cross(position);
+        const vpef = velocity.add(rotVec);
+        const rtod = position.rot3(-ast);
         const vtod = vpef.rot3(-ast);
         const [ri, rj, rk, vi, vj, vk] = rtod.concat(vtod).state;
         return new EarthCenteredInertial(millis, ri, rj, rk, vi, vj, vk);
@@ -63,19 +65,15 @@ export class EarthCenteredFixed {
 
     public toTopocentric(observer: Geodetic): Topocentric {
         const { latitude, longitude } = observer;
+        const { sin, cos } = Math;
         const [oX, oY, oZ] = observer.toECEF().position.state;
         const [tX, tY, tZ] = this.position.state;
         const [rX, rY, rZ] = [tX - oX, tY - oY, tZ - oZ];
-        const s = ((Math.sin(latitude) * Math.cos(longitude) * rX) +
-            (Math.sin(latitude) * Math.sin(longitude) * rY)) -
-            (Math.cos(latitude) * rZ);
-        const e =
-            (-Math.sin(longitude) * rX) +
-            (Math.cos(longitude) * rY);
-        const z =
-            (Math.cos(latitude) * Math.cos(longitude) * rX) +
-            (Math.cos(latitude) * Math.sin(longitude) * rY) +
-            (Math.sin(latitude) * rZ);
+        const s = ((sin(latitude) * cos(longitude) * rX)
+            + (sin(latitude) * sin(longitude) * rY)) - (cos(latitude) * rZ);
+        const e = (-sin(longitude) * rX) + (cos(longitude) * rY);
+        const z = (cos(latitude) * cos(longitude) * rX)
+            + (cos(latitude) * sin(longitude) * rY) + (sin(latitude) * rZ);
         return new Topocentric(s, e, z);
     }
 }
