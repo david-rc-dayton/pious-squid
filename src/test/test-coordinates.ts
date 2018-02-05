@@ -3,11 +3,11 @@ import { DEG2RAD, RAD2DEG } from "../constants";
 import { EarthCenteredFixed } from "../coordinates/earth-centered-fixed";
 import { Geodetic } from "../coordinates/geodetic";
 import { J2000 } from "../coordinates/j2000";
-import { Keplerian } from "../coordinates/keplerian";
+import { KeplerianElements } from "../coordinates/keplerian-elements";
 
 const TEST_J2K = new J2000(0, 8228, 389, 6888, -0.7, 6.6, -0.6);
 
-const TEST_KEPLER = new Keplerian(
+const TEST_KEPLER = new KeplerianElements(
     0,
     13360.642770119148,
     0.22049791840816513,
@@ -18,9 +18,9 @@ const TEST_KEPLER = new Keplerian(
 );
 
 describe("J2000", () => {
-    describe("#.toKeplerian()", () => {
+    describe("#.toKeplerianElements()", () => {
         it("should convert to Keplerian elements", () => {
-            const { epoch, a, e, i, o, w, v } = TEST_J2K.toKeplerian();
+            const { epoch, a, e, i, o, w, v } = TEST_J2K.toKeplerianElements();
             assert.equal(epoch.unix, TEST_J2K.epoch.unix);
             assert.equal(a, 13360.642770119148);
             assert.equal(e, 0.22049791840816513);
@@ -32,7 +32,7 @@ describe("J2000", () => {
     });
 });
 
-describe("Keplerian", () => {
+describe("KeplerianElements", () => {
     describe("#.toJ2K()", () => {
         it("should convert to J2000 cartesian coordinates", () => {
             const { epoch, position, velocity } = TEST_KEPLER.toJ2K();

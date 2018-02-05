@@ -1,5 +1,8 @@
 import { Vector } from "./vector";
 
+/** Value of 2 times Pi. */
+export const TWO_PI = Math.PI * 2;
+
 /**  Unit for converting degrees to radians. */
 export const DEG2RAD = Math.PI / 180;
 

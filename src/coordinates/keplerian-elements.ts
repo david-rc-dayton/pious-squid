@@ -3,8 +3,8 @@ import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { J2000 } from "./j2000";
 
-/** Class representing Keplerian elements. */
-export class Keplerian {
+/** Class representing Keplerian orbital elements. */
+export class KeplerianElements {
     /** Satellite state epoch. */
     public epoch: Epoch;
     /** Semimajor axis, in kilometers. */
@@ -54,5 +54,15 @@ export class Keplerian {
         const vJ2k = vPqw.rot3(-w).rot1(-i).rot3(-o);
         const [ri, rj, rk, vi, vj, vk] = rJ2k.concat(vJ2k).state;
         return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk);
+    }
+
+    /**
+     * Calculate the satellite's mean motion, in radians per second and
+     * revolutions per day.
+     */
+    public meanMotion(): [number, number] {
+        const rps = Math.sqrt(EARTH_MU / Math.pow(this.a, 3));
+        const rpd = (rps * 86400) / (2 * Math.PI);
+        return [rps, rpd];
     }
 }

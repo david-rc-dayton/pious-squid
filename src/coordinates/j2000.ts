@@ -1,9 +1,9 @@
 import { nutation, precession } from "../bodies";
-import { EARTH_MU } from "../constants";
+import { EARTH_MU, TWO_PI } from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
-import { Keplerian } from "./keplerian";
+import { KeplerianElements } from "./keplerian-elements";
 
 /** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 {
@@ -48,7 +48,7 @@ export class J2000 {
     }
 
     /** Convert to Keplerian elements. */
-    public toKeplerian(): Keplerian {
+    public toKeplerianElements(): KeplerianElements {
         const { epoch, position, velocity } = this;
         const [R, V] = [position.magnitude(), velocity.magnitude()];
         const energy = ((V * V) / 2) - (EARTH_MU / R);
@@ -62,16 +62,16 @@ export class J2000 {
         const n = new Vector(0, 0, 1).cross(h);
         let o = Math.acos(n.state[0] / n.magnitude());
         if (n.state[1] < 0) {
-            o = 2 * Math.PI - o;
+            o = TWO_PI - o;
         }
         let w = Math.acos(n.dot(eVec) / (n.magnitude() * e));
         if (eVec.state[2] < 0) {
-            w = 2 * Math.PI - w;
+            w = TWO_PI - w;
         }
         let v = Math.acos(eVec.dot(position) / (e * R));
         if (position.dot(velocity) < 0) {
-            v = 2 * Math.PI - v;
+            v = TWO_PI - v;
         }
-        return new Keplerian(epoch.toMillis(), a, e, i, o, w, v);
+        return new KeplerianElements(epoch.toMillis(), a, e, i, o, w, v);
     }
 }
