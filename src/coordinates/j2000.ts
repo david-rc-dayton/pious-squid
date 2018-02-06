@@ -48,7 +48,7 @@ export class J2000 {
     }
 
     /** Convert to Keplerian elements. */
-    public toKeplerianElements(): KeplerianElements {
+    public toKeplerian(): KeplerianElements {
         const { epoch, position, velocity } = this;
         const [R, V] = [position.magnitude(), velocity.magnitude()];
         const energy = ((V * V) / 2) - (EARTH_MU / R);

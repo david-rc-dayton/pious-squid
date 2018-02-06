@@ -18,9 +18,9 @@ const TEST_KEPLER = new KeplerianElements(
 );
 
 describe("J2000", () => {
-    describe("#.toKeplerianElements()", () => {
+    describe("#.toKeplerian()", () => {
         it("should convert to Keplerian elements", () => {
-            const { epoch, a, e, i, o, w, v } = TEST_J2K.toKeplerianElements();
+            const { epoch, a, e, i, o, w, v } = TEST_J2K.toKeplerian();
             assert.equal(epoch.unix, TEST_J2K.epoch.unix);
             assert.equal(a, 13360.642770119148);
             assert.equal(e, 0.22049791840816513);

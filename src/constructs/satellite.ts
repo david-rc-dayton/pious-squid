@@ -1,4 +1,9 @@
+import { EarthCenteredFixed } from "../coordinates/earth-centered-fixed";
+import { EarthCenteredInertial } from "../coordinates/earth-centered-inertial";
+import { Geodetic } from "../coordinates/geodetic";
 import { J2000 } from "../coordinates/j2000";
+import { KeplerianElements } from "../coordinates/keplerian-elements";
+import { Spherical } from "../coordinates/spherical";
 import { IPropagator } from "../propagators/propagator-interface";
 import { ISatelliteOptions } from "./construct-config";
 
@@ -17,6 +22,30 @@ export class Satellite {
     public propagate(millis: number): Satellite {
         this.state = this.propagator.propagate(millis);
         return this;
+    }
+
+    public toECEF(): EarthCenteredFixed {
+        return this.state.toECI().toECEF();
+    }
+
+    public toECI(): EarthCenteredInertial {
+        return this.state.toECI();
+    }
+
+    public toGeodetic(): Geodetic {
+        return this.state.toECI().toECEF().toGeodetic();
+    }
+
+    public toJ2K(): J2000 {
+        return this.state;
+    }
+
+    public toKeplerian(): KeplerianElements {
+        return this.state.toKeplerian();
+    }
+
+    public toSpherical(): Spherical {
+        return this.state.toECI().toECEF().toSpherical();
     }
 }
 
