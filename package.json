@@ -1,5 +1,5 @@
 {
-  "name": "unholy-octopus",
+  "name": "pious-squid",
   "version": "0.1.0",
   "description": "",
   "main": "./dist/index.js",
@@ -11,7 +11,7 @@
     "clean-bundle": "npm run clean-build && npm run bundle",
     "clean": "rimraf dist bundle",
     "lint": "tslint -c tslint.json './src/**/*.ts'",
-    "prepublish": "npm run clean-build",
+    "prepack": "npm run clean-build",
     "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
   },

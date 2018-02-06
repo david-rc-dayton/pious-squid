@@ -1,4 +1,4 @@
-# Unholy Octopus
+# Pious Squid
 
 ## License
 
