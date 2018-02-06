@@ -112,14 +112,26 @@ export class RungeKutta4 implements IPropagator {
         return this.state;
     }
 
+    /**
+     * Generate a derivative function given the propagator's current model
+     * options.
+     */
     private genDerivative(): (epoch: Epoch, posVel: Vector) => Vector {
         const { j2Effect, j3Effect, j4Effect, gravitySun, gravityMoon,
             solarRadiation, atmosphericDrag, mass, area, drag, reflect } = this;
         return (epoch: Epoch, posVel: Vector) => {
-            return derivative(epoch, posVel, j2Effect, j3Effect,
-                j4Effect, gravitySun, gravityMoon,
-                solarRadiation, atmosphericDrag, mass, area,
-                drag, reflect);
+            return derivative(epoch, posVel,
+                j2Effect,
+                j3Effect,
+                j4Effect,
+                gravitySun,
+                gravityMoon,
+                solarRadiation,
+                atmosphericDrag,
+                mass,
+                area,
+                drag,
+                reflect);
         };
     }
 

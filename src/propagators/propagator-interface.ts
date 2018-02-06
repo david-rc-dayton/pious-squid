@@ -40,6 +40,7 @@ export interface INumericalModel {
     reflect?: number;
 }
 
+/** Common interface for propagator objects. */
 export interface IPropagator {
     propagate(millis: number): J2000;
 }
