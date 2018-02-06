@@ -1,9 +1,10 @@
 import { J2000 } from "../coordinates/j2000";
 import { derivative } from "../forces";
 import { sign } from "../operations";
+import { IPropagator } from "./propagator-interface";
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
-export class RungeKutta4 {
+export class RungeKutta4 implements IPropagator {
     /** State used to initialize the propagator. */
     public initialState: J2000;
     /** Cached state used in propagator calculations after initialization. */
@@ -37,8 +38,8 @@ export class RungeKutta4 {
         const unix = millis / 1000;
         while (this.cachedState.epoch.unix !== unix) {
             const delta = unix - this.cachedState.epoch.unix;
-            const s = sign(delta);
-            const stepNorm = Math.min(Math.abs(delta), this.stepSize) * s;
+            const sgn = sign(delta);
+            const stepNorm = Math.min(Math.abs(delta), this.stepSize) * sgn;
             this.cachedState = this.integrate(stepNorm);
         }
         return this.cachedState;

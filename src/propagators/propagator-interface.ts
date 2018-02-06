@@ -1,3 +1,5 @@
+import { J2000 } from "../coordinates/j2000";
+
 /** Options for the Kepler propagation model. */
 export interface IKeplerModel {
     /** First derivative mean motion, in revolutions/day^2. */
@@ -24,4 +26,8 @@ export interface INumericalModel {
     area?: number;
     drag?: number;
     reflect?: number;
+}
+
+export interface IPropagator {
+    propagate(millis: number): J2000;
 }

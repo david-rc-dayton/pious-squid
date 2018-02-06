@@ -1,35 +1,29 @@
 import { EARTH_J2, EARTH_RAD_EQ, SEC2DAY, TWO_PI } from "../constants";
+import { J2000 } from "../coordinates/j2000";
 import { KeplerianElements } from "../coordinates/keplerian-elements";
-import { IKeplerModel } from "./propagation-model";
+import { IKeplerModel, IPropagator } from "./propagator-interface";
 
-export class Kepler {
-    public initialElements: KeplerianElements;
-    public cachedElements: KeplerianElements;
+export class Kepler implements IPropagator {
+    public elements: KeplerianElements;
     public nDot: number;
     public nDDot: number;
     public atmosphericDrag: boolean;
     public j2Effect: boolean;
 
     constructor(elements: KeplerianElements, model: IKeplerModel) {
-        this.initialElements = elements;
-        this.cachedElements = elements;
+        this.elements = elements;
         this.nDot = model.nDot || 0;
         this.nDDot = model.nDDot || 0;
         this.atmosphericDrag = model.atmosphericDrag || false;
         this.j2Effect = model.j2Effect || false;
     }
 
-    public reset(): KeplerianElements {
-        this.cachedElements = this.initialElements;
-        return this.cachedElements;
-    }
-
-    public propogate(millis: number): KeplerianElements {
+    public propagate(millis: number): J2000 {
         // aDrag, eDrag, oJ2, wJ2
-        const { epoch, a, e, i, o, w, v } = this.cachedElements;
+        const { epoch, a, e, i, o, w, v } = this.elements;
         const { nDot, nDDot } = this;
         const delta = ((millis / 1000) - epoch.unix) * SEC2DAY;
-        const n = this.cachedElements.meanMotion();
+        const n = this.elements.meanMotion();
         let aDot = 0;
         let eDot = 0;
         if (this.atmosphericDrag) {
@@ -62,9 +56,8 @@ export class Kepler {
         }
         const vFinal = Math.acos((Math.cos(EFinal) - eFinal)
             / (1 - eFinal * Math.cos(EFinal)));
-        this.cachedElements = new KeplerianElements(millis, aFinal, eFinal,
-            i, oFinal, wFinal, vFinal);
-        return this.cachedElements;
+        return new KeplerianElements(millis, aFinal, eFinal,
+            i, oFinal, wFinal, vFinal).toJ2K();
     }
 }
 
