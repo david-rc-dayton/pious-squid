@@ -3,7 +3,9 @@ import { Epoch } from "../epoch";
 import { derivative } from "../forces";
 import { sign } from "../operations";
 import { Vector } from "../vector";
-import { INumericalModel, IPropagator } from "./propagator-interface";
+import {
+    INumericalModel, IPropagator, PropagatorType,
+} from "./propagator-interface";
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
@@ -23,6 +25,10 @@ export class RungeKutta4 implements IPropagator {
         });
     }
 
+    /** Propagator identifier string. */
+    public readonly type: string;
+    /** Milliseconds since 1 January 1970, 00:00 UTC of initial state. */
+    public readonly millis: number;
     /** Cached state used in propagator calculations after initialization. */
     public state: J2000;
     /** Step size, in seconds. */
@@ -73,8 +79,10 @@ export class RungeKutta4 implements IPropagator {
      * @param model propagator options
      */
     public constructor(state: J2000, model?: INumericalModel) {
+        this.type = PropagatorType.RUNGE_KUTTA_4;
         this.initState = state;
         this.state = state;
+        this.millis = state.epoch.toMillis();
         model = model || {};
         this.stepSize = model.stepSize || 60;
         this.j2Effect = model.j2Effect || true;

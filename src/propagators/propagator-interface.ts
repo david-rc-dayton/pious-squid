@@ -42,5 +42,15 @@ export interface INumericalModel {
 
 /** Common interface for propagator objects. */
 export interface IPropagator {
+    /** Propagator identifier string. */
+    type: string;
+    /** Milliseconds since 1 January 1970, 00:00 UTC of initial state. */
+    millis: number;
+    /** Generic propagation method. */
     propagate(millis: number): J2000;
+}
+
+export enum PropagatorType {
+    RUNGE_KUTTA_4 = "rk4",
+    KEPLER = "kepler",
 }

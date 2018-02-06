@@ -1,12 +1,19 @@
 import { EARTH_J2, EARTH_RAD_EQ, SEC2DAY, TWO_PI } from "../constants";
 import { J2000 } from "../coordinates/j2000";
 import { KeplerianElements } from "../coordinates/keplerian-elements";
-import { IKeplerModel, IPropagator } from "./propagator-interface";
+import { matchHalfPlane } from "../operations";
+import {
+    IKeplerModel, IPropagator, PropagatorType,
+} from "./propagator-interface";
 
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements IPropagator {
+    /** Propagator identifier string. */
+    public readonly type: string;
     /** Keplerian element set. */
-    public elements: KeplerianElements;
+    public readonly elements: KeplerianElements;
+    /** Milliseconds since 1 January 1970, 00:00 UTC of initial state. */
+    public readonly millis: number;
     /** First derivative of mean motion, in revolutions/day^2. */
     public nDot: number;
     /** Second derivative of mean motion, in revolutions/day^3. */
@@ -29,7 +36,9 @@ export class Kepler implements IPropagator {
      * @param model propagator options
      */
     constructor(elements: KeplerianElements, model?: IKeplerModel) {
+        this.type = PropagatorType.KEPLER;
         this.elements = elements;
+        this.millis = elements.epoch.toMillis();
         model = model || {};
         this.nDot = model.nDot || 0;
         this.nDDot = model.nDDot || 0;
@@ -66,19 +75,21 @@ export class Kepler implements IPropagator {
         const oFinal = o + oDot * delta;
         const wFinal = w + wDot * delta;
         let EInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)));
-        if (v > Math.PI) {
-            EInit = TWO_PI - EInit;
-        }
-        const M = EInit - e * Math.sin(EInit);
-        let MFinal = (M / TWO_PI) + n * delta + (nDot / 2)
-            * Math.pow(delta, 2) + (nDDot / 6) * Math.pow(delta, 3);
+        EInit = matchHalfPlane(EInit, v);
+        let MInit = EInit - e * Math.sin(EInit);
+        MInit = matchHalfPlane(MInit, v);
+        let MFinal = (MInit / TWO_PI)
+            + n * delta
+            + (nDot / 2) * Math.pow(delta, 2)
+            + (nDDot / 6) * Math.pow(delta, 3);
         MFinal = (MFinal % 1) * TWO_PI;
-        let EFinal = 0;
+        let EFinal = MFinal;
         for (let iter = 0; iter < 16; iter++) {
             EFinal = MFinal + eFinal * Math.sin(EFinal);
         }
-        const vFinal = Math.acos((Math.cos(EFinal) - eFinal)
+        let vFinal = Math.acos((Math.cos(EFinal) - eFinal)
             / (1 - eFinal * Math.cos(EFinal)));
+        vFinal = matchHalfPlane(vFinal, EFinal);
         return new KeplerianElements(millis, aFinal, eFinal,
             i, oFinal, wFinal, vFinal).toJ2K();
     }
