@@ -16,16 +16,33 @@ export class Kepler implements IPropagator {
     /** Model J2 effect, if true. */
     public j2Effect: boolean;
 
-    constructor(elements: KeplerianElements, model: IKeplerModel) {
+    /**
+     * Create a new Kepler propagator object. If values are not specified in
+     * the model argument, the following options will be used:
+     *
+     *     nDot            = 0
+     *     nDDot           = 0
+     *     atmosphericDrag = false
+     *     j2Effect        = false
+     *
+     * @param elements Keplerian Elements
+     * @param model Kepler propagator options
+     */
+    constructor(elements: KeplerianElements, model?: IKeplerModel) {
         this.elements = elements;
+        model = model || {};
         this.nDot = model.nDot || 0;
         this.nDDot = model.nDDot || 0;
         this.atmosphericDrag = model.atmosphericDrag || false;
         this.j2Effect = model.j2Effect || false;
     }
 
+    /**
+     * Propagate satellite state to a new epoch.
+     *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
+     */
     public propagate(millis: number): J2000 {
-        // aDrag, eDrag, oJ2, wJ2
         const { epoch, a, e, i, o, w, v } = this.elements;
         const { nDot, nDDot } = this;
         const delta = ((millis / 1000) - epoch.unix) * SEC2DAY;
@@ -74,4 +91,6 @@ export class Kepler implements IPropagator {
 //     atmosphericDrag: true,
 //     j2Effect: true,
 //     nDot: 2 * 0.01017347,
-// }).propogate(Date.UTC(2010, 2, 11, 22, 53, 14, 697)).toJ2K());
+// }).propagate(Date.UTC(2010, 2, 11, 22, 53, 14, 697)));
+// console.log(new Kepler(els)
+//     .propagate(Date.UTC(2010, 2, 11, 22, 53, 14, 697)));
