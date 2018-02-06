@@ -1,4 +1,4 @@
-import { EARTH_MU } from "../constants";
+import { EARTH_MU, TWO_PI } from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { J2000 } from "./j2000";
@@ -56,13 +56,8 @@ export class KeplerianElements {
         return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk);
     }
 
-    /**
-     * Calculate the satellite's mean motion, in radians per second and
-     * revolutions per day.
-     */
-    public meanMotion(): [number, number] {
-        const rps = Math.sqrt(EARTH_MU / Math.pow(this.a, 3));
-        const rpd = (rps * 86400) / (2 * Math.PI);
-        return [rps, rpd];
+    /** Calculate the satellite's mean motion, in revolutions per day. */
+    public meanMotion(): number {
+        return Math.sqrt(EARTH_MU / Math.pow(this.a, 3)) * (86400 / TWO_PI);
     }
 }
