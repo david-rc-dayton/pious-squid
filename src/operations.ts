@@ -39,6 +39,13 @@ export function sign(n: number): number {
     return 0;
 }
 
+/**
+ * Return the angle (original or inverse) that exists the half plane of the
+ * match argument.
+ *
+ * @param angle angle to adjust
+ * @param match reference angle
+ */
 export function matchHalfPlane(angle: number, match: number): number {
     const [a1, a2] = [angle, TWO_PI - angle];
     const d1 = Math.atan2(Math.sin(a1 - match), Math.cos(a1 - match));

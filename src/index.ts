@@ -15,6 +15,8 @@ export { forces };
 
 export { Geodetic } from "./coordinates/geodetic";
 
+export { GroundStation } from "./constructs/ground-station";
+
 export { J2000 } from "./coordinates/j2000";
 
 export { Kepler } from "./propagators/kepler";
@@ -27,6 +29,8 @@ import * as operations from "./operations";
 export { operations };
 
 export { RungeKutta4 } from "./propagators/runge-kutta-4";
+
+export { Satellite } from "./constructs/satellite";
 
 export { Spherical } from "./coordinates/spherical";
 

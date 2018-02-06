@@ -24,6 +24,12 @@ export class Satellite {
         return this;
     }
 
+    public step(seconds: number): Satellite {
+        const nextEpoch = this.state.epoch.toMillis() + (seconds * 1000);
+        this.propagate(nextEpoch);
+        return this;
+    }
+
     public toECEF(): EarthCenteredFixed {
         return this.state.toECI().toECEF();
     }
