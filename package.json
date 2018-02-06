@@ -1,9 +1,13 @@
 {
   "name": "pious-squid",
-  "version": "0.1.0",
-  "description": "",
+  "version": "1.0.0",
+  "description": "Orbital mechanics and satellite mission analysis library.",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/david-rc-dayton/pious-squid.git"
+  },
   "scripts": {
     "build": "tsc",
     "bundle": "webpack",
@@ -15,7 +19,14 @@
     "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
   },
-  "keywords": [],
+  "keywords": [
+    "orbital-mechanics",
+    "satellite",
+    "coordinates",
+    "propagator",
+    "look-angles",
+    "typescript"
+  ],
   "author": "David RC Dayton",
   "license": "MIT",
   "devDependencies": {
