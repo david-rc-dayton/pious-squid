@@ -82,7 +82,8 @@ describe("forces", () => {
 
     describe("#solarRadiation()", () => {
         it("should compute acceleration due to solar radiation", () => {
-            const srAcc = forces.solarRadiation(TEST_EPOCH, TEST_POSITION);
+            const srAcc = forces.solarRadiation(TEST_EPOCH, TEST_POSITION,
+                1000, 1, 1.4);
             assert.deepEqual(srAcc.state, [
                 6.259125160767262e-13,
                 -5.6010407852157446e-12,
@@ -93,26 +94,12 @@ describe("forces", () => {
 
     describe("#atmosphericDrag()", () => {
         it("should compute acceleration due to atmospheric drag", () => {
-            const adAcc = forces.atmosphericDrag(TEST_POSITION, TEST_VELOCITY);
+            const adAcc = forces.atmosphericDrag(TEST_POSITION, TEST_VELOCITY,
+                1000, 1, 2.2);
             assert.deepEqual(adAcc.state, [
                 -1.7323209434508467e-74,
                 -3.669569925336681e-74,
                 -1.9481607545554463e-73,
-            ]);
-        });
-    });
-
-    describe("#derivative()", () => {
-        it("should compute position and velocity derivative", () => {
-            const testPosVel = TEST_POSITION.concat(TEST_VELOCITY);
-            const deriv = forces.derivative(TEST_EPOCH, testPosVel);
-            assert.deepEqual(deriv.state, [
-                -0.53281,
-                3.030355,
-                0.105016,
-                -0.00022038686662588904,
-                -0.000039692804468320307,
-                0.000019624476730338078,
             ]);
         });
     });

@@ -140,9 +140,8 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
  * @param area satellite surface area, in meters squared
  * @param reflect satellite reflectivity coefficient
  */
-export function solarRadiation(epoch: Epoch, position: Vector,
-                               mass = 1000.0, area = 1.0,
-                               reflect = 1.4): Vector {
+export function solarRadiation(epoch: Epoch, position: Vector, mass: number,
+                               area: number, reflect: number): Vector {
     const rSat = position;
     const rSun = sunPosition(epoch);
     const sFactor = shadowFactor(rSat, rSun);
@@ -166,7 +165,8 @@ export function solarRadiation(epoch: Epoch, position: Vector,
  * @param drag satellite drag coefficient
  */
 export function atmosphericDrag(position: Vector, velocity: Vector,
-                                mass = 1000.0, area = 1.0, drag = 2.2): Vector {
+                                mass: number, area: number,
+                                drag: number): Vector {
     const rotVel = c.EARTH_ROTATION.cross(position);
     const vRel = velocity.add(rotVel.scale(-1)).scale(1000);
     const vMag = vRel.magnitude();
@@ -182,17 +182,50 @@ export function atmosphericDrag(position: Vector, velocity: Vector,
  *
  * @param epoch satellite state epoch
  * @param posVel satellite J2000 position and velocity 6-vector, in km and km/s
+ * @param j2Flag enable J2 effect model
+ * @param j3Flag enable J3 effect model
+ * @param j4Flag enable J4 effect model
+ * @param gSunFlag enable Solar gravity model
+ * @param gMoonFlag enable lunar gravity model
+ * @param sRadFlag enable solar radiation pressure model
+ * @param aDragFlag enable atmospheric drag model
+ * @param mass satellite mass, in kilograms
+ * @param area satellite area, in meters squared
+ * @param drag satellite drag coefficient
+ * @param reflect satellite reflectivity coefficient
  */
-export function derivative(epoch: Epoch, posVel: Vector): Vector {
+export function derivative(epoch: Epoch, posVel: Vector, j2Flag: boolean,
+                           j3Flag: boolean, j4Flag: boolean, gSunFlag: boolean,
+                           gMoonFlag: boolean, sRadFlag: boolean,
+                           aDragFlag: boolean, mass: number, area: number,
+                           drag: number, reflect: number): Vector {
     const position = posVel.slice(0, 3);
     const velocity = posVel.slice(3, 6);
-    const acceleration = gravityEarth(position)
-        .add(j2Effect(position))
-        .add(j3Effect(position))
-        .add(j4Effect(position))
-        .add(gravitySun(epoch, position))
-        .add(gravityMoon(epoch, position))
-        .add(solarRadiation(epoch, position))
-        .add(atmosphericDrag(position, velocity));
+    let acceleration = gravityEarth(position);
+    if (j2Flag) {
+        acceleration = acceleration.add(j2Effect(position));
+    }
+    if (j3Flag) {
+        acceleration = acceleration.add(j3Effect(position));
+    }
+    if (j4Flag) {
+        acceleration = acceleration.add(j4Effect(position));
+    }
+    if (gSunFlag) {
+        acceleration = acceleration.add(gravitySun(epoch, position));
+    }
+    if (gMoonFlag) {
+        acceleration = acceleration.add(gravityMoon(epoch, position));
+    }
+    if (sRadFlag) {
+        acceleration = acceleration.add(
+            solarRadiation(epoch, position, mass, area, reflect),
+        );
+    }
+    if (aDragFlag) {
+        acceleration = acceleration.add(
+            atmosphericDrag(position, velocity, mass, area, drag),
+        );
+    }
     return velocity.concat(acceleration);
 }

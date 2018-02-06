@@ -14,17 +14,29 @@ export interface IKeplerModel {
 
 /** Options for numerical integration propagation models. */
 export interface INumericalModel {
+    /** Step size, in seconds. */
     stepSize?: number;
+    /** Model J2 effect, if true. */
     j2Effect?: boolean;
+    /** Model J3 effect, if true. */
     j3Effect?: boolean;
+    /** Model J4 effect, if true. */
     j4Effect?: boolean;
+    /** Model Solar gravity, if true. */
     gravitySun?: boolean;
+    /** Model Lunar gravity, if true. */
     gravityMoon?: boolean;
+    /** Model Solar radiation pressure, if true. */
     solarRadiation?: boolean;
+    /** Model atmospheric drag, if true. */
     atmosphericDrag?: boolean;
+    /** Satellite mass, in kilograms */
     mass?: number;
+    /** Satellite surface area, in meters squared */
     area?: number;
+    /** Satellite drag coefficient. */
     drag?: number;
+    /** Satellite reflectivity coefficient. */
     reflect?: number;
 }
 

@@ -25,8 +25,8 @@ export class Kepler implements IPropagator {
      *     atmosphericDrag = false
      *     j2Effect        = false
      *
-     * @param elements Keplerian Elements
-     * @param model Kepler propagator options
+     * @param elements element set
+     * @param model propagator options
      */
     constructor(elements: KeplerianElements, model?: IKeplerModel) {
         this.elements = elements;
