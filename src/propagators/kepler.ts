@@ -1,17 +1,27 @@
 import { EARTH_J2, EARTH_RAD_EQ, SEC2DAY, TWO_PI } from "../constants";
 import { KeplerianElements } from "../coordinates/keplerian-elements";
+import { IKeplerModel } from "./propagation-model";
 
 export class Kepler {
     public initialElements: KeplerianElements;
     public cachedElements: KeplerianElements;
     public nDot: number;
     public nDDot: number;
+    public atmosphericDrag: boolean;
+    public j2Effect: boolean;
 
-    constructor(elements: KeplerianElements, nDot = 0, nDDot = 0) {
+    constructor(elements: KeplerianElements, model: IKeplerModel) {
         this.initialElements = elements;
         this.cachedElements = elements;
-        this.nDot = nDot;
-        this.nDDot = nDDot;
+        this.nDot = model.nDot || 0;
+        this.nDDot = model.nDDot || 0;
+        this.atmosphericDrag = model.atmosphericDrag || false;
+        this.j2Effect = model.j2Effect || false;
+    }
+
+    public reset(): KeplerianElements {
+        this.cachedElements = this.initialElements;
+        return this.cachedElements;
     }
 
     public propogate(millis: number): KeplerianElements {
@@ -20,12 +30,20 @@ export class Kepler {
         const { nDot, nDDot } = this;
         const delta = ((millis / 1000) - epoch.unix) * SEC2DAY;
         const n = this.cachedElements.meanMotion();
-        const aDot = -((2 * a) / (3 * n)) * nDot;
-        const eDot = -((2 * (1 - e)) / (3 * n)) * nDot;
-        const j2Rad = Math.pow(EARTH_RAD_EQ / (a * (1 - e * e)), 2);
-        const oDot = -(3 / 2) * EARTH_J2 * j2Rad * Math.cos(i) * n * TWO_PI;
-        const wDot = (3 / 4) * EARTH_J2 * j2Rad
-            * (4 - 5 * Math.pow(Math.sin(i), 2)) * n * TWO_PI;
+        let aDot = 0;
+        let eDot = 0;
+        if (this.atmosphericDrag) {
+            aDot = -((2 * a) / (3 * n)) * nDot;
+            eDot = -((2 * (1 - e)) / (3 * n)) * nDot;
+        }
+        let oDot = 0;
+        let wDot = 0;
+        if (this.j2Effect) {
+            const j2Rad = Math.pow(EARTH_RAD_EQ / (a * (1 - e * e)), 2);
+            oDot = -(3 / 2) * EARTH_J2 * j2Rad * Math.cos(i) * n * TWO_PI;
+            wDot = (3 / 4) * EARTH_J2 * j2Rad
+                * (4 - 5 * Math.pow(Math.sin(i), 2)) * n * TWO_PI;
+        }
         const aFinal = a + aDot * delta;
         const eFinal = e + eDot * delta;
         const oFinal = o + oDot * delta;
@@ -44,13 +62,17 @@ export class Kepler {
         }
         const vFinal = Math.acos((Math.cos(EFinal) - eFinal)
             / (1 - eFinal * Math.cos(EFinal)));
-        return new KeplerianElements(millis, aFinal, eFinal, i, oFinal,
-            wFinal, vFinal);
+        this.cachedElements = new KeplerianElements(millis, aFinal, eFinal,
+            i, oFinal, wFinal, vFinal);
+        return this.cachedElements;
     }
 }
 
 // const els = new KeplerianElements(Date.UTC(2010, 2, 10, 22, 53, 14, 697),
 //     7792.181, 0.1287762, 100.5570 * DEG2RAD, 211.8106 * DEG2RAD,
 //     211.3101 * DEG2RAD, 148.7972 * DEG2RAD);
-// new Kepler(els, 2 * 0.01017347)
-//     .propogate(Date.UTC(2010, 2, 11, 22, 53, 14, 697));
+// console.log(new Kepler(els, {
+//     atmosphericDrag: true,
+//     j2Effect: true,
+//     nDot: 2 * 0.01017347,
+// }).propogate(Date.UTC(2010, 2, 11, 22, 53, 14, 697)).toJ2K());

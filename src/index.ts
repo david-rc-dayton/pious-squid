@@ -17,6 +17,8 @@ export { Geodetic } from "./coordinates/geodetic";
 
 export { J2000 } from "./coordinates/j2000";
 
+export { Kepler } from "./propagators/kepler";
+
 export { KeplerianElements } from "./coordinates/keplerian-elements";
 
 export { LookAngle } from "./coordinates/look-angle";
