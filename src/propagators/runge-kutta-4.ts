@@ -5,12 +5,12 @@ import { IPropagator } from "./propagator-interface";
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
-    /** State used to initialize the propagator. */
-    public initialState: J2000;
     /** Cached state used in propagator calculations after initialization. */
-    public cachedState: J2000;
+    public state: J2000;
     /** Step size, in seconds. */
     public stepSize: number;
+    /** State used to initialize the propagator. */
+    private initState: J2000;
 
     /**
      * Create a new RungeKutta4 propagator object.
@@ -18,14 +18,14 @@ export class RungeKutta4 implements IPropagator {
      * @param stepSize integration step size, in seconds
      */
     public constructor(state: J2000, stepSize = 60) {
-        this.initialState = state;
-        this.cachedState = state;
+        this.initState = state;
+        this.state = state;
         this.stepSize = stepSize;
     }
 
     /** Reset the propagator cached state to its initial state. */
     public reset(): RungeKutta4 {
-        this.cachedState = this.initialState;
+        this.state = this.initState;
         return this;
     }
 
@@ -36,13 +36,13 @@ export class RungeKutta4 implements IPropagator {
      */
     public propagate(millis: number): J2000 {
         const unix = millis / 1000;
-        while (this.cachedState.epoch.unix !== unix) {
-            const delta = unix - this.cachedState.epoch.unix;
+        while (this.state.epoch.unix !== unix) {
+            const delta = unix - this.state.epoch.unix;
             const sgn = sign(delta);
             const stepNorm = Math.min(Math.abs(delta), this.stepSize) * sgn;
-            this.cachedState = this.integrate(stepNorm);
+            this.state = this.integrate(stepNorm);
         }
-        return this.cachedState;
+        return this.state;
     }
 
     /**
@@ -51,7 +51,7 @@ export class RungeKutta4 implements IPropagator {
      * @param step step size, in seconds
      */
     private integrate(step: number): J2000 {
-        const { epoch, position, velocity } = this.cachedState;
+        const { epoch, position, velocity } = this.state;
         const posVel = position.concat(velocity);
         const k1 = derivative(epoch, posVel);
         const k2 = derivative(epoch.roll(step / 2),

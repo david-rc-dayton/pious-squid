@@ -20,9 +20,9 @@ export class EarthCenteredFixed {
      * @param rx x-axis position, in kilometers
      * @param ry y-axis position, in kilometers
      * @param rz z-axis position, in kilometers
-     * @param vx x-axis velocity, in kilometers per second
-     * @param vy y-axis velocity, in kilometers per second
-     * @param vz z-axis velocity, in kilometers per second
+     * @param vx x-axis velocity, in kilometers per second (default = 0)
+     * @param vy y-axis velocity, in kilometers per second (default = 0)
+     * @param vz z-axis velocity, in kilometers per second (default = 0)
      */
     constructor(rx: number, ry: number, rz: number,
                 vx = 0, vy = 0, vz = 0) {

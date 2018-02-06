@@ -3,11 +3,17 @@ import { J2000 } from "../coordinates/j2000";
 import { KeplerianElements } from "../coordinates/keplerian-elements";
 import { IKeplerModel, IPropagator } from "./propagator-interface";
 
+/** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements IPropagator {
+    /** Keplerian element set. */
     public elements: KeplerianElements;
+    /** First derivative of mean motion, in revolutions/day^2. */
     public nDot: number;
+    /** Second derivative of mean motion, in revolutions/day^3. */
     public nDDot: number;
+    /** Model effects of atmospheric drag, if true. */
     public atmosphericDrag: boolean;
+    /** Model J2 effect, if true. */
     public j2Effect: boolean;
 
     constructor(elements: KeplerianElements, model: IKeplerModel) {
