@@ -6,7 +6,7 @@ export interface ISatelliteOptions {
 
 /** Options for the GroundStation constructor. */
 export interface IGroundStationOptions {
-    /** Satellite name. */
+    /** Ground station name. */
     name?: string;
     /** Site minimum elevation, in radians. */
     minEl?: number;

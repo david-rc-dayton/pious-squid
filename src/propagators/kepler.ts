@@ -94,14 +94,3 @@ export class Kepler implements IPropagator {
             i, oFinal, wFinal, vFinal).toJ2K();
     }
 }
-
-// const els = new KeplerianElements(Date.UTC(2010, 2, 10, 22, 53, 14, 697),
-//     7792.181, 0.1287762, 100.5570 * DEG2RAD, 211.8106 * DEG2RAD,
-//     211.3101 * DEG2RAD, 148.7972 * DEG2RAD);
-// console.log(new Kepler(els, {
-//     atmosphericDrag: true,
-//     j2Effect: true,
-//     nDot: 2 * 0.01017347,
-// }).propagate(Date.UTC(2010, 2, 11, 22, 53, 14, 697)));
-// console.log(new Kepler(els)
-//     .propagate(Date.UTC(2010, 2, 11, 22, 53, 14, 697)));

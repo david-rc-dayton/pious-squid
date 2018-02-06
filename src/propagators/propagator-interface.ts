@@ -50,6 +50,7 @@ export interface IPropagator {
     propagate(millis: number): J2000;
 }
 
+/** Propagator type identifiers. */
 export enum PropagatorType {
     RUNGE_KUTTA_4 = "rk4",
     KEPLER = "kepler",

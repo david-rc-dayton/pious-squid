@@ -43,7 +43,7 @@ export function sign(n: number): number {
  * Return the angle (original or inverse) that exists the half plane of the
  * match argument.
  *
- * @param angle angle to adjust
+ * @param angle angle to (possibly) adjust
  * @param match reference angle
  */
 export function matchHalfPlane(angle: number, match: number): number {
