@@ -1,7 +1,44 @@
 # Pious Squid
 
 Orbital mechanics and satellite mission analysis library, for NodeJS and the
-browser. Written in TypeScript.
+browser.
+
+## Features
+
++ **Coordinate Frames**
+    - Earth Centered Earth Fixed *(ECEF)*
+    - Earth Centered Inertial *(ECI)*
+    - Geodetic *(LLA)*
+    - J2000
+    - Keplerian Elements
+    - Look Angles
+    - Spherical
+    - Topocentric-Horizon *(SEZ)*
+
++ **Ephemeris Propagators**
+    - Keplerian *(analytic)*
+    - 4th Order Runge-Kutta *(numerical)*
+
++ **Celestial Bodies**
+    - Earth Precession / Nutation
+    - Earth Atmospheric Density
+    - Moon Position
+    - Sun Position
+
++ **Time**
+    - Julian Date
+    - Leap Seconds
+    - Terrestrial Centuries
+    - Julian Centuries
+    - Greenwich Mean Sidereal Time
+
++ **Model Forces**
+    - J2 / J3 / J4 Effect
+    - Earth Gravity
+    - Moon Gravity
+    - Sun Gravity
+    - Solar Radiation Pressure
+    - Atmospheric Drag
 
 ## Install
 
@@ -10,7 +47,9 @@ To include `pious-squid` in your *NodeJS* project:
     npm install pious-squid --save
 
 The browser library bundles (`pious-squid.js` or `pious-squid.min.js`) can be
-found under, the *Releases* tab on *GitHub*.
+found under, the 
+[Releases](https://github.com/david-rc-dayton/pious-squid/releases)
+tab on *GitHub*.
 
 ## Example
 
@@ -48,7 +87,9 @@ console.log(satellite.toGeodetic())
 //     altitude: 9781.485856227775 }
 ```
 
-Examples can be found in the `examples` directory in project root.
+Examples can be found in the 
+[examples](https://github.com/david-rc-dayton/pious-squid/tree/master/examples)
+directory in the project root directory.
 
 ## License
 
