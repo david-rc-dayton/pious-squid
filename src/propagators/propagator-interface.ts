@@ -44,10 +44,10 @@ export interface INumericalModel {
 export interface IPropagator {
     /** Propagator identifier string. */
     type: string;
-    /** Milliseconds since 1 January 1970, 00:00 UTC of initial state. */
-    millis: number;
-    /** Generic propagation method. */
+    /** Propagate state to a new epoch. */
     propagate(millis: number): J2000;
+    /** Propagate state by some number of seconds, repeatedly. */
+    step(millis: number, interval: number, count: number): J2000[];
 }
 
 /** Propagator type identifiers. */

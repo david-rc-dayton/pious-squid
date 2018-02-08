@@ -10,9 +10,9 @@ import { TopocentricHorizon } from "./topocentric-horizon";
 /** Class representing Earth Centered Earth Fixed (ECEF) coordinates. */
 export class EarthCenteredFixed {
     /** Position 3-vector, in kilometers. */
-    public position: Vector;
+    public readonly position: Vector;
     /** Velocity 3-vector, in kilometers per second. */
-    public velocity: Vector;
+    public readonly velocity: Vector;
 
     /**
      * Create a new EarthCenteredFixed object.

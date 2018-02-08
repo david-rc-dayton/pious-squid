@@ -8,11 +8,11 @@ import { KeplerianElements } from "./keplerian-elements";
 /** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 {
     /** Satellite state epoch. */
-    public epoch: Epoch;
+    public readonly epoch: Epoch;
     /** Position 3-vector, in kilometers. */
-    public position: Vector;
+    public readonly position: Vector;
     /** Velocity 3-vector, in kilometers per second. */
-    public velocity: Vector;
+    public readonly velocity: Vector;
 
     /**
      * Create a new J2000 object.

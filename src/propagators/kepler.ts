@@ -12,16 +12,14 @@ export class Kepler implements IPropagator {
     public readonly type: string;
     /** Keplerian element set. */
     public readonly elements: KeplerianElements;
-    /** Milliseconds since 1 January 1970, 00:00 UTC of initial state. */
-    public readonly millis: number;
     /** First derivative of mean motion, in revolutions/day^2. */
-    public nDot: number;
+    public readonly nDot: number;
     /** Second derivative of mean motion, in revolutions/day^3. */
-    public nDDot: number;
+    public readonly nDDot: number;
     /** Model effects of atmospheric drag, if true. */
-    public atmosphericDrag: boolean;
+    public readonly atmosphericDrag: boolean;
     /** Model J2 effect, if true. */
-    public j2Effect: boolean;
+    public readonly j2Effect: boolean;
 
     /**
      * Create a new Kepler propagator object. If values are not specified in
@@ -38,7 +36,6 @@ export class Kepler implements IPropagator {
     constructor(elements: KeplerianElements, model?: IKeplerModel) {
         this.type = PropagatorType.KEPLER;
         this.elements = elements;
-        this.millis = elements.epoch.toMillis();
         model = model || {};
         this.nDot = model.nDot || 0;
         this.nDDot = model.nDDot || 0;
@@ -92,5 +89,23 @@ export class Kepler implements IPropagator {
         vFinal = matchHalfPlane(vFinal, EFinal);
         return new KeplerianElements(millis, aFinal, eFinal,
             i, oFinal, wFinal, vFinal).toJ2K();
+    }
+
+    /**
+     * Propagate state by some number of seconds, repeatedly, starting at a
+     * specified epoch.
+     *
+     * @param millis propagation start time
+     * @param interval seconds between output states
+     * @param count number of steps to take
+     */
+    public step(millis: number, interval: number, count: number): J2000[] {
+        const output: J2000[] = [this.propagate(millis)];
+        let tempEpoch = millis;
+        for (let i = 0; i < count; i++) {
+            tempEpoch += interval * 1000;
+            output.push(this.propagate(tempEpoch));
+        }
+        return output;
     }
 }

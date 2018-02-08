@@ -5,12 +5,12 @@ import { Satellite } from "./satellite";
 
 /** Class representing a ground station. */
 export class GroundStation {
-    /** Geodetic location of the ground station. */
-    public location: Geodetic;
     /** Ground station name. */
-    public name: string;
+    public readonly name: string;
+    /** Geodetic location of the ground station. */
+    public readonly location: Geodetic;
     /** Site minimum elevation, in radians. */
-    public minEl: number;
+    public readonly minEl: number;
 
     /**
      * Create a new GroundStation object. If values are not specified in the
@@ -37,20 +37,24 @@ export class GroundStation {
     /**
      * Calculate look angles for the ground station to a satellite.
      *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
      * @param satellite target satellite
      */
-    public lookAngles(satellite: Satellite): LookAngle {
-        return satellite.toECEF().toTopocentric(this.location).toLookAngle();
+    public lookAngles(millis: number, satellite: Satellite): LookAngle {
+        const state = satellite.propagate(millis);
+        return state.toECI().toECEF()
+            .toTopocentric(this.location).toLookAngle();
     }
 
     /**
-     * Return true if a satellite is in view at the satellite's latest
-     * propagated state, otherwise return false.
+     * Return true if a satellite is in view at the specified epoch, otherwise
+     * return false.
      *
+     * @param millis milliseconds since 1 January 1970, 00:00 UTC
      * @param satellite target satellite
      */
-    public isVisible(satellite: Satellite): boolean {
-        const { elevation } = this.lookAngles(satellite);
+    public isVisible(millis: number, satellite: Satellite): boolean {
+        const { elevation } = this.lookAngles(millis, satellite);
         return elevation >= this.minEl;
     }
 }

@@ -9,7 +9,7 @@ export class Epoch {
     }
 
     /** Seconds since 1 January 1970, 00:00 UTC. */
-    public unix: number;
+    public readonly unix: number;
 
     /**
      * Create a new Epoch object.

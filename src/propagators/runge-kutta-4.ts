@@ -27,36 +27,32 @@ export class RungeKutta4 implements IPropagator {
 
     /** Propagator identifier string. */
     public readonly type: string;
-    /** Milliseconds since 1 January 1970, 00:00 UTC of initial state. */
-    public readonly millis: number;
     /** Cached state used in propagator calculations after initialization. */
-    public state: J2000;
+    public readonly state: J2000;
     /** Step size, in seconds. */
-    public stepSize: number;
+    public readonly stepSize: number;
     /** Model J2 effect, if true. */
-    public j2Effect: boolean;
+    public readonly j2Effect: boolean;
     /** Model J3 effect, if true. */
-    public j3Effect: boolean;
+    public readonly j3Effect: boolean;
     /** Model J4 effect, if true. */
-    public j4Effect: boolean;
+    public readonly j4Effect: boolean;
     /** Model Solar gravity, if true. */
-    public gravitySun: boolean;
+    public readonly gravitySun: boolean;
     /** Model Lunar gravity, if true. */
-    public gravityMoon: boolean;
+    public readonly gravityMoon: boolean;
     /** Model Solar radiation pressure, if true. */
-    public solarRadiation: boolean;
+    public readonly solarRadiation: boolean;
     /** Model atmospheric drag, if true. */
-    public atmosphericDrag: boolean;
+    public readonly atmosphericDrag: boolean;
     /** Satellite mass, in kilograms */
-    public mass: number;
+    public readonly mass: number;
     /** Satellite surface area, in meters squared */
-    public area: number;
+    public readonly area: number;
     /** Satellite drag coefficient. */
-    public drag: number;
+    public readonly drag: number;
     /** Satellite reflectivity coefficient. */
-    public reflect: number;
-    /** State used to initialize the propagator. */
-    private initState: J2000;
+    public readonly reflect: number;
 
     /**
      * Create a new RungeKutta4 propagator object. If values are not specified
@@ -80,9 +76,7 @@ export class RungeKutta4 implements IPropagator {
      */
     public constructor(state: J2000, model?: INumericalModel) {
         this.type = PropagatorType.RUNGE_KUTTA_4;
-        this.initState = state;
         this.state = state;
-        this.millis = state.epoch.toMillis();
         model = model || {};
         this.stepSize = model.stepSize || 60;
         this.j2Effect = model.j2Effect || true;
@@ -118,12 +112,6 @@ export class RungeKutta4 implements IPropagator {
         ].join("\n");
     }
 
-    /** Reset the propagator cached state to its initial state. */
-    public reset(): RungeKutta4 {
-        this.state = this.initState;
-        return this;
-    }
-
     /**
      * Propagate satellite state to a new epoch.
      *
@@ -131,13 +119,40 @@ export class RungeKutta4 implements IPropagator {
      */
     public propagate(millis: number): J2000 {
         const unix = millis / 1000;
-        while (this.state.epoch.unix !== unix) {
-            const delta = unix - this.state.epoch.unix;
+        let tempState = this.state;
+        while (tempState.epoch.unix !== unix) {
+            const delta = unix - tempState.epoch.unix;
             const sgn = sign(delta);
             const stepNorm = Math.min(Math.abs(delta), this.stepSize) * sgn;
-            this.state = this.integrate(stepNorm);
+            tempState = this.integrate(tempState, stepNorm);
         }
-        return this.state;
+        return tempState;
+    }
+
+    /**
+     * Propagate state by some number of seconds, repeatedly, starting at a
+     * specified epoch.
+     *
+     * @param millis propagation start time
+     * @param interval seconds between output states
+     * @param count number of steps to take
+     */
+    public step(millis: number, interval: number, count: number): J2000[] {
+        let tempState = this.propagate(millis);
+        const output: J2000[] = [tempState];
+        let epochStart = tempState.epoch.unix;
+        for (let i = 0; i < count; i++) {
+            const unix = epochStart + interval;
+            while (tempState.epoch.unix !== unix) {
+                const delta = unix - tempState.epoch.unix;
+                const sgn = sign(delta);
+                const stepNorm = Math.min(Math.abs(delta), this.stepSize) * sgn;
+                tempState = this.integrate(tempState, stepNorm);
+            }
+            epochStart = tempState.epoch.unix;
+            output.push(tempState);
+        }
+        return output;
     }
 
     /**
@@ -148,7 +163,9 @@ export class RungeKutta4 implements IPropagator {
         const { j2Effect, j3Effect, j4Effect, gravitySun, gravityMoon,
             solarRadiation, atmosphericDrag, mass, area, drag, reflect } = this;
         return (epoch: Epoch, posVel: Vector) => {
-            return derivative(epoch, posVel,
+            return derivative(
+                epoch,
+                posVel,
                 j2Effect,
                 j3Effect,
                 j4Effect,
@@ -159,7 +176,8 @@ export class RungeKutta4 implements IPropagator {
                 mass,
                 area,
                 drag,
-                reflect);
+                reflect,
+            );
         };
     }
 
@@ -168,8 +186,8 @@ export class RungeKutta4 implements IPropagator {
      *
      * @param step step size, in seconds
      */
-    private integrate(step: number): J2000 {
-        const { epoch, position, velocity } = this.state;
+    private integrate(state: J2000, step: number): J2000 {
+        const { epoch, position, velocity } = state;
         const posVel = position.concat(velocity);
         const drv = this.genDerivative();
         const k1 = drv(epoch, posVel);

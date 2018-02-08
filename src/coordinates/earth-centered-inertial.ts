@@ -8,11 +8,11 @@ import { J2000 } from "./j2000";
 /** Class representing Earth Centered Inertial (ECI) coordinates. */
 export class EarthCenteredInertial {
     /** Satellite state epoch. */
-    public epoch: Epoch;
+    public readonly epoch: Epoch;
     /** Position 3-vector, in kilometers. */
-    public position: Vector;
+    public readonly position: Vector;
     /** Velocity 3-vector, in kilometers per second. */
-    public velocity: Vector;
+    public readonly velocity: Vector;
 
     /**
      * Create a new EarthCenteredFixed object.

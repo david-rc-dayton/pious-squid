@@ -6,19 +6,19 @@ import { J2000 } from "./j2000";
 /** Class representing Keplerian orbital elements. */
 export class KeplerianElements {
     /** Satellite state epoch. */
-    public epoch: Epoch;
+    public readonly epoch: Epoch;
     /** Semimajor axis, in kilometers. */
-    public a: number;
+    public readonly a: number;
     /** Orbit eccentricity (unitless). */
-    public e: number;
+    public readonly e: number;
     /** Inclination, in radians. */
-    public i: number;
+    public readonly i: number;
     /** Right ascension of the ascending node, in radians. */
-    public o: number;
+    public readonly o: number;
     /** Argument of perigee, in radians. */
-    public w: number;
+    public readonly w: number;
     /** True anomaly, in radians. */
-    public v: number;
+    public readonly v: number;
 
     /**
      * Create a new Keplerian object.
