@@ -32,6 +32,17 @@ export class J2000 {
         this.velocity = new Vector(vi, vj, vk);
     }
 
+    /** Return a string representation of the object. */
+    public toString(): string {
+        const { epoch, position, velocity } = this;
+        const output = [
+            `Epoch: ${epoch.toString()}`,
+            `Position: ${position.toString()} km`,
+            `Velocity: ${velocity.toString()} km/s`,
+        ];
+        return output.join("\n");
+    }
+
     /** Convert to the Earth Centered Inertial (ECI) coordinate frame. */
     public toECI(): EarthCenteredInertial {
         const { epoch, position, velocity } = this;

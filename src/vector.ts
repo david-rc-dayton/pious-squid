@@ -38,7 +38,8 @@ export class Vector {
 
     /** Return the string representation of the state array. */
     public toString(): string {
-        return this.state.toString();
+        const fixArray = this.state.map((x) => parseFloat(x.toFixed(3)));
+        return `[ ${fixArray.join(", ")} ]`;
     }
 
     /**

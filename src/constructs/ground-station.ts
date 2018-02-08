@@ -29,6 +29,11 @@ export class GroundStation {
         this.minEl = opts.minEl || 0;
     }
 
+    /** Return a string representation of the object. */
+    public toString(): string {
+        return `Ground Station: ${this.name}\n` + location.toString();
+    }
+
     /**
      * Calculate look angles for the ground station to a satellite.
      *

@@ -98,6 +98,26 @@ export class RungeKutta4 implements IPropagator {
         this.reflect = model.reflect || 1.4;
     }
 
+    /** Return a string representation of the object. */
+    public toString(): string {
+        const status = (p: boolean) => p ? "ENABLED" : "DISABLED";
+        return [
+            this.state.toString(),
+            `Step Size: ${this.stepSize.toFixed(3)} seconds`,
+            `Satellite Mass: ${this.mass.toFixed(3)} kg`,
+            `Satellite Surface Area: ${this.area.toFixed(3)} m^2`,
+            `Drag Coefficient: ${this.drag.toFixed(3)}`,
+            `Reflectivity Coefficient: ${this.reflect.toFixed(3)}`,
+            `J2 Effect: ${status(this.j2Effect)}`,
+            `J3 Effect: ${status(this.j3Effect)}`,
+            `J4 Effect: ${status(this.j4Effect)}`,
+            `Sun Gravity: ${status(this.gravitySun)}`,
+            `Moon Gravity: ${status(this.gravityMoon)}`,
+            `Solar Radiation Pressure: ${status(this.solarRadiation)}`,
+            `Atmospheric Drag: ${status(this.atmosphericDrag)}`,
+        ].join("\n");
+    }
+
     /** Reset the propagator cached state to its initial state. */
     public reset(): RungeKutta4 {
         this.state = this.initState;

@@ -31,6 +31,13 @@ export class Satellite {
         this.state = propagator.propagate(this.propagator.millis);
     }
 
+    /** Return a string representation of the object. */
+    public toString(): string {
+        return `Satellite: ${this.name}\n`
+            + `Propagator: ${this.propagator.type}\n`
+            + this.state.toString();
+    }
+
     /**
      * Propagate the satellite's state to a new epoch.
      *
