@@ -117,7 +117,7 @@ satellite.toGeodetic()
 //     Altitude: 9781.486 km
 ```
 
-Examples can be found in the 
+Additional examples can be found in the 
 [examples](https://github.com/david-rc-dayton/pious-squid/tree/master/examples)
 directory in the project root directory.
 
