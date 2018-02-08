@@ -57,7 +57,7 @@ To propagate a satellite from its position and velocity vectors:
 
 ```javascript
 // import pious-squid modules
-const PiousSquid = require('..')
+const PiousSquid = require('pious-squid')
 const J2000 = PiousSquid.J2000
 const RungeKutta4 = PiousSquid.RungeKutta4
 const Satellite = PiousSquid.Satellite
