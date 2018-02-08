@@ -27,9 +27,10 @@ export class Geodetic {
     public toString(): string {
         const { latitude, longitude, altitude } = this;
         const output = [
-            `Latitude: ${(latitude * RAD2DEG).toFixed(3)}\u00b0`,
-            `Longitude: ${(longitude * RAD2DEG).toFixed(3)}\u00b0`,
-            `Altitude: ${altitude.toFixed(3)} km`,
+            "[Geodetic]",
+            `  Latitude: ${(latitude * RAD2DEG).toFixed(3)}\u00b0`,
+            `  Longitude: ${(longitude * RAD2DEG).toFixed(3)}\u00b0`,
+            `  Altitude: ${altitude.toFixed(3)} km`,
         ];
         return output.join("\n");
     }

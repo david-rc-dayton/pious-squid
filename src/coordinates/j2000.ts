@@ -36,9 +36,10 @@ export class J2000 {
     public toString(): string {
         const { epoch, position, velocity } = this;
         const output = [
-            `Epoch: ${epoch.toString()}`,
-            `Position: ${position.toString()} km`,
-            `Velocity: ${velocity.toString()} km/s`,
+            "[J2000]",
+            `  Epoch: ${epoch.toString()}`,
+            `  Position: ${position.toString()} km`,
+            `  Velocity: ${velocity.toString()} km/s`,
         ];
         return output.join("\n");
     }

@@ -96,19 +96,19 @@ export class RungeKutta4 implements IPropagator {
     public toString(): string {
         const status = (p: boolean) => p ? "ENABLED" : "DISABLED";
         return [
-            this.state.toString(),
-            `Step Size: ${this.stepSize.toFixed(3)} seconds`,
-            `Satellite Mass: ${this.mass.toFixed(3)} kg`,
-            `Satellite Surface Area: ${this.area.toFixed(3)} m^2`,
-            `Drag Coefficient: ${this.drag.toFixed(3)}`,
-            `Reflectivity Coefficient: ${this.reflect.toFixed(3)}`,
-            `J2 Effect: ${status(this.j2Effect)}`,
-            `J3 Effect: ${status(this.j3Effect)}`,
-            `J4 Effect: ${status(this.j4Effect)}`,
-            `Sun Gravity: ${status(this.gravitySun)}`,
-            `Moon Gravity: ${status(this.gravityMoon)}`,
-            `Solar Radiation Pressure: ${status(this.solarRadiation)}`,
-            `Atmospheric Drag: ${status(this.atmosphericDrag)}`,
+            "[RungeKutta4]",
+            `  Step Size: ${this.stepSize} seconds`,
+            `  Satellite Mass: ${this.mass} kg`,
+            `  Satellite Surface Area: ${this.area} m^2`,
+            `  Drag Coefficient: ${this.drag}`,
+            `  Reflectivity Coefficient: ${this.reflect}`,
+            `  J2 Effect: ${status(this.j2Effect)}`,
+            `  J3 Effect: ${status(this.j3Effect)}`,
+            `  J4 Effect: ${status(this.j4Effect)}`,
+            `  Sun Gravity: ${status(this.gravitySun)}`,
+            `  Moon Gravity: ${status(this.gravityMoon)}`,
+            `  Solar Radiation Pressure: ${status(this.solarRadiation)}`,
+            `  Atmospheric Drag: ${status(this.atmosphericDrag)}`,
         ].join("\n");
     }
 

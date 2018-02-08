@@ -25,8 +25,11 @@ export class Satellite {
 
     /** Return a string representation of the object. */
     public toString(): string {
-        return `Satellite: ${this.name}\n`
-            + `Propagator: ${this.propagator.type}`;
+        return [
+            "[Satellite]",
+            `  Name: ${this.name}`,
+            `  Propagator: ${this.propagator.type}`,
+        ].join("\n");
     }
 
     /**
