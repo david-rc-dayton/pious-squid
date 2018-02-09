@@ -52,6 +52,19 @@ export class Kepler implements IPropagator {
         this.j2Effect = mergeModel.j2Effect as boolean;
     }
 
+    /** Return a string representation of the object. */
+    public toString() {
+        const { nDot, nDDot, atmosphericDrag, j2Effect } = this;
+        const status = (p: boolean) => p ? "ENABLED" : "DISABLED";
+        return [
+            "[Kepler]",
+            `  1st Derivative of Mean Motion: ${nDot} rev/day^2`,
+            `  2nd Derivative of Mean Motion: ${nDDot} rev/day^3`,
+            `  Atmospheric Drag: ${status(atmosphericDrag)}`,
+            `  J2 Effect: ${status(j2Effect)}`,
+        ].join("\n");
+    }
+
     /**
      * Propagate satellite state to a new epoch.
      *

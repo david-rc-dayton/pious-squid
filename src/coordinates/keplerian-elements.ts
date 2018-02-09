@@ -1,4 +1,4 @@
-import { EARTH_MU, TWO_PI } from "../constants";
+import { EARTH_MU, RAD2DEG, TWO_PI } from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
@@ -44,6 +44,21 @@ export class KeplerianElements implements ICoordinate {
         this.o = o;
         this.w = w;
         this.v = v;
+    }
+
+    /** Return a string representation of the object. */
+    public toString() {
+        const { epoch, a, e, i, o, w, v } = this;
+        return [
+            "[KeplerianElements]",
+            `  Epoch: ${epoch.toString()}`,
+            `  Semimajor Axis: ${a.toFixed(3)} km`,
+            `  Eccentricity: ${e.toFixed(6)}`,
+            `  Inclination: ${(i * RAD2DEG).toFixed(4)}\u00b0`,
+            `  Right Ascension: ${(o * RAD2DEG).toFixed(4)}\u00b0`,
+            `  Argument of Perigee: ${(w * RAD2DEG).toFixed(4)}\u00b0`,
+            `  True Anomaly: ${(v * RAD2DEG).toFixed(4)}\u00b0`,
+        ].join("\n");
     }
 
     /** Convert to the J2000 (J2K) inertial coordinate frame. */
