@@ -3,6 +3,12 @@ import { LookAngle } from "../coordinates/look-angle";
 import { IGroundStationOptions } from "./construct-config";
 import { Satellite } from "./satellite";
 
+/** Default construct options. */
+const DEFAULT_OPTIONS: IGroundStationOptions = {
+    minEl: 0,
+    name: "",
+};
+
 /** Class representing a ground station. */
 export class GroundStation {
     /** Ground station name. */
@@ -25,8 +31,9 @@ export class GroundStation {
     constructor(location: Geodetic, opts?: IGroundStationOptions) {
         this.location = location;
         opts = opts || {};
-        this.name = opts.name || "";
-        this.minEl = opts.minEl || 0;
+        const mergeOpts = { ...DEFAULT_OPTIONS, ...opts };
+        this.name = mergeOpts.name as string;
+        this.minEl = mergeOpts.minEl as number;
     }
 
     /** Return a string representation of the object. */

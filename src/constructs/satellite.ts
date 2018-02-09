@@ -2,6 +2,11 @@ import { J2000 } from "../coordinates/j2000";
 import { IPropagator } from "../propagators/propagator-interface";
 import { ISatelliteOptions } from "./construct-config";
 
+/** Default construct options. */
+const DEFAULT_OPTIONS: ISatelliteOptions = {
+    name: "",
+};
+
 /** Class representing a satellite. */
 export class Satellite {
     /** Satellite name. */
@@ -20,7 +25,8 @@ export class Satellite {
     constructor(propagator: IPropagator, opts?: ISatelliteOptions) {
         this.propagator = propagator;
         opts = opts || {};
-        this.name = opts.name || "";
+        const mergeOpts = { ...DEFAULT_OPTIONS, ...opts };
+        this.name = mergeOpts.name as string;
     }
 
     /** Return a string representation of the object. */

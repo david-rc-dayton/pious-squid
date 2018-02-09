@@ -6,6 +6,14 @@ import {
     IKeplerModel, IPropagator, PropagatorType,
 } from "./propagator-interface";
 
+/** Default propagator model. */
+const DEFAULT_MODEL: IKeplerModel = {
+    atmosphericDrag: false,
+    j2Effect: false,
+    nDDot: 0,
+    nDot: 0,
+};
+
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements IPropagator {
     /** Propagator identifier string. */
@@ -37,10 +45,11 @@ export class Kepler implements IPropagator {
         this.type = PropagatorType.KEPLER;
         this.elements = elements;
         model = model || {};
-        this.nDot = model.nDot || 0;
-        this.nDDot = model.nDDot || 0;
-        this.atmosphericDrag = model.atmosphericDrag || false;
-        this.j2Effect = model.j2Effect || false;
+        const mergeModel = { ...DEFAULT_MODEL, ...model };
+        this.nDot = mergeModel.nDot as number;
+        this.nDDot = mergeModel.nDDot as number;
+        this.atmosphericDrag = mergeModel.atmosphericDrag as boolean;
+        this.j2Effect = mergeModel.j2Effect as boolean;
     }
 
     /**

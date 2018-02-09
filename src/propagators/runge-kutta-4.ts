@@ -7,6 +7,22 @@ import {
     INumericalModel, IPropagator, PropagatorType,
 } from "./propagator-interface";
 
+/** Default propagator model. */
+const DEFAULT_MODEL: INumericalModel = {
+    area: 1,
+    atmosphericDrag: true,
+    drag: 2.2,
+    gravityMoon: true,
+    gravitySun: true,
+    j2Effect: true,
+    j3Effect: true,
+    j4Effect: true,
+    mass: 1000,
+    reflect: 1.4,
+    solarRadiation: true,
+    stepSize: 60,
+};
+
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
     /**
@@ -58,18 +74,18 @@ export class RungeKutta4 implements IPropagator {
      * Create a new RungeKutta4 propagator object. If values are not specified
      * in the model argument, the following options will be used:
      *
-     *     stepSize        = 60
-     *     j2Effect        = true
-     *     j3Effect        = true
-     *     j4Effect        = true
-     *     gravitySun      = true
-     *     gravityMoon     = true
-     *     solarRadiation  = true
-     *     atmosphericDrag = true
-     *     mass            = 1000
-     *     area            = 1
-     *     drag            = 2.2
-     *     reflect         = 1.4
+     *     stepSize        = 60      // seconds
+     *     j2Effect        = true    // enabled
+     *     j3Effect        = true    // enabled
+     *     j4Effect        = true    // enabled
+     *     gravitySun      = true    // enabled
+     *     gravityMoon     = true    // enabled
+     *     solarRadiation  = true    // enabled
+     *     atmosphericDrag = true    // enabled
+     *     mass            = 1000    // kilograms
+     *     area            = 1       // meters squared
+     *     drag            = 2.2     // coefficient
+     *     reflect         = 1.4     // coefficient
      *
      * @param state satellite state
      * @param model propagator options
@@ -78,18 +94,19 @@ export class RungeKutta4 implements IPropagator {
         this.type = PropagatorType.RUNGE_KUTTA_4;
         this.state = state;
         model = model || {};
-        this.stepSize = model.stepSize || 60;
-        this.j2Effect = model.j2Effect || true;
-        this.j3Effect = model.j3Effect || true;
-        this.j4Effect = model.j4Effect || true;
-        this.gravitySun = model.gravitySun || true;
-        this.gravityMoon = model.gravityMoon || true;
-        this.solarRadiation = model.solarRadiation || true;
-        this.atmosphericDrag = model.atmosphericDrag || true;
-        this.mass = model.mass || 1000;
-        this.area = model.area || 1;
-        this.drag = model.drag || 2.2;
-        this.reflect = model.reflect || 1.4;
+        const mergeModel = { ...DEFAULT_MODEL, ...model };
+        this.stepSize = mergeModel.stepSize as number;
+        this.j2Effect = mergeModel.j2Effect as boolean;
+        this.j3Effect = mergeModel.j3Effect as boolean;
+        this.j4Effect = mergeModel.j4Effect as boolean;
+        this.gravitySun = mergeModel.gravitySun as boolean;
+        this.gravityMoon = mergeModel.gravityMoon as boolean;
+        this.solarRadiation = mergeModel.solarRadiation as boolean;
+        this.atmosphericDrag = mergeModel.atmosphericDrag as boolean;
+        this.mass = mergeModel.mass as number;
+        this.area = mergeModel.area as number;
+        this.drag = mergeModel.drag as number;
+        this.reflect = mergeModel.reflect as number;
     }
 
     /** Return a string representation of the object. */
