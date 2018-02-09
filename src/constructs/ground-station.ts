@@ -1,7 +1,7 @@
+import { J2000 } from "..";
 import { Geodetic } from "../coordinates/geodetic";
 import { LookAngle } from "../coordinates/look-angle";
 import { IGroundStationOptions } from "./construct-config";
-import { Satellite } from "./satellite";
 
 /** Default construct options. */
 const DEFAULT_OPTIONS: IGroundStationOptions = {
@@ -42,26 +42,22 @@ export class GroundStation {
     }
 
     /**
-     * Calculate look angles for the ground station to a satellite.
+     * Calculate look angles for the ground station to a target state.
      *
-     * @param millis milliseconds since 1 January 1970, 00:00 UTC
-     * @param satellite target satellite
+     * @param state target state
      */
-    public lookAngles(millis: number, satellite: Satellite): LookAngle {
-        const state = satellite.propagate(millis);
+    public lookAngles(state: J2000): LookAngle {
         return state.toECI().toECEF()
             .toTopocentric(this.location).toLookAngle();
     }
 
     /**
-     * Return true if a satellite is in view at the specified epoch, otherwise
-     * return false.
+     * Return true if a target state is in view, otherwise return false.
      *
-     * @param millis milliseconds since 1 January 1970, 00:00 UTC
-     * @param satellite target satellite
+     * @param state target state
      */
-    public isVisible(millis: number, satellite: Satellite): boolean {
-        const { elevation } = this.lookAngles(millis, satellite);
+    public isVisible(state: J2000): boolean {
+        const { elevation } = this.lookAngles(state);
         return elevation >= this.minEl;
     }
 }
