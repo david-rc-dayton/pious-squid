@@ -15,7 +15,7 @@
     "clean-bundle": "npm run clean-build && npm run bundle",
     "clean": "rimraf dist bundle",
     "lint": "tslint -c tslint.json './src/**/*.ts'",
-    "prepack": "npm run clean-build",
+    "prepack": "npm run clean-bundle",
     "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
   },
