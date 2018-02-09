@@ -1,8 +1,11 @@
 import { EARTH_ECC_SQ, EARTH_RAD_EQ, RAD2DEG } from "../constants";
+import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 
 /** Class representing Geodetic (LLA) coordinates. */
-export class Geodetic {
+export class Geodetic implements ICoordinate {
+    /** Coordinate identifier string. */
+    public readonly type: CoordinateType;
     /** Geodetic latitude, in radians. */
     public readonly latitude: number;
     /** Geodetic longitude, in radians. */
@@ -18,6 +21,7 @@ export class Geodetic {
      * @param altitude geodetic altitude, in kilometers
      */
     constructor(latitude: number, longitude: number, altitude: number) {
+        this.type = CoordinateType.GEODETIC;
         this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;

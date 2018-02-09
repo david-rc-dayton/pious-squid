@@ -1,10 +1,13 @@
 import { EARTH_MU, TWO_PI } from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
+import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { J2000 } from "./j2000";
 
 /** Class representing Keplerian orbital elements. */
-export class KeplerianElements {
+export class KeplerianElements implements ICoordinate {
+    /** Coordinate identifier string. */
+    public readonly type: CoordinateType;
     /** Satellite state epoch. */
     public readonly epoch: Epoch;
     /** Semimajor axis, in kilometers. */
@@ -33,6 +36,7 @@ export class KeplerianElements {
      */
     constructor(millis: number, a: number, e: number, i: number,
                 o: number, w: number, v: number) {
+        this.type = CoordinateType.KEPLERIAN_ELEMENTS;
         this.epoch = new Epoch(millis);
         this.a = a;
         this.e = e;

@@ -1,7 +1,10 @@
+import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 
 /** Class representing spherical coordinates. */
-export class Spherical {
+export class Spherical implements ICoordinate {
+    /** Coordinate identifier string. */
+    public readonly type: CoordinateType;
     /** Distance from origin, in kilometers. */
     public readonly radius: number;
     /** Inclination angle, in radians. */
@@ -17,6 +20,7 @@ export class Spherical {
      * @param azimuth azimuth angle, in radians
      */
     constructor(radius: number, inclination: number, azimuth: number) {
+        this.type = CoordinateType.SPHERICAL;
         this.radius = radius;
         this.inclination = inclination;
         this.azimuth = azimuth;

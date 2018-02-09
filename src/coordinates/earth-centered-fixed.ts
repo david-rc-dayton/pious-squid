@@ -2,13 +2,16 @@ import { nutation } from "../bodies";
 import { EARTH_ECC_SQ, EARTH_RAD_EQ, EARTH_ROTATION } from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
+import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
 import { Geodetic } from "./geodetic";
 import { Spherical } from "./spherical";
 import { TopocentricHorizon } from "./topocentric-horizon";
 
 /** Class representing Earth Centered Earth Fixed (ECEF) coordinates. */
-export class EarthCenteredFixed {
+export class EarthCenteredFixed implements ICoordinate {
+    /** Coordinate identifier string. */
+    public readonly type: CoordinateType;
     /** Position 3-vector, in kilometers. */
     public readonly position: Vector;
     /** Velocity 3-vector, in kilometers per second. */
@@ -26,6 +29,7 @@ export class EarthCenteredFixed {
      */
     constructor(rx: number, ry: number, rz: number,
                 vx = 0, vy = 0, vz = 0) {
+        this.type = CoordinateType.EARTH_CENTERED_FIXED;
         this.position = new Vector(rx, ry, rz);
         this.velocity = new Vector(vx, vy, vz);
     }

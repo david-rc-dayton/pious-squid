@@ -1,7 +1,10 @@
+import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { LookAngle } from "./look-angle";
 
 /** Class representing topocentric-horizon coordinates. */
-export class TopocentricHorizon {
+export class TopocentricHorizon implements ICoordinate {
+    /** Coordinate identifier string. */
+    public readonly type: CoordinateType;
     /** South component, in kilometers. */
     public readonly s: number;
     /** East component, in kilometers. */
@@ -17,6 +20,7 @@ export class TopocentricHorizon {
      * @param z surface-normal component, in kilometers
      */
     constructor(s: number, e: number, z: number) {
+        this.type = CoordinateType.TOPOCENTRIC_HORIZON;
         this.s = s;
         this.e = e;
         this.z = z;
