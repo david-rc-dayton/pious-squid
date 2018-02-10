@@ -23,22 +23,32 @@ const DEFAULT_MODEL: INumericalModel = {
     stepSize: 60,
 };
 
+/** Default propagator model for two-body acceleration. */
+const DEFAULT_MODEL_TWOBODY: INumericalModel = {
+    area: 0,
+    atmosphericDrag: false,
+    drag: 0,
+    gravityMoon: false,
+    gravitySun: false,
+    j2Effect: false,
+    j3Effect: false,
+    j4Effect: false,
+    mass: 0,
+    reflect: 0,
+    solarRadiation: false,
+    stepSize: 0,
+};
+
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
     /**
      * Create a new RungeKutta4 propagator object, using onlt two-body
      * perturbation options.
      */
-    public static twoBody(state: J2000): RungeKutta4 {
-        return new RungeKutta4(state, {
-            atmosphericDrag: false,
-            gravityMoon: false,
-            gravitySun: false,
-            j2Effect: false,
-            j3Effect: false,
-            j4Effect: false,
-            solarRadiation: false,
-        });
+    public static twoBody(state: J2000, model?: INumericalModel): RungeKutta4 {
+        model = model || {};
+        const mergeModel = { ...DEFAULT_MODEL_TWOBODY, ...model };
+        return new RungeKutta4(state, mergeModel);
     }
 
     /** Propagator identifier string. */

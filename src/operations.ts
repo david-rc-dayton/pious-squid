@@ -50,6 +50,5 @@ export function matchHalfPlane(angle: number, match: number): number {
     const [a1, a2] = [angle, TWO_PI - angle];
     const d1 = Math.atan2(Math.sin(a1 - match), Math.cos(a1 - match));
     const d2 = Math.atan2(Math.sin(a2 - match), Math.cos(a2 - match));
-    if (d1 < d2) { return a1; }
-    return a2;
+    return (Math.abs(d1) < Math.abs(d2)) ? a1 : a2;
 }

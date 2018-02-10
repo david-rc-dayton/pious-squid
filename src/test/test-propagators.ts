@@ -1,5 +1,6 @@
 import * as assert from "assert";
 import { J2000 } from "../coordinates/j2000";
+import { Kepler } from "../propagators/kepler";
 import { RungeKutta4 } from "../propagators/runge-kutta-4";
 
 const GEO_STATE_1 = [
@@ -35,6 +36,31 @@ describe("RungeKutta4", () => {
             const { position } = rk4.propagate(GEO_24HR.epoch.toMillis());
             const dist = position.distance(GEO_24HR.position) * 1000;
             assert.ok(dist < 200, `Distance: ${dist.toFixed(2)} meters`);
+        });
+    });
+});
+
+describe("Kepler", () => {
+    describe("#.step()", () => {
+        it("should match numerical two-body results", () => {
+            const state = new J2000(
+                Date.UTC(2017, 10, 16, 0, 11, 30, 195),
+                -3.86234943730e4, 1.68697633760e4, 1.00434444900e3,
+                -1.231249e0, -2.810612e0, -2.01294e-1,
+            );
+            const propRk = RungeKutta4.twoBody(state, { stepSize: 60 });
+            const resultRk = propRk.step(
+                Date.UTC(2017, 10, 16, 0, 11, 30, 195), 21600, 6,
+            );
+            const propKep = new Kepler(state.toKeplerian());
+            const resultKep = propKep.step(
+                Date.UTC(2017, 10, 16, 0, 11, 30, 195), 21600, 6,
+            );
+            for (let i = 0; i < resultRk.length; i++) {
+                const dist = resultRk[i].position
+                    .distance(resultKep[i].position) * 1000;
+                assert.ok(dist < 1, `Distance: ${dist.toFixed(3)} meters`);
+            }
         });
     });
 });

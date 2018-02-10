@@ -96,7 +96,7 @@ export class Kepler implements IPropagator {
         let EInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)));
         EInit = matchHalfPlane(EInit, v);
         let MInit = EInit - e * Math.sin(EInit);
-        MInit = matchHalfPlane(MInit, v);
+        MInit = matchHalfPlane(MInit, EInit);
         let MFinal = (MInit / TWO_PI)
             + n * delta
             + (nDot / 2) * Math.pow(delta, 2)
