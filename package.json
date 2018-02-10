@@ -20,11 +20,12 @@
     "watch": "tsc --watch"
   },
   "keywords": [
-    "orbital-mechanics",
-    "satellite",
+    "astrodynamics",
     "coordinates",
-    "propagator",
     "look-angles",
+    "orbital-mechanics",
+    "propagator",
+    "satellite",
     "typescript"
   ],
   "author": "David RC Dayton",
