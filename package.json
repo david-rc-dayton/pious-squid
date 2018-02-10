@@ -13,7 +13,7 @@
     "bundle": "webpack",
     "clean-build": "npm run clean && npm run build",
     "clean-bundle": "npm run clean-build && npm run bundle",
-    "clean": "rimraf dist bundle",
+    "clean": "rimraf dist bundle pious-squid-*.tgz",
     "lint": "tslint -c tslint.json './src/**/*.ts'",
     "prepack": "npm run clean-bundle",
     "test": "mocha ./dist/test/**/*.js",
