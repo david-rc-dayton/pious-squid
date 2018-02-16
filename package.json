@@ -14,7 +14,7 @@
     "clean-build": "npm run clean && npm run build",
     "clean-bundle": "npm run clean-build && npm run bundle",
     "clean": "rimraf dist bundle pious-squid-*.tgz",
-    "lint": "tslint -c tslint.json './src/**/*.ts'",
+    "lint": "tslint --project tsconfig.json './src/**/*.ts'",
     "prepack": "npm run clean-bundle",
     "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
@@ -37,6 +37,7 @@
     "mocha": "^5.0.1",
     "rimraf": "^2.6.2",
     "tslint": "^5.9.1",
+    "tslint-config-standard": "^7.0.0",
     "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.1.8",
     "webpack": "^3.11.0"
