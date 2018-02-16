@@ -10,12 +10,9 @@ import { Vector } from './vector'
  */
 export function precession (epoch: Epoch): [number, number, number] {
   const t = epoch.toTerrestrialCenturies()
-  const zeta = evalPoly(t,
-    [0.0, 0.6406161, 0.0000839, 5.0e-6]) * c.DEG2RAD
-  const theta = evalPoly(t,
-    [0.0, 0.5567530, -0.0001185, -1.16e-5]) * c.DEG2RAD
-  const zed = evalPoly(t,
-    [0.0, 0.6406161, 0.0003041, 5.1e-6]) * c.DEG2RAD
+  const zeta = evalPoly(t, [0.0, 0.6406161, 0.0000839, 5.0e-6]) * c.DEG2RAD
+  const theta = evalPoly(t, [0.0, 0.5567530, -0.0001185, -1.16e-5]) * c.DEG2RAD
+  const zed = evalPoly(t, [0.0, 0.6406161, 0.0003041, 5.1e-6]) * c.DEG2RAD
   return [zeta, theta, zed]
 }
 
@@ -47,11 +44,12 @@ export function nutation (epoch: Epoch): [number, number, number] {
   let deltaEpsilon = 0
   c.IAU_1980.map((iauLine) => {
     const arg = (
-      iauLine[0] * moonAnom +
-      iauLine[1] * sunAnom +
-      iauLine[2] * moonLat +
-      iauLine[3] * sunElong +
-      iauLine[4] * moonRaan)
+      iauLine[0] * moonAnom
+      + iauLine[1] * sunAnom
+      + iauLine[2] * moonLat
+      + iauLine[3] * sunElong
+      + iauLine[4] * moonRaan
+    )
     const sinC = iauLine[5] + iauLine[6] * t
     const cosC = iauLine[7] + iauLine[8] * t
     deltaPsi = deltaPsi + sinC * Math.sin(arg)

@@ -4,7 +4,7 @@ import { derivative } from '../forces'
 import { sign } from '../operations'
 import { Vector } from '../vector'
 import {
-  INumericalModel, IPropagator, PropagatorType
+  INumericalModel, INumericalOptions, IPropagator, PropagatorType
 } from './propagator-interface'
 
 /** Default propagator model. */
@@ -45,30 +45,8 @@ export class RungeKutta4 implements IPropagator {
   public readonly type: string
   /** Cached state used in propagator calculations after initialization. */
   public readonly state: J2000
-  /** Step size, in seconds. */
-  public readonly stepSize: number
-  /** Model J2 effect, if true. */
-  public readonly j2Effect: boolean
-  /** Model J3 effect, if true. */
-  public readonly j3Effect: boolean
-  /** Model J4 effect, if true. */
-  public readonly j4Effect: boolean
-  /** Model Solar gravity, if true. */
-  public readonly gravitySun: boolean
-  /** Model Lunar gravity, if true. */
-  public readonly gravityMoon: boolean
-  /** Model Solar radiation pressure, if true. */
-  public readonly solarRadiation: boolean
-  /** Model atmospheric drag, if true. */
-  public readonly atmosphericDrag: boolean
-  /** Satellite mass, in kilograms */
-  public readonly mass: number
-  /** Satellite surface area, in meters squared */
-  public readonly area: number
-  /** Satellite drag coefficient. */
-  public readonly drag: number
-  /** Satellite reflectivity coefficient. */
-  public readonly reflect: number
+  /** Propagator force model. */
+  public readonly model: INumericalModel
 
   /**
    * Create a new RungeKutta4 propagator object. If values are not specified
@@ -90,30 +68,18 @@ export class RungeKutta4 implements IPropagator {
    * @param state satellite state
    * @param model propagator options
    */
-  public constructor (state: J2000, model?: INumericalModel) {
+  public constructor (state: J2000, model?: INumericalOptions) {
     this.type = PropagatorType.RUNGE_KUTTA_4
     this.state = state
     model = model || {}
-    const mergeModel = { ...DEFAULT_MODEL, ...model }
-    this.stepSize = mergeModel.stepSize as number
-    this.j2Effect = mergeModel.j2Effect as boolean
-    this.j3Effect = mergeModel.j3Effect as boolean
-    this.j4Effect = mergeModel.j4Effect as boolean
-    this.gravitySun = mergeModel.gravitySun as boolean
-    this.gravityMoon = mergeModel.gravityMoon as boolean
-    this.solarRadiation = mergeModel.solarRadiation as boolean
-    this.atmosphericDrag = mergeModel.atmosphericDrag as boolean
-    this.mass = mergeModel.mass as number
-    this.area = mergeModel.area as number
-    this.drag = mergeModel.drag as number
-    this.reflect = mergeModel.reflect as number
+    this.model = { ...DEFAULT_MODEL, ...model }
   }
 
   /**
    * Create a new RungeKutta4 propagator object, using onlt two-body
    * perturbation options.
    */
-  public static twoBody (state: J2000, model?: INumericalModel): RungeKutta4 {
+  public static twoBody (state: J2000, model?: INumericalOptions): RungeKutta4 {
     model = model || {}
     const mergeModel = { ...DEFAULT_MODEL_TWOBODY, ...model }
     return new RungeKutta4(state, mergeModel)
@@ -124,18 +90,18 @@ export class RungeKutta4 implements IPropagator {
     const status = (p: boolean) => p ? 'ENABLED' : 'DISABLED'
     return [
       '[RungeKutta4]',
-      `  Step Size: ${this.stepSize} seconds`,
-      `  Satellite Mass: ${this.mass} kg`,
-      `  Satellite Surface Area: ${this.area} m^2`,
-      `  Drag Coefficient: ${this.drag}`,
-      `  Reflectivity Coefficient: ${this.reflect}`,
-      `  J2 Effect: ${status(this.j2Effect)}`,
-      `  J3 Effect: ${status(this.j3Effect)}`,
-      `  J4 Effect: ${status(this.j4Effect)}`,
-      `  Sun Gravity: ${status(this.gravitySun)}`,
-      `  Moon Gravity: ${status(this.gravityMoon)}`,
-      `  Solar Radiation Pressure: ${status(this.solarRadiation)}`,
-      `  Atmospheric Drag: ${status(this.atmosphericDrag)}`
+      `  Step Size: ${this.model.stepSize} seconds`,
+      `  Satellite Mass: ${this.model.mass} kg`,
+      `  Satellite Surface Area: ${this.model.area} m^2`,
+      `  Drag Coefficient: ${this.model.drag}`,
+      `  Reflectivity Coefficient: ${this.model.reflect}`,
+      `  J2 Effect: ${status(this.model.j2Effect)}`,
+      `  J3 Effect: ${status(this.model.j3Effect)}`,
+      `  J4 Effect: ${status(this.model.j4Effect)}`,
+      `  Sun Gravity: ${status(this.model.gravitySun)}`,
+      `  Moon Gravity: ${status(this.model.gravityMoon)}`,
+      `  Solar Radiation Pressure: ${status(this.model.solarRadiation)}`,
+      `  Atmospheric Drag: ${status(this.model.atmosphericDrag)}`
     ].join('\n')
   }
 
@@ -150,7 +116,7 @@ export class RungeKutta4 implements IPropagator {
     while (tempState.epoch.unix !== unix) {
       const delta = unix - tempState.epoch.unix
       const sgn = sign(delta)
-      const stepNorm = Math.min(Math.abs(delta), this.stepSize) * sgn
+      const stepNorm = Math.min(Math.abs(delta), this.model.stepSize) * sgn
       tempState = this.integrate(tempState, stepNorm)
     }
     return tempState
@@ -165,6 +131,7 @@ export class RungeKutta4 implements IPropagator {
    * @param count number of steps to take
    */
   public step (millis: number, interval: number, count: number): J2000[] {
+    const { stepSize } = this.model
     let tempState = this.propagate(millis)
     const output: J2000[] = [tempState]
     let epochStart = tempState.epoch.unix
@@ -173,7 +140,7 @@ export class RungeKutta4 implements IPropagator {
       while (tempState.epoch.unix !== unix) {
         const delta = unix - tempState.epoch.unix
         const sgn = sign(delta)
-        const stepNorm = Math.min(Math.abs(delta), this.stepSize) * sgn
+        const stepNorm = Math.min(Math.abs(delta), stepSize) * sgn
         tempState = this.integrate(tempState, stepNorm)
       }
       epochStart = tempState.epoch.unix
@@ -187,24 +154,8 @@ export class RungeKutta4 implements IPropagator {
    * options.
    */
   private genDerivative (): (epoch: Epoch, posVel: Vector) => Vector {
-    const { j2Effect, j3Effect, j4Effect, gravitySun, gravityMoon,
-      solarRadiation, atmosphericDrag, mass, area, drag, reflect } = this
     return (epoch: Epoch, posVel: Vector) => {
-      return derivative(
-        epoch,
-        posVel,
-        j2Effect,
-        j3Effect,
-        j4Effect,
-        gravitySun,
-        gravityMoon,
-        solarRadiation,
-        atmosphericDrag,
-        mass,
-        area,
-        drag,
-        reflect
-      )
+      return derivative(epoch, posVel, this.model)
     }
   }
 

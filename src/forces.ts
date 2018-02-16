@@ -1,6 +1,7 @@
 import { atmosphericDensity, moonPosition, sunPosition } from './bodies'
 import * as c from './constants'
 import { Epoch } from './epoch'
+import { INumericalModel } from './propagators/propagator-interface'
 import { Vector } from './vector'
 
 /**
@@ -182,47 +183,35 @@ export function atmosphericDrag (position: Vector, velocity: Vector,
  *
  * @param epoch satellite state epoch
  * @param posVel satellite J2000 position and velocity 6-vector, in km and km/s
- * @param j2Flag enable J2 effect model
- * @param j3Flag enable J3 effect model
- * @param j4Flag enable J4 effect model
- * @param gSunFlag enable Solar gravity model
- * @param gMoonFlag enable lunar gravity model
- * @param sRadFlag enable solar radiation pressure model
- * @param aDragFlag enable atmospheric drag model
- * @param mass satellite mass, in kilograms
- * @param area satellite area, in meters squared
- * @param drag satellite drag coefficient
- * @param reflect satellite reflectivity coefficient
+ * @param flags options for calculating acceleration
  */
-export function derivative (epoch: Epoch, posVel: Vector, j2Flag: boolean,
-  j3Flag: boolean, j4Flag: boolean, gSunFlag: boolean,
-  gMoonFlag: boolean, sRadFlag: boolean,
-  aDragFlag: boolean, mass: number, area: number,
-  drag: number, reflect: number): Vector {
+export function derivative (epoch: Epoch, posVel: Vector,
+  flags: INumericalModel): Vector {
   const position = posVel.slice(0, 3)
   const velocity = posVel.slice(3, 6)
+  const { mass, area, drag, reflect } = flags
   let acceleration = gravityEarth(position)
-  if (j2Flag) {
+  if (flags.j2Effect) {
     acceleration = acceleration.add(j2Effect(position))
   }
-  if (j3Flag) {
+  if (flags.j3Effect) {
     acceleration = acceleration.add(j3Effect(position))
   }
-  if (j4Flag) {
+  if (flags.j4Effect) {
     acceleration = acceleration.add(j4Effect(position))
   }
-  if (gSunFlag) {
+  if (flags.gravitySun) {
     acceleration = acceleration.add(gravitySun(epoch, position))
   }
-  if (gMoonFlag) {
+  if (flags.gravityMoon) {
     acceleration = acceleration.add(gravityMoon(epoch, position))
   }
-  if (sRadFlag) {
+  if (flags.solarRadiation) {
     acceleration = acceleration.add(
       solarRadiation(epoch, position, mass, area, reflect)
     )
   }
-  if (aDragFlag) {
+  if (flags.atmosphericDrag) {
     acceleration = acceleration.add(
       atmosphericDrag(position, velocity, mass, area, drag)
     )

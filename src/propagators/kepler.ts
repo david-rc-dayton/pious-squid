@@ -3,7 +3,7 @@ import { J2000 } from '../coordinates/j2000'
 import { KeplerianElements } from '../coordinates/keplerian-elements'
 import { matchHalfPlane } from '../operations'
 import {
-  IKeplerModel, IPropagator, PropagatorType
+  IKeplerModel, IKeplerOptions, IPropagator, PropagatorType
 } from './propagator-interface'
 
 /** Default propagator model. */
@@ -20,14 +20,8 @@ export class Kepler implements IPropagator {
   public readonly type: string
   /** Keplerian element set. */
   public readonly elements: KeplerianElements
-  /** First derivative of mean motion, in revolutions/day^2. */
-  public readonly nDot: number
-  /** Second derivative of mean motion, in revolutions/day^3. */
-  public readonly nDDot: number
-  /** Model effects of atmospheric drag, if true. */
-  public readonly atmosphericDrag: boolean
-  /** Model J2 effect, if true. */
-  public readonly j2Effect: boolean
+  /** Propagator force model. */
+  public readonly model: IKeplerModel
 
   /**
    * Create a new Kepler propagator object. If values are not specified in
@@ -41,20 +35,16 @@ export class Kepler implements IPropagator {
    * @param elements element set
    * @param model propagator options
    */
-  constructor (elements: KeplerianElements, model?: IKeplerModel) {
+  constructor (elements: KeplerianElements, model?: IKeplerOptions) {
     this.type = PropagatorType.KEPLER
     this.elements = elements
     model = model || {}
-    const mergeModel = { ...DEFAULT_MODEL, ...model }
-    this.nDot = mergeModel.nDot as number
-    this.nDDot = mergeModel.nDDot as number
-    this.atmosphericDrag = mergeModel.atmosphericDrag as boolean
-    this.j2Effect = mergeModel.j2Effect as boolean
+    this.model = { ...DEFAULT_MODEL, ...model }
   }
 
   /** Return a string representation of the object. */
   public toString () {
-    const { nDot, nDDot, atmosphericDrag, j2Effect } = this
+    const { nDot, nDDot, atmosphericDrag, j2Effect } = this.model
     const status = (p: boolean) => p ? 'ENABLED' : 'DISABLED'
     return [
       '[Kepler]',
@@ -72,18 +62,18 @@ export class Kepler implements IPropagator {
    */
   public propagate (millis: number): J2000 {
     const { epoch, a, e, i, o, w, v } = this.elements
-    const { nDot, nDDot } = this
+    const { nDot, nDDot } = this.model
     const delta = ((millis / 1000) - epoch.unix) * SEC2DAY
     const n = this.elements.meanMotion()
     let aDot = 0
     let eDot = 0
-    if (this.atmosphericDrag) {
+    if (this.model.atmosphericDrag) {
       aDot = -((2 * a) / (3 * n)) * nDot
       eDot = -((2 * (1 - e)) / (3 * n)) * nDot
     }
     let oDot = 0
     let wDot = 0
-    if (this.j2Effect) {
+    if (this.model.j2Effect) {
       const j2Rad = Math.pow(EARTH_RAD_EQ / (a * (1 - e * e)), 2)
       oDot = -(3 / 2) * EARTH_J2 * j2Rad * Math.cos(i) * n * TWO_PI
       wDot = (3 / 4) * EARTH_J2 * j2Rad
@@ -93,22 +83,22 @@ export class Kepler implements IPropagator {
     const eFinal = e + eDot * delta
     const oFinal = o + oDot * delta
     const wFinal = w + wDot * delta
-    let EInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)))
-    EInit = matchHalfPlane(EInit, v)
-    let MInit = EInit - e * Math.sin(EInit)
-    MInit = matchHalfPlane(MInit, EInit)
-    let MFinal = (MInit / TWO_PI)
+    let eeInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)))
+    eeInit = matchHalfPlane(eeInit, v)
+    let mInit = eeInit - e * Math.sin(eeInit)
+    mInit = matchHalfPlane(mInit, eeInit)
+    let mFinal = (mInit / TWO_PI)
       + n * delta
       + (nDot / 2) * Math.pow(delta, 2)
       + (nDDot / 6) * Math.pow(delta, 3)
-    MFinal = (MFinal % 1) * TWO_PI
-    let EFinal = MFinal
+    mFinal = (mFinal % 1) * TWO_PI
+    let eeFinal = mFinal
     for (let iter = 0; iter < 16; iter++) {
-      EFinal = MFinal + eFinal * Math.sin(EFinal)
+      eeFinal = mFinal + eFinal * Math.sin(eeFinal)
     }
-    let vFinal = Math.acos((Math.cos(EFinal) - eFinal)
-      / (1 - eFinal * Math.cos(EFinal)))
-    vFinal = matchHalfPlane(vFinal, EFinal)
+    let vFinal = Math.acos((Math.cos(eeFinal) - eFinal)
+      / (1 - eFinal * Math.cos(eeFinal)))
+    vFinal = matchHalfPlane(vFinal, eeFinal)
     return new KeplerianElements(millis, aFinal, eFinal,
       i, oFinal, wFinal, vFinal).toJ2K()
   }

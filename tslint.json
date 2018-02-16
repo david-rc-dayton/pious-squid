@@ -4,6 +4,11 @@
     "max-line-length": [
       true,
       80
-    ]
+    ],
+    "ordered-imports": true,
+    "class-name": true,
+    "interface-name": true,
+    "variable-name": true,
+    "object-literal-sort-keys": true
   }
 }
