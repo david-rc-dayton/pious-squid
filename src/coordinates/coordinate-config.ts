@@ -1,3 +1,4 @@
+/** Interface for coordinate objects. */
 export interface ICoordinate {
   /** Coordinate identifier string. */
   type: string

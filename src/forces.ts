@@ -166,8 +166,7 @@ export function solarRadiation (epoch: Epoch, position: Vector, mass: number,
  * @param drag satellite drag coefficient
  */
 export function atmosphericDrag (position: Vector, velocity: Vector,
-  mass: number, area: number,
-  drag: number): Vector {
+  mass: number, area: number, drag: number): Vector {
   const rotVel = c.EARTH_ROTATION.cross(position)
   const vRel = velocity.add(rotVel.scale(-1)).scale(1000)
   const vMag = vRel.magnitude()

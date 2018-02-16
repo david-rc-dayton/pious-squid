@@ -40,7 +40,7 @@ export function sign (n: number): number {
 }
 
 /**
- * Return the angle (original or inverse) that exists the half plane of the
+ * Return the angle (original or inverse) that exists in the half plane of the
  * match argument.
  *
  * @param angle angle to (possibly) adjust

@@ -162,6 +162,7 @@ export class RungeKutta4 implements IPropagator {
   /**
    * Integrate orbital perturbations to a new state.
    *
+   * @param state object state
    * @param step step size, in seconds
    */
   private integrate (state: J2000, step: number): J2000 {
