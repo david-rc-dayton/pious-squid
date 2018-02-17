@@ -1,4 +1,4 @@
-import * as assert from 'assert'
+import { assert } from 'chai'
 import * as bodies from '../bodies'
 import { Epoch } from '../epoch'
 import { Vector } from '../vector'

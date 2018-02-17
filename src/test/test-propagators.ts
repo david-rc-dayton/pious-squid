@@ -1,4 +1,4 @@
-import * as assert from 'assert'
+import { assert } from 'chai'
 import { J2000 } from '../coordinates/j2000'
 import { Kepler } from '../propagators/kepler'
 import { RungeKutta4 } from '../propagators/runge-kutta-4'

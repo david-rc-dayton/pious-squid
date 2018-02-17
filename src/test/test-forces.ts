@@ -1,4 +1,4 @@
-import * as assert from 'assert'
+import { assert } from 'chai'
 import { Epoch } from '../epoch'
 import * as forces from '../forces'
 import { Vector } from '../vector'

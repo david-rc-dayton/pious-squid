@@ -1,4 +1,4 @@
-import * as assert from 'assert'
+import { assert } from 'chai'
 import { DEG2RAD, RAD2DEG } from '../constants'
 import { EarthCenteredFixed } from '../coordinates/earth-centered-fixed'
 import { Geodetic } from '../coordinates/geodetic'
