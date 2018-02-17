@@ -1,6 +1,7 @@
 {
   "editor.detectIndentation": false,
   "editor.tabSize": 2,
+  "tslint.autoFixOnSave": true,
   "typescript.disableAutomaticTypeAcquisition": true,
   "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
   "typescript.tsdk": "node_modules/typescript/lib"
