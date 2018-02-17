@@ -1,5 +1,8 @@
 {
   "editor.detectIndentation": false,
+  "editor.rulers": [
+    80
+  ],
   "editor.tabSize": 2,
   "tslint.autoFixOnSave": true,
   "typescript.disableAutomaticTypeAcquisition": true,
