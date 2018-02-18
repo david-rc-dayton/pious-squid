@@ -2,6 +2,7 @@ import { EARTH_RAD_MEAN } from '../constants'
 import { J2000 } from '../coordinates/j2000'
 import { IPropagator } from '../propagators/propagator-interface'
 import { ISatelliteOptions } from './construct-config'
+import { GroundStation } from './ground-station'
 
 /** Default construct options. */
 const DEFAULT_OPTIONS: ISatelliteOptions = {
@@ -37,6 +38,14 @@ export class Satellite {
       `  Name: ${this.name}`,
       `  Propagator: ${this.propagator.type}`
     ].join('\n')
+  }
+
+  /** Convert to a GroundStation object, using current cached state. */
+  public toGroundStation (): GroundStation {
+    return new GroundStation(
+      this.getState().toECI().toECEF().toGeodetic(),
+      { name: this.name, minEl: -Math.PI }
+    )
   }
 
   /** Return the propagator's cached state. */

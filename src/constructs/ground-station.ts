@@ -1,5 +1,6 @@
-import { J2000 } from '..'
+import { sunPosition } from '../bodies'
 import { Geodetic } from '../coordinates/geodetic'
+import { J2000 } from '../coordinates/j2000'
 import { LookAngle } from '../coordinates/look-angle'
 import { IGroundStationOptions } from './construct-config'
 
@@ -59,5 +60,17 @@ export class GroundStation {
   public isVisible (state: J2000): boolean {
     const { elevation } = this.lookAngles(state)
     return elevation >= this.minEl
+  }
+
+  /**
+   * Calculate the angle between the Sun and a target state, in radians, using
+   * the ground station as the vertex.
+   */
+  public sunAngle (state: J2000): number {
+    const sensor = this.location.toECEF()
+      .toECI(state.epoch.toMillis()).toJ2K().position
+    const sun = sunPosition(state.epoch).changeOrigin(sensor)
+    const target = state.position.changeOrigin(sensor)
+    return target.angle(sun)
   }
 }
