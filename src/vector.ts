@@ -207,4 +207,10 @@ export class Vector {
   public angle (v: Vector): number {
     return Math.acos(this.dot(v) / (this.magnitude() * v.magnitude()))
   }
+
+  /** Change coordinates to the relative position from a new origin. */
+  public changeOrigin (origin: Vector): Vector {
+    const delta = origin.scale(-1)
+    return this.add(delta)
+  }
 }

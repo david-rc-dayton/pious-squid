@@ -112,4 +112,14 @@ describe('Vector', () => {
       assert.equal(v1.angle(v2), 2.671408755771823)
     })
   })
+
+  describe('#changeOrigin()', () => {
+    const origin = new Vector(3, 3)
+    const p1 = new Vector(1, 1)
+    const p2 = new Vector(-1, 1)
+    it('should output the vector given a different origin', () => {
+      assert.deepEqual(p1.changeOrigin(origin).state, [-2, -2])
+      assert.deepEqual(p2.changeOrigin(origin).state, [-4, -2])
+    })
+  })
 })

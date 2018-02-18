@@ -5,7 +5,7 @@ import { J2000 } from '../coordinates/j2000'
 import { RungeKutta4 } from '../propagators/runge-kutta-4'
 
 describe('Satellite', () => {
-  describe('#.calcFootprint()', () => {
+  describe('#calcFootprint()', () => {
     it('should calculate swath angle using cached state', () => {
       const state = new J2000(0, 42164, 0, 0, 0, 0, 0)
       const satellite = new Satellite(new RungeKutta4(state))
