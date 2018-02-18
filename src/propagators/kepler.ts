@@ -17,20 +17,20 @@ const DEFAULT_MODEL: IKeplerModel = {
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements IPropagator {
   /** Propagator identifier string. */
-  public readonly type: string
+  public type: string
   /** Keplerian element set. */
-  public readonly elements: KeplerianElements
+  public elements: KeplerianElements
   /** Propagator force model. */
-  public readonly model: IKeplerModel
+  public model: IKeplerModel
 
   /**
    * Create a new Kepler propagator object. If values are not specified in
    * the model argument, the following options will be used:
    *
-   *     nDot            = 0
-   *     nDDot           = 0
-   *     atmosphericDrag = false
-   *     j2Effect        = false
+   *   nDot            = 0
+   *   nDDot           = 0
+   *   atmosphericDrag = false
+   *   j2Effect        = false
    *
    * @param elements element set
    * @param model propagator options
@@ -53,6 +53,15 @@ export class Kepler implements IPropagator {
       `  Atmospheric Drag: ${status(atmosphericDrag)}`,
       `  J2 Effect: ${status(j2Effect)}`
     ].join('\n')
+  }
+
+  /**
+   * Restore initial propagator state. Doesn't do anything for the Kepler
+   * propagator, since there is no cached state.
+   */
+  public reset (): Kepler {
+    // do nothing, since there is no cached state
+    return this
   }
 
   /**

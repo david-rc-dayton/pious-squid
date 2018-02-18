@@ -7,21 +7,21 @@ import { J2000 } from './j2000'
 /** Class representing Keplerian orbital elements. */
 export class KeplerianElements implements ICoordinate {
   /** Coordinate identifier string. */
-  public readonly type: CoordinateType
+  public type: CoordinateType
   /** Satellite state epoch. */
-  public readonly epoch: Epoch
+  public epoch: Epoch
   /** Semimajor axis, in kilometers. */
-  public readonly a: number
+  public a: number
   /** Orbit eccentricity (unitless). */
-  public readonly e: number
+  public e: number
   /** Inclination, in radians. */
-  public readonly i: number
+  public i: number
   /** Right ascension of the ascending node, in radians. */
-  public readonly o: number
+  public o: number
   /** Argument of perigee, in radians. */
-  public readonly w: number
+  public w: number
   /** True anomaly, in radians. */
-  public readonly v: number
+  public v: number
 
   /**
    * Create a new Keplerian object.

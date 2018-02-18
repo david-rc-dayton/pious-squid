@@ -9,13 +9,13 @@ import { KeplerianElements } from './keplerian-elements'
 /** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 implements ICoordinate {
   /** Coordinate identifier string. */
-  public readonly type: CoordinateType
+  public type: CoordinateType
   /** Satellite state epoch. */
-  public readonly epoch: Epoch
+  public epoch: Epoch
   /** Position 3-vector, in kilometers. */
-  public readonly position: Vector
+  public position: Vector
   /** Velocity 3-vector, in kilometers per second. */
-  public readonly velocity: Vector
+  public velocity: Vector
 
   /**
    * Create a new J2000 object.

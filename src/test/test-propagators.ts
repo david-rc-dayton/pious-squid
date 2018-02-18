@@ -25,17 +25,17 @@ describe('RungeKutta4', () => {
     it('should have an error less than 50 meters after 6 hours', () => {
       const { position } = rk4.propagate(GEO_6HR.epoch.toMillis())
       const dist = position.distance(GEO_6HR.position) * 1000
-      assert.isBelow(dist, 50, `Distance: ${dist.toFixed(2)} meters`)
+      assert.isBelow(dist, 50)
     })
     it('should have an error less than 100 meters after 12 hours', () => {
       const { position } = rk4.propagate(GEO_12HR.epoch.toMillis())
       const dist = position.distance(GEO_12HR.position) * 1000
-      assert.isBelow(dist, 100, `Distance: ${dist.toFixed(2)} meters`)
+      assert.isBelow(dist, 100)
     })
     it('should have an error less than 200 meters after 24 hours', () => {
       const { position } = rk4.propagate(GEO_24HR.epoch.toMillis())
       const dist = position.distance(GEO_24HR.position) * 1000
-      assert.isBelow(dist, 200, `Distance: ${dist.toFixed(2)} meters`)
+      assert.isBelow(dist, 200)
     })
   })
 })
@@ -48,7 +48,7 @@ describe('Kepler', () => {
         -3.86234943730e4, 1.68697633760e4, 1.00434444900e3,
         -1.231249e0, -2.810612e0, -2.01294e-1
       )
-      const propRk = RungeKutta4.twoBody(state, { stepSize: 60 })
+      const propRk = RungeKutta4.twoBody(state, { stepSize: 300 })
       const resultRk = propRk.step(
         Date.UTC(2017, 10, 16, 0, 11, 30, 195), 21600, 6
       )
@@ -59,7 +59,7 @@ describe('Kepler', () => {
       for (let i = 0; i < resultRk.length; i++) {
         const dist = resultRk[i].position
           .distance(resultKep[i].position) * 1000
-        assert.isBelow(dist, 1, `Distance: ${dist.toFixed(3)} meters`)
+        assert.isBelow(dist, 5)
       }
     })
   })

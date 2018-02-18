@@ -4,7 +4,7 @@ import { evalPoly } from './operations'
 /** Class representing a astrodynamic epoch. */
 export class Epoch {
   /** Seconds since 1 January 1970, 00:00 UTC. */
-  public readonly unix: number
+  public unix: number
 
   /**
    * Create a new Epoch object.

@@ -42,35 +42,38 @@ const DEFAULT_MODEL_TWOBODY: INumericalModel = {
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
   /** Propagator identifier string. */
-  public readonly type: string
+  public type: string
+  /** Propagator initial state. */
+  public initState: J2000
   /** Cached state used in propagator calculations after initialization. */
-  public readonly state: J2000
+  public cachedState: J2000
   /** Propagator force model. */
-  public readonly model: INumericalModel
+  public model: INumericalModel
 
   /**
    * Create a new RungeKutta4 propagator object. If values are not specified
    * in the model argument, the following options will be used:
    *
-   *     stepSize        = 60      // seconds
-   *     j2Effect        = true    // enabled
-   *     j3Effect        = true    // enabled
-   *     j4Effect        = true    // enabled
-   *     gravitySun      = true    // enabled
-   *     gravityMoon     = true    // enabled
-   *     solarRadiation  = true    // enabled
-   *     atmosphericDrag = true    // enabled
-   *     mass            = 1000    // kilograms
-   *     area            = 1       // meters squared
-   *     drag            = 2.2     // coefficient
-   *     reflect         = 1.4     // coefficient
+   *   stepSize        = 60      // seconds
+   *   j2Effect        = true    // enabled
+   *   j3Effect        = true    // enabled
+   *   j4Effect        = true    // enabled
+   *   gravitySun      = true    // enabled
+   *   gravityMoon     = true    // enabled
+   *   solarRadiation  = true    // enabled
+   *   atmosphericDrag = true    // enabled
+   *   mass            = 1000    // kilograms
+   *   area            = 1       // meters squared
+   *   drag            = 2.2     // coefficient
+   *   reflect         = 1.4     // coefficient
    *
    * @param state satellite state
    * @param model propagator options
    */
   public constructor (state: J2000, model?: INumericalOptions) {
     this.type = PropagatorType.RUNGE_KUTTA_4
-    this.state = state
+    this.initState = state
+    this.cachedState = state
     model = model || {}
     this.model = { ...DEFAULT_MODEL, ...model }
   }
@@ -105,6 +108,12 @@ export class RungeKutta4 implements IPropagator {
     ].join('\n')
   }
 
+  /** Restore initial propagator state. */
+  public reset (): RungeKutta4 {
+    this.cachedState = this.initState
+    return this
+  }
+
   /**
    * Propagate satellite state to a new epoch.
    *
@@ -112,14 +121,13 @@ export class RungeKutta4 implements IPropagator {
    */
   public propagate (millis: number): J2000 {
     const unix = millis / 1000
-    let tempState = this.state
-    while (tempState.epoch.unix !== unix) {
-      const delta = unix - tempState.epoch.unix
+    while (this.cachedState.epoch.unix !== unix) {
+      const delta = unix - this.cachedState.epoch.unix
       const sgn = sign(delta)
       const stepNorm = Math.min(Math.abs(delta), this.model.stepSize) * sgn
-      tempState = this.integrate(tempState, stepNorm)
+      this.cachedState = this.integrate(stepNorm)
     }
-    return tempState
+    return this.cachedState
   }
 
   /**
@@ -131,20 +139,11 @@ export class RungeKutta4 implements IPropagator {
    * @param count number of steps to take
    */
   public step (millis: number, interval: number, count: number): J2000[] {
-    const { stepSize } = this.model
-    let tempState = this.propagate(millis)
-    const output: J2000[] = [tempState]
-    let epochStart = tempState.epoch.unix
+    const output: J2000[] = [this.propagate(millis)]
+    let tempEpoch = millis
     for (let i = 0; i < count; i++) {
-      const unix = epochStart + interval
-      while (tempState.epoch.unix !== unix) {
-        const delta = unix - tempState.epoch.unix
-        const sgn = sign(delta)
-        const stepNorm = Math.min(Math.abs(delta), stepSize) * sgn
-        tempState = this.integrate(tempState, stepNorm)
-      }
-      epochStart = tempState.epoch.unix
-      output.push(tempState)
+      tempEpoch += interval * 1000
+      output.push(this.propagate(tempEpoch))
     }
     return output
   }
@@ -162,11 +161,10 @@ export class RungeKutta4 implements IPropagator {
   /**
    * Integrate orbital perturbations to a new state.
    *
-   * @param state object state
    * @param step step size, in seconds
    */
-  private integrate (state: J2000, step: number): J2000 {
-    const { epoch, position, velocity } = state
+  private integrate (step: number): J2000 {
+    const { epoch, position, velocity } = this.cachedState
     const posVel = position.concat(velocity)
     const drv = this.genDerivative()
     const k1 = drv(epoch, posVel)

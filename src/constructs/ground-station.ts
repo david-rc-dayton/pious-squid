@@ -12,11 +12,11 @@ const DEFAULT_OPTIONS: IGroundStationOptions = {
 /** Class representing a ground station. */
 export class GroundStation {
   /** Ground station name. */
-  public readonly name: string
+  public name: string
   /** Geodetic location of the ground station. */
-  public readonly location: Geodetic
+  public location: Geodetic
   /** Site minimum elevation, in radians. */
-  public readonly minEl: number
+  public minEl: number
 
   /**
    * Create a new GroundStation object. If values are not specified in the

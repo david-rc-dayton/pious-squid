@@ -3,13 +3,13 @@ import { CoordinateType, ICoordinate } from './coordinate-config'
 /** Class representing look angles. */
 export class LookAngle implements ICoordinate {
   /** Coordinate identifier string. */
-  public readonly type: CoordinateType
+  public type: CoordinateType
   /** Azimuth angle, in radians. */
-  public readonly azimuth: number
+  public azimuth: number
   /** Elevation angle, in radians. */
-  public readonly elevation: number
+  public elevation: number
   /** Slant range, in kilometers. */
-  public readonly range: number
+  public range: number
 
   /**
    * Create a new LookAngle object.

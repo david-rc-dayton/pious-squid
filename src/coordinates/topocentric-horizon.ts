@@ -4,13 +4,13 @@ import { LookAngle } from './look-angle'
 /** Class representing topocentric-horizon coordinates. */
 export class TopocentricHorizon implements ICoordinate {
   /** Coordinate identifier string. */
-  public readonly type: CoordinateType
+  public type: CoordinateType
   /** South component, in kilometers. */
-  public readonly s: number
+  public s: number
   /** East component, in kilometers. */
-  public readonly e: number
+  public e: number
   /** Surface-normal component, in kilometers. */
-  public readonly z: number
+  public z: number
 
   /**
    * Create a new Topocentric object.

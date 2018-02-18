@@ -10,9 +10,9 @@ const DEFAULT_OPTIONS: ISatelliteOptions = {
 /** Class representing a satellite. */
 export class Satellite {
   /** Satellite name. */
-  public readonly name: string
+  public name: string
   /** Satellite ephemeris propagator. */
-  public readonly propagator: IPropagator
+  public propagator: IPropagator
 
   /** Create a new Satellite object. If values are not specified in the
    * options argument, the following defaults are used:

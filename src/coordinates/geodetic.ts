@@ -5,13 +5,13 @@ import { EarthCenteredFixed } from './earth-centered-fixed'
 /** Class representing Geodetic (LLA) coordinates. */
 export class Geodetic implements ICoordinate {
   /** Coordinate identifier string. */
-  public readonly type: CoordinateType
+  public type: CoordinateType
   /** Geodetic latitude, in radians. */
-  public readonly latitude: number
+  public latitude: number
   /** Geodetic longitude, in radians. */
-  public readonly longitude: number
+  public longitude: number
   /** Geodetic altitude, in kilometers. */
-  public readonly altitude: number
+  public altitude: number
 
   /**
    * Create a new Geodetic object.

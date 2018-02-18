@@ -54,6 +54,8 @@ export interface IPropagator {
   propagate (millis: number): J2000
   /** Propagate state by some number of seconds, repeatedly. */
   step (millis: number, interval: number, count: number): J2000[]
+  /** Restore initial propagator state. */
+  reset (): IPropagator
 }
 
 /** Propagator type identifiers. */
