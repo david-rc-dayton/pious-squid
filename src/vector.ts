@@ -197,4 +197,14 @@ export class Vector {
       0 * x + 0 * y + 1 * z
     )
   }
+
+  /**
+   * Calculate the angle, in radians, between this Vector object, and another
+   * vector object.
+   *
+   * @param v the other vector
+   */
+  public angle (v: Vector): number {
+    return Math.acos(this.dot(v) / (this.magnitude() * v.magnitude()))
+  }
 }

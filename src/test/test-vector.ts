@@ -104,4 +104,12 @@ describe('Vector', () => {
         [-1, -1, 1])
     })
   })
+
+  describe('#angle()', () => {
+    const v1 = new Vector(2, -4, -1)
+    const v2 = new Vector(0, 5, 2)
+    it('should compute the angle between two vectors', () => {
+      assert.equal(v1.angle(v2), 2.671408755771823)
+    })
+  })
 })
