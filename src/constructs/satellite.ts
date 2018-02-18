@@ -59,9 +59,17 @@ export class Satellite {
   }
 
   /** Calculate satellite footprint half-angle, in radians. */
-  public calcFootprint (): number {
-    const dist = this.propagator.state.position.magnitude()
+  public footprint (): number {
+    const dist = this.getState().position.magnitude()
     return Math.acos(EARTH_RAD_MEAN / dist)
+  }
+
+  /**
+   * Calculate the Earth's angular radius using the current cached
+   * state, in radians.
+   */
+  public earthRadius (): number {
+    return Math.asin(EARTH_RAD_MEAN / this.getState().position.magnitude())
   }
 
   /**
