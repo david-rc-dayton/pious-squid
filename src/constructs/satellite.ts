@@ -48,6 +48,11 @@ export class Satellite {
     )
   }
 
+  /** Propagate this to match the epoch of another Satellite object. */
+  public matchEpoch (satellite: Satellite): Satellite {
+    return this.propagate(satellite.getState().epoch.toMillis())
+  }
+
   /** Return the propagator's cached state. */
   public getState (): J2000 {
     return this.propagator.state
