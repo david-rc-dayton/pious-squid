@@ -1,3 +1,4 @@
+import { EARTH_RAD_MEAN } from '../constants'
 import { J2000 } from '../coordinates/j2000'
 import { IPropagator } from '../propagators/propagator-interface'
 import { ISatelliteOptions } from './construct-config'
@@ -38,24 +39,24 @@ export class Satellite {
     ].join('\n')
   }
 
+  /** Return the propagator's cached state. */
+  public getState (): J2000 {
+    return this.propagator.state
+  }
+
+  /** Calculate satellite footprint half-angle, in radians. */
+  public calcFootprint (): number {
+    const dist = this.propagator.state.position.magnitude()
+    return Math.acos(EARTH_RAD_MEAN / dist)
+  }
+
   /**
    * Propagate the satellite's state to a new epoch.
    *
    * @param millis milliseconds since 1 January 1970, 00:00 UTC
    */
-  public propagate (millis: number): J2000 {
-    return this.propagator.propagate(millis)
-  }
-
-  /**
-   * Propagate state by some number of seconds, repeatedly, starting at a
-   * specified epoch.
-   *
-   * @param millis propagation start time
-   * @param interval seconds between output states
-   * @param count number of steps to take
-   */
-  public step (millis: number, interval: number, count: number): J2000[] {
-    return this.propagator.step(millis, interval, count)
+  public propagate (millis: number): Satellite {
+    this.propagator.propagate(millis)
+    return this
   }
 }
