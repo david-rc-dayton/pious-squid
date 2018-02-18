@@ -24,6 +24,9 @@ export const EARTH_FLAT = 1 / 298.257223563
 /** Earth polar radius, in kilometers. */
 export const EARTH_RAD_POL = EARTH_RAD_EQ * (1 - EARTH_FLAT)
 
+/** Earth mean radius, in kilometers. */
+export const EARTH_RAD_MEAN = (2 * EARTH_RAD_EQ + EARTH_RAD_POL) / 3
+
 /** Earth eccentricity, squared. */
 export const EARTH_ECC_SQ = (Math.pow(EARTH_RAD_EQ, 2)
   - Math.pow(EARTH_RAD_POL, 2)) / Math.pow(EARTH_RAD_EQ, 2)

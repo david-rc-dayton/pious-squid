@@ -46,7 +46,7 @@ export class RungeKutta4 implements IPropagator {
   /** Propagator initial state. */
   public initState: J2000
   /** Cached state used in propagator calculations after initialization. */
-  public cachedState: J2000
+  public state: J2000
   /** Propagator force model. */
   public model: INumericalModel
 
@@ -73,7 +73,7 @@ export class RungeKutta4 implements IPropagator {
   public constructor (state: J2000, model?: INumericalOptions) {
     this.type = PropagatorType.RUNGE_KUTTA_4
     this.initState = state
-    this.cachedState = state
+    this.state = state
     model = model || {}
     this.model = { ...DEFAULT_MODEL, ...model }
   }
@@ -110,7 +110,7 @@ export class RungeKutta4 implements IPropagator {
 
   /** Restore initial propagator state. */
   public reset (): RungeKutta4 {
-    this.cachedState = this.initState
+    this.state = this.initState
     return this
   }
 
@@ -121,13 +121,13 @@ export class RungeKutta4 implements IPropagator {
    */
   public propagate (millis: number): J2000 {
     const unix = millis / 1000
-    while (this.cachedState.epoch.unix !== unix) {
-      const delta = unix - this.cachedState.epoch.unix
+    while (this.state.epoch.unix !== unix) {
+      const delta = unix - this.state.epoch.unix
       const sgn = sign(delta)
       const stepNorm = Math.min(Math.abs(delta), this.model.stepSize) * sgn
-      this.cachedState = this.integrate(stepNorm)
+      this.state = this.integrate(stepNorm)
     }
-    return this.cachedState
+    return this.state
   }
 
   /**
@@ -164,7 +164,7 @@ export class RungeKutta4 implements IPropagator {
    * @param step step size, in seconds
    */
   private integrate (step: number): J2000 {
-    const { epoch, position, velocity } = this.cachedState
+    const { epoch, position, velocity } = this.state
     const posVel = position.concat(velocity)
     const drv = this.genDerivative()
     const k1 = drv(epoch, posVel)

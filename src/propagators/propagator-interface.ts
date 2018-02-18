@@ -50,6 +50,8 @@ export type INumericalOptions = Partial<INumericalModel>
 export interface IPropagator {
   /** Propagator identifier string. */
   type: string
+  /** Cache for last computed statellite state. */
+  state: J2000
   /** Propagate state to a new epoch. */
   propagate (millis: number): J2000
   /** Propagate state by some number of seconds, repeatedly. */

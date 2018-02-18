@@ -22,6 +22,8 @@ export class Kepler implements IPropagator {
   public elements: KeplerianElements
   /** Propagator force model. */
   public model: IKeplerModel
+  /** Cache for last computed statellite state. */
+  public state: J2000
 
   /**
    * Create a new Kepler propagator object. If values are not specified in
@@ -38,6 +40,7 @@ export class Kepler implements IPropagator {
   constructor (elements: KeplerianElements, model?: IKeplerOptions) {
     this.type = PropagatorType.KEPLER
     this.elements = elements
+    this.state = elements.toJ2K()
     model = model || {}
     this.model = { ...DEFAULT_MODEL, ...model }
   }
@@ -56,11 +59,10 @@ export class Kepler implements IPropagator {
   }
 
   /**
-   * Restore initial propagator state. Doesn't do anything for the Kepler
-   * propagator, since there is no cached state.
+   * Restore initial propagator state.
    */
   public reset (): Kepler {
-    // do nothing, since there is no cached state
+    this.state = this.elements.toJ2K()
     return this
   }
 
@@ -108,8 +110,9 @@ export class Kepler implements IPropagator {
     let vFinal = Math.acos((Math.cos(eeFinal) - eFinal)
       / (1 - eFinal * Math.cos(eeFinal)))
     vFinal = matchHalfPlane(vFinal, eeFinal)
-    return new KeplerianElements(millis, aFinal, eFinal,
+    this.state = new KeplerianElements(millis, aFinal, eFinal,
       i, oFinal, wFinal, vFinal).toJ2K()
+    return this.state
   }
 
   /**
