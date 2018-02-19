@@ -18,6 +18,7 @@ browser.
 + **Ephemeris Propagators**
     - Keplerian *(analytic)*
     - 4th Order Runge-Kutta *(numerical)*
+    - Interpolator *(hybrid)*
 
 + **Celestial Bodies**
     - Earth Precession / Nutation
@@ -56,7 +57,7 @@ tab on *GitHub*.
 To propagate a satellite from its position and velocity vectors:
 
 ```javascript
-// import pious-squid modules
+// import pious-squid module
 const PiousSquid = require('pious-squid')
 const J2000 = PiousSquid.J2000
 const RungeKutta4 = PiousSquid.RungeKutta4
@@ -64,9 +65,9 @@ const RungeKutta4 = PiousSquid.RungeKutta4
 
 // create the initial state
 let initState = new J2000(
-    Date.UTC(2010, 2, 10, 22, 53, 14, 697),  // UTC epoch
-    8228, 389, 6888,                         // position (km)
-    -0.7, 6.6, -0.6                          // velocity (km/s)
+  Date.UTC(2010, 2, 10, 22, 53, 14, 697),  // UTC epoch
+  8228, 389, 6888,                         // position (km)
+  -0.7, 6.6, -0.6                          // velocity (km/s)
 )
 //=> [J2000]
 //   Epoch: Wed, 10 Mar 2010 22:53:14 GMT

@@ -149,6 +149,19 @@ export class Interpolator implements Propagator {
     }
   }
 
+  /** Return a string representation of the object. */
+  public toString (): string {
+    const tStart = new Date(this.range[0]).toUTCString()
+    const tEnd = new Date(this.range[1]).toUTCString()
+    const sStr = this.isNumerical() ? `${this.model.stepSize} seconds` : 'N/A'
+    return [
+      '[Interpolator]',
+      `  Method: ${this.model.method}`,
+      `  Range: [${tStart}] -> [${tEnd}]`,
+      `  Step Size: ${sStr}`
+    ].join('\n')
+  }
+
   /**
    * Restore cached state to initial propagator state. Doesn't really do much
    * for the Interpolator, since it doesn't rely on transient states.
@@ -195,5 +208,13 @@ export class Interpolator implements Propagator {
       output.push(this.propagate(tempEpoch))
     }
     return output
+  }
+
+  /** Return true if using numerical methods, otherwise return false. */
+  private isNumerical (): boolean {
+    if (this.model.method === Interpolator.VERLET) {
+      return true
+    }
+    return false
   }
 }

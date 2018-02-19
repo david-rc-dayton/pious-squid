@@ -1,6 +1,6 @@
 // Example: using the Kepler propagator
 
-// import pious-squid modules
+// import pious-squid module
 const PiousSquid = require('..')
 const DEG2RAD = PiousSquid.constants.DEG2RAD
 const KeplerianElements = PiousSquid.KeplerianElements
@@ -8,13 +8,13 @@ const Kepler = PiousSquid.Kepler
 
 // create the initial state
 let initState = new KeplerianElements(
-    Date.UTC(2018, 1, 7, 12, 0, 0, 0),  // UTC epoch
-    6787.23371,                         // semimajor axis (kilometers)
-    0.0008787,                          // eccentricity (unitless)
-    51.34474 * DEG2RAD,                 // inclination (radians)
-    304.51644 * DEG2RAD,                // right ascension (radians)
-    54.44526 * DEG2RAD,                 // argument of perigee (radians)
-    279.68095 * DEG2RAD                 // true anomaly (radians)
+  Date.UTC(2018, 1, 7, 12, 0, 0, 0),  // UTC epoch
+  6787.23371,                         // semimajor axis (kilometers)
+  0.0008787,                          // eccentricity (unitless)
+  51.34474 * DEG2RAD,                 // inclination (radians)
+  304.51644 * DEG2RAD,                // right ascension (radians)
+  54.44526 * DEG2RAD,                 // argument of perigee (radians)
+  279.68095 * DEG2RAD                 // true anomaly (radians)
 )
 //=> [KeplerianElements]
 //   Epoch: Wed, 07 Feb 2018 12:00:00 GMT
@@ -28,11 +28,7 @@ let initState = new KeplerianElements(
 
 // initialize the propagator, using default two-body settings
 let kepProp = new Kepler(initState)
-//=> [Kepler]
-//   1st Derivative of Mean Motion: 0 rev/day^2
-//   2nd Derivative of Mean Motion: 0 rev/day^3
-//   Atmospheric Drag: DISABLED
-//   J2 Effect: DISABLED
+//=> [Kepler]:  Two-Body Propagator
 
 
 // propagate the state one day forward
