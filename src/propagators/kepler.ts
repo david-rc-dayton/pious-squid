@@ -1,68 +1,33 @@
-import { EARTH_J2, EARTH_RAD_EQ, SEC2DAY, TWO_PI } from '../constants'
+import { TWO_PI } from '../constants'
 import { J2000 } from '../coordinates/j2000'
 import { KeplerianElements } from '../coordinates/keplerian-elements'
 import { matchHalfPlane } from '../operations'
 import { Propagator, PropagatorType } from './propagator-interface'
 
-/** Options for the Kepler propagation model. */
-export interface KeplerModel {
-  /** First derivative mean motion, in revolutions/day^2. */
-  nDot: number
-  /** Second derivative of mean motion, in revolutions/day^3 */
-  nDDot: number
-  /** Model effects of atmospheric drag, if true. */
-  atmosphericDrag: boolean
-  /** Model J2 effect, if true. */
-  j2Effect: boolean
-}
-
-/** Options for the Kepler propagation constructor. */
-export type KeplerOptions = Partial<KeplerModel>
-
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements Propagator {
-  /** Default propagator model. */
-  public static readonly DEFAULT_MODEL: KeplerModel = {
-    atmosphericDrag: false,
-    j2Effect: false,
-    nDDot: 0,
-    nDot: 0
-  }
   /** Propagator identifier string. */
   public readonly type: string
-  /** Propagator force model. */
-  public readonly model: KeplerModel
   /** Cache for last computed statellite state. */
   public state: J2000
   /** Keplerian element set. */
   private readonly elements: KeplerianElements
 
   /**
-   * Create a new Kepler propagator object. If values are not specified in the
-   * model argument, options are merged from: DEFAULT_MODEL
+   * Create a new Kepler propagator object. This propagator only models
+   * two-body effects on the orbiting object.
    *
-   * @param elements element set
-   * @param model propagator options
+   * @param elements Keplerian element set
    */
-  constructor (elements: KeplerianElements, model?: KeplerOptions) {
+  constructor (elements: KeplerianElements) {
     this.type = PropagatorType.KEPLER
     this.elements = elements
     this.state = elements.toJ2K()
-    model = model || {}
-    this.model = { ...Kepler.DEFAULT_MODEL, ...model }
   }
 
   /** Return a string representation of the object. */
   public toString () {
-    const { nDot, nDDot, atmosphericDrag, j2Effect } = this.model
-    const status = (p: boolean) => p ? 'ENABLED' : 'DISABLED'
-    return [
-      '[Kepler]',
-      `  1st Derivative of Mean Motion: ${nDot} rev/day^2`,
-      `  2nd Derivative of Mean Motion: ${nDDot} rev/day^3`,
-      `  Atmospheric Drag: ${status(atmosphericDrag)}`,
-      `  J2 Effect: ${status(j2Effect)}`
-    ].join('\n')
+    return this.elements.toString()
   }
 
   /**
@@ -81,45 +46,23 @@ export class Kepler implements Propagator {
    */
   public propagate (millis: number): J2000 {
     const { epoch, a, e, i, o, w, v } = this.elements
-    const { nDot, nDDot } = this.model
-    const delta = ((millis / 1000) - epoch.unix) * SEC2DAY
+    const delta = (millis / 1000) - epoch.unix
     const n = this.elements.meanMotion()
-    let aDot = 0
-    let eDot = 0
-    if (this.model.atmosphericDrag) {
-      aDot = -((2 * a) / (3 * n)) * nDot
-      eDot = -((2 * (1 - e)) / (3 * n)) * nDot
+    let eaInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)))
+    eaInit = matchHalfPlane(eaInit, v)
+    let maInit = eaInit - e * Math.sin(eaInit)
+    maInit = matchHalfPlane(maInit, eaInit)
+    const maFinal = (maInit + n * delta) % TWO_PI
+    let eaFinal = maFinal
+    for (let iter = 0; iter < 32; iter++) {
+      const eaTemp = maFinal + e * Math.sin(eaFinal)
+      if (Math.abs(eaTemp - eaFinal) < 1e-12) break
+      eaFinal = eaTemp
     }
-    let oDot = 0
-    let wDot = 0
-    if (this.model.j2Effect) {
-      const j2Rad = Math.pow(EARTH_RAD_EQ / (a * (1 - e * e)), 2)
-      oDot = -(3 / 2) * EARTH_J2 * j2Rad * Math.cos(i) * n * TWO_PI
-      wDot = (3 / 4) * EARTH_J2 * j2Rad
-        * (4 - 5 * Math.pow(Math.sin(i), 2)) * n * TWO_PI
-    }
-    const aFinal = a + aDot * delta
-    const eFinal = e + eDot * delta
-    const oFinal = o + oDot * delta
-    const wFinal = w + wDot * delta
-    let eeInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)))
-    eeInit = matchHalfPlane(eeInit, v)
-    let mInit = eeInit - e * Math.sin(eeInit)
-    mInit = matchHalfPlane(mInit, eeInit)
-    let mFinal = (mInit / TWO_PI)
-      + n * delta
-      + (nDot / 2) * Math.pow(delta, 2)
-      + (nDDot / 6) * Math.pow(delta, 3)
-    mFinal = (mFinal % 1) * TWO_PI
-    let eeFinal = mFinal
-    for (let iter = 0; iter < 16; iter++) {
-      eeFinal = mFinal + eFinal * Math.sin(eeFinal)
-    }
-    let vFinal = Math.acos((Math.cos(eeFinal) - eFinal)
-      / (1 - eFinal * Math.cos(eeFinal)))
-    vFinal = matchHalfPlane(vFinal, eeFinal)
-    this.state = new KeplerianElements(millis, aFinal, eFinal,
-      i, oFinal, wFinal, vFinal).toJ2K()
+    let vFinal = Math.acos((Math.cos(eaFinal) - e)
+      / (1 - e * Math.cos(eaFinal)))
+    vFinal = matchHalfPlane(vFinal, eaFinal)
+    this.state = new KeplerianElements(millis, a, e, i, o, w, vFinal).toJ2K()
     return this.state
   }
 

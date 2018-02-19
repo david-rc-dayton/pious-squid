@@ -75,8 +75,13 @@ export class KeplerianElements implements Coordinate {
     return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk)
   }
 
-  /** Calculate the satellite's mean motion, in revolutions per day. */
+  /** Calculate the satellite's mean motion, in radians per second. */
   public meanMotion (): number {
-    return Math.sqrt(EARTH_MU / Math.pow(this.a, 3)) * (86400 / TWO_PI)
+    return Math.sqrt(EARTH_MU / Math.pow(this.a, 3))
+  }
+
+  /** Calculate the number of revolutions the satellite completes per day. */
+  public revsPerDay (): number {
+    return this.meanMotion() * (86400 / TWO_PI)
   }
 }
