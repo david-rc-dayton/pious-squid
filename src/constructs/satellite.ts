@@ -12,9 +12,9 @@ const DEFAULT_OPTIONS: SatelliteOptions = {
 /** Class representing a satellite. */
 export class Satellite {
   /** Satellite name. */
-  public name: string
+  public readonly name: string
   /** Satellite ephemeris propagator. */
-  public propagator: Propagator
+  public readonly propagator: Propagator
 
   /** Create a new Satellite object. If values are not specified in the
    * options argument, the following defaults are used:

@@ -4,13 +4,13 @@ import { EarthCenteredFixed } from './earth-centered-fixed'
 /** Class representing spherical coordinates. */
 export class Spherical implements Coordinate {
   /** Coordinate identifier string. */
-  public type: string
+  public readonly type: string
   /** Distance from origin, in kilometers. */
-  public radius: number
+  public readonly radius: number
   /** Inclination angle, in radians. */
-  public inclination: number
+  public readonly inclination: number
   /** Azimuth angle, in radians. */
-  public azimuth: number
+  public readonly azimuth: number
 
   /**
    * Create a new Spherical object.
