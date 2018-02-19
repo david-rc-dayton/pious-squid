@@ -7,7 +7,6 @@
     ],
     "ordered-imports": true,
     "class-name": true,
-    "interface-name": true,
     "variable-name": true,
     "object-literal-sort-keys": true,
     "prefer-const": true,

@@ -1,7 +1,7 @@
 import { atmosphericDensity, moonPosition, sunPosition } from './bodies'
 import * as c from './constants'
 import { Epoch } from './epoch'
-import { INumericalModel } from './propagators/propagator-interface'
+import { NumericalModel } from './propagators/propagator-interface'
 import { Vector } from './vector'
 
 /**
@@ -185,7 +185,7 @@ export function atmosphericDrag (position: Vector, velocity: Vector,
  * @param flags options for calculating acceleration
  */
 export function derivative (epoch: Epoch, posVel: Vector,
-  flags: INumericalModel): Vector {
+  flags: NumericalModel): Vector {
   const position = posVel.slice(0, 3)
   const velocity = posVel.slice(3, 6)
   const { mass, area, drag, reflect } = flags

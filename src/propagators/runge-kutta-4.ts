@@ -4,11 +4,11 @@ import { derivative } from '../forces'
 import { sign } from '../operations'
 import { Vector } from '../vector'
 import {
-  INumericalModel, IPropagator, NumericalOptions, PropagatorType
+  NumericalModel, NumericalOptions, Propagator, PropagatorType
 } from './propagator-interface'
 
 /** Default propagator model. */
-const DEFAULT_MODEL: INumericalModel = {
+const DEFAULT_MODEL: NumericalModel = {
   area: 1,
   atmosphericDrag: true,
   drag: 2.2,
@@ -24,7 +24,7 @@ const DEFAULT_MODEL: INumericalModel = {
 }
 
 /** Default propagator model for two-body acceleration. */
-const DEFAULT_MODEL_TWOBODY: INumericalModel = {
+const DEFAULT_MODEL_TWOBODY: NumericalModel = {
   area: 0,
   atmosphericDrag: false,
   drag: 0,
@@ -40,15 +40,15 @@ const DEFAULT_MODEL_TWOBODY: INumericalModel = {
 }
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
-export class RungeKutta4 implements IPropagator {
+export class RungeKutta4 implements Propagator {
   /** Propagator identifier string. */
-  public type: PropagatorType
+  public type: string
   /** Propagator initial state. */
   public initState: J2000
   /** Cached state used in propagator calculations after initialization. */
   public state: J2000
   /** Propagator force model. */
-  public model: INumericalModel
+  public model: NumericalModel
 
   /**
    * Create a new RungeKutta4 propagator object. If values are not specified

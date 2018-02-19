@@ -2,10 +2,10 @@ import { sunPosition } from '../bodies'
 import { Geodetic } from '../coordinates/geodetic'
 import { J2000 } from '../coordinates/j2000'
 import { LookAngle } from '../coordinates/look-angle'
-import { IGroundStationOptions } from './construct-config'
+import { GroundStationOptions } from './construct-config'
 
 /** Default construct options. */
-const DEFAULT_OPTIONS: IGroundStationOptions = {
+const DEFAULT_OPTIONS: GroundStationOptions = {
   minEl: 0,
   name: ''
 }
@@ -29,7 +29,7 @@ export class GroundStation {
    * @param location geodetic location of the ground station
    * @param opts ground station options
    */
-  constructor (location: Geodetic, opts?: IGroundStationOptions) {
+  constructor (location: Geodetic, opts?: GroundStationOptions) {
     this.location = location
     opts = opts || {}
     const mergeOpts = { ...DEFAULT_OPTIONS, ...opts }

@@ -1,5 +1,5 @@
 /** Interface for coordinate objects. */
-export interface ICoordinate {
+export interface Coordinate {
   /** Coordinate identifier string. */
   type: string
 }

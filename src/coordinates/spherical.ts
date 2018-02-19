@@ -1,10 +1,10 @@
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 import { EarthCenteredFixed } from './earth-centered-fixed'
 
 /** Class representing spherical coordinates. */
-export class Spherical implements ICoordinate {
+export class Spherical implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** Distance from origin, in kilometers. */
   public radius: number
   /** Inclination angle, in radians. */

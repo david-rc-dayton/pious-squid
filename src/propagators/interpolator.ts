@@ -2,19 +2,10 @@ import { J2000 } from '../coordinates/j2000'
 import { gravityEarth } from '../forces'
 import { linearInterpolate, sign } from '../operations'
 import { Vector } from '../vector'
-import {
-  IInterpolatorModel, InterpolatorMethods, InterpolatorOptions,
-  IPropagator, PropagatorType
-} from './propagator-interface'
+import { Propagator, PropagatorType } from './propagator-interface'
 
 /** Closure used for interpolation. */
 export type InterpClosure = (millis: number) => J2000
-
-/** Default interpolator model. */
-const DEFAULT_MODEL: IInterpolatorModel = {
-  method: InterpolatorMethods.VERLET,
-  stepSize: 60
-}
 
 /**
  * Create a closure for interpolating new states, using the Verlet method, from
@@ -98,14 +89,34 @@ function closureLinear (states: J2000[]): InterpClosure {
   }
 }
 
+/** Standard interface for interpolator options. */
+export interface InterpolatorModel {
+  /** Interpolator method string. */
+  method: string
+  /** Step size, in seconds. Only used for numerical interpolation methods. */
+  stepSize: number
+}
+
+/** Nullable interpolator options. */
+export type InterpolatorOptions = Partial<InterpolatorModel>
+
 /** Interpolate ephemeris from an array of J2000 states. */
-export class Interpolator implements IPropagator {
+export class Interpolator implements Propagator {
+  /** Verlet method identifier string. */
+  public static readonly VERLET = 'verlet'
+  /** Linear method identifier string. */
+  public static readonly LINEAR = 'linear'
+  /** Default interpolator model. */
+  public static readonly DEFAULT_MODEL: InterpolatorModel = {
+    method: Interpolator.VERLET,
+    stepSize: 60
+  }
   /** Propagator identifier string. */
-  public type: PropagatorType
+  public type: string
   /** Revert state on reset call. */
   public resetState: J2000
   /** Interpolator model options. */
-  public model: IInterpolatorModel
+  public model: InterpolatorModel
   /** Time range available for interpolation, in UNIX milliseconds. */
   public range: [number, number]
   /** Closure used for interpolation. */
@@ -117,7 +128,7 @@ export class Interpolator implements IPropagator {
    * Create a new Interpolator object. If values are not specified in the
    * model argument, the following options are used:
    *
-   *   method = InterpolationMethods.VERLET
+   *   method = VERLET
    *   stepSize = 60
    *
    * @param states a list of propagated J2000 states
@@ -126,18 +137,18 @@ export class Interpolator implements IPropagator {
   public constructor (states: J2000[], model?: InterpolatorOptions) {
     this.type = PropagatorType.INTERPOLATOR
     model = model || {}
-    this.model = { ...DEFAULT_MODEL, ...model }
+    this.model = { ...Interpolator.DEFAULT_MODEL, ...model }
     this.range = [
       states[0].epoch.toMillis(), states[states.length - 1].epoch.toMillis()
     ]
     this.resetState = states[0]
     this.state = states[0]
-    if (this.model.method === InterpolatorMethods.LINEAR) {
+    if (this.model.method === Interpolator.LINEAR) {
       this.closure = closureLinear(states)
-    } else if (this.model.method === InterpolatorMethods.VERLET) {
+    } else if (this.model.method === Interpolator.VERLET) {
       this.closure = closureVerlet(states, this.model.stepSize)
     } else {
-      this.closure = closureLinear(states)
+      throw new Error(`Invalid Interpolator method: [${this.model.method}]`)
     }
   }
 

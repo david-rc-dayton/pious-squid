@@ -2,7 +2,6 @@ import { assert } from 'chai'
 import { J2000 } from '../coordinates/j2000'
 import { Interpolator } from '../propagators/interpolator'
 import { Kepler } from '../propagators/kepler'
-import { InterpolatorMethods } from '../propagators/propagator-interface'
 import { RungeKutta4 } from '../propagators/runge-kutta-4'
 
 const GEO_STATE_1 = [
@@ -78,13 +77,8 @@ describe('Interpolator', () => {
     const j2ks = rk4.step(Date.UTC(2017, 10, 17), 900, 96)
     rk4.reset()
     const expected = rk4.step(Date.UTC(2017, 10, 17), 60, 1440)
-    const interpLinear = new Interpolator(j2ks, {
-      method: InterpolatorMethods.LINEAR
-    })
-    const interpVerlet = new Interpolator(j2ks, {
-      method: InterpolatorMethods.VERLET,
-      stepSize: 60
-    })
+    const interpLinear = new Interpolator(j2ks, { method: 'linear' })
+    const interpVerlet = new Interpolator(j2ks, { method: 'verlet' })
     it('should be within 25km of expected using the linear method', () => {
       expected.forEach(element => {
         const actual = interpLinear.propagate(element.epoch.toMillis())

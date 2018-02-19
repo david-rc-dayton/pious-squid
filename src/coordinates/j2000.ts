@@ -2,14 +2,14 @@ import { nutation, precession } from '../bodies'
 import { EARTH_MU, TWO_PI } from '../constants'
 import { Epoch } from '../epoch'
 import { Vector } from '../vector'
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 import { EarthCenteredInertial } from './earth-centered-inertial'
 import { KeplerianElements } from './keplerian-elements'
 
 /** Class representing J2000 (J2K) inertial coordinates. */
-export class J2000 implements ICoordinate {
+export class J2000 implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** Satellite state epoch. */
   public epoch: Epoch
   /** Position 3-vector, in kilometers. */

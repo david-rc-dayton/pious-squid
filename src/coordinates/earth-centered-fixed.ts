@@ -2,16 +2,16 @@ import { nutation } from '../bodies'
 import { EARTH_ECC_SQ, EARTH_RAD_EQ, EARTH_ROTATION } from '../constants'
 import { Epoch } from '../epoch'
 import { Vector } from '../vector'
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 import { EarthCenteredInertial } from './earth-centered-inertial'
 import { Geodetic } from './geodetic'
 import { Spherical } from './spherical'
 import { TopocentricHorizon } from './topocentric-horizon'
 
 /** Class representing Earth Centered Earth Fixed (ECEF) coordinates. */
-export class EarthCenteredFixed implements ICoordinate {
+export class EarthCenteredFixed implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** Position 3-vector, in kilometers. */
   public position: Vector
   /** Velocity 3-vector, in kilometers per second. */

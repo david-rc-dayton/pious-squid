@@ -1,9 +1,9 @@
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 
 /** Class representing look angles. */
-export class LookAngle implements ICoordinate {
+export class LookAngle implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** Azimuth angle, in radians. */
   public azimuth: number
   /** Elevation angle, in radians. */

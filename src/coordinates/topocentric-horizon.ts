@@ -1,10 +1,10 @@
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 import { LookAngle } from './look-angle'
 
 /** Class representing topocentric-horizon coordinates. */
-export class TopocentricHorizon implements ICoordinate {
+export class TopocentricHorizon implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** South component, in kilometers. */
   public s: number
   /** East component, in kilometers. */

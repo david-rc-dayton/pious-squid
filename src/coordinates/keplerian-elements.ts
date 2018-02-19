@@ -1,13 +1,13 @@
 import { EARTH_MU, RAD2DEG, TWO_PI } from '../constants'
 import { Epoch } from '../epoch'
 import { Vector } from '../vector'
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 import { J2000 } from './j2000'
 
 /** Class representing Keplerian orbital elements. */
-export class KeplerianElements implements ICoordinate {
+export class KeplerianElements implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** Satellite state epoch. */
   public epoch: Epoch
   /** Semimajor axis, in kilometers. */

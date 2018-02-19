@@ -3,11 +3,11 @@ import { J2000 } from '../coordinates/j2000'
 import { KeplerianElements } from '../coordinates/keplerian-elements'
 import { matchHalfPlane } from '../operations'
 import {
-  IKeplerModel, IPropagator, KeplerOptions, PropagatorType
+  KeplerModel, KeplerOptions, Propagator, PropagatorType
 } from './propagator-interface'
 
 /** Default propagator model. */
-const DEFAULT_MODEL: IKeplerModel = {
+const DEFAULT_MODEL: KeplerModel = {
   atmosphericDrag: false,
   j2Effect: false,
   nDDot: 0,
@@ -15,13 +15,13 @@ const DEFAULT_MODEL: IKeplerModel = {
 }
 
 /** Satellite ephemeris propagator, using Kepler's method. */
-export class Kepler implements IPropagator {
+export class Kepler implements Propagator {
   /** Propagator identifier string. */
-  public type: PropagatorType
+  public type: string
   /** Keplerian element set. */
   public elements: KeplerianElements
   /** Propagator force model. */
-  public model: IKeplerModel
+  public model: KeplerModel
   /** Cache for last computed statellite state. */
   public state: J2000
 

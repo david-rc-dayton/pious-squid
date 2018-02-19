@@ -17,6 +17,8 @@ export { Geodetic } from './coordinates/geodetic'
 
 export { GroundStation } from './constructs/ground-station'
 
+export { Interpolator } from './propagators/interpolator'
+
 export { J2000 } from './coordinates/j2000'
 
 export { Kepler } from './propagators/kepler'

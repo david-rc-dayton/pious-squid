@@ -1,11 +1,11 @@
 import { EARTH_ECC_SQ, EARTH_RAD_EQ, RAD2DEG } from '../constants'
-import { CoordinateType, ICoordinate } from './coordinate-config'
+import { Coordinate, CoordinateType } from './coordinate-config'
 import { EarthCenteredFixed } from './earth-centered-fixed'
 
 /** Class representing Geodetic (LLA) coordinates. */
-export class Geodetic implements ICoordinate {
+export class Geodetic implements Coordinate {
   /** Coordinate identifier string. */
-  public type: CoordinateType
+  public type: string
   /** Geodetic latitude, in radians. */
   public latitude: number
   /** Geodetic longitude, in radians. */

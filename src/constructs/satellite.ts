@@ -1,11 +1,11 @@
 import { EARTH_RAD_MEAN } from '../constants'
 import { J2000 } from '../coordinates/j2000'
-import { IPropagator } from '../propagators/propagator-interface'
-import { ISatelliteOptions } from './construct-config'
+import { Propagator } from '../propagators/propagator-interface'
+import { SatelliteOptions } from './construct-config'
 import { GroundStation } from './ground-station'
 
 /** Default construct options. */
-const DEFAULT_OPTIONS: ISatelliteOptions = {
+const DEFAULT_OPTIONS: SatelliteOptions = {
   name: ''
 }
 
@@ -14,7 +14,7 @@ export class Satellite {
   /** Satellite name. */
   public name: string
   /** Satellite ephemeris propagator. */
-  public propagator: IPropagator
+  public propagator: Propagator
 
   /** Create a new Satellite object. If values are not specified in the
    * options argument, the following defaults are used:
@@ -24,7 +24,7 @@ export class Satellite {
    * @param propagator satellite ephemeris propagator
    * @param opts satellite options
    */
-  constructor (propagator: IPropagator, opts?: ISatelliteOptions) {
+  constructor (propagator: Propagator, opts?: SatelliteOptions) {
     this.propagator = propagator
     opts = opts || {}
     const mergeOpts = { ...DEFAULT_OPTIONS, ...opts }

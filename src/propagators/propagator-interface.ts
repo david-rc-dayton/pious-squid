@@ -1,7 +1,7 @@
 import { J2000 } from '../coordinates/j2000'
 
 /** Options for the Kepler propagation model. */
-export interface IKeplerModel {
+export interface KeplerModel {
   /** First derivative mean motion, in revolutions/day^2. */
   nDot: number
   /** Second derivative of mean motion, in revolutions/day^3 */
@@ -13,10 +13,10 @@ export interface IKeplerModel {
 }
 
 /** Options for the Kepler propagation constructor. */
-export type KeplerOptions = Partial<IKeplerModel>
+export type KeplerOptions = Partial<KeplerModel>
 
 /** Options for numerical integration propagation models. */
-export interface INumericalModel {
+export interface NumericalModel {
   /** Step size, in seconds. */
   stepSize: number
   /** Model J2 effect, if true. */
@@ -44,21 +44,12 @@ export interface INumericalModel {
 }
 
 /** Options for numerical integration propagation constructors. */
-export type NumericalOptions = Partial<INumericalModel>
-
-export interface IInterpolatorModel {
-  /** Interpolator method string. */
-  method: string
-  /** Step size, in seconds. Only used for numerical interpolation methods. */
-  stepSize: number
-}
-
-export type InterpolatorOptions = Partial<IInterpolatorModel>
+export type NumericalOptions = Partial<NumericalModel>
 
 /** Common interface for propagator objects. */
-export interface IPropagator {
+export interface Propagator {
   /** Propagator identifier string. */
-  type: PropagatorType
+  type: string
   /** Cache for last computed statellite state. */
   state: J2000
   /** Propagate state to a new epoch. */
@@ -66,7 +57,7 @@ export interface IPropagator {
   /** Propagate state by some number of seconds, repeatedly. */
   step (millis: number, interval: number, count: number): J2000[]
   /** Restore initial propagator state. */
-  reset (): IPropagator
+  reset (): Propagator
 }
 
 /** Propagator type identifiers. */
@@ -74,12 +65,4 @@ export enum PropagatorType {
   RUNGE_KUTTA_4 = 'runge-kutta-4',
   KEPLER = 'kepler',
   INTERPOLATOR = 'interpolator'
-}
-
-/** Interpolator method identifiers. */
-export enum InterpolatorMethods {
-  LINEAR = 'linear',
-  VERLET = 'verlet'
-  // CUBIC_SPLINE = 'cubic-spline'
-  // EULER = 'euler'
 }
