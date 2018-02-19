@@ -2,37 +2,44 @@ import { EARTH_J2, EARTH_RAD_EQ, SEC2DAY, TWO_PI } from '../constants'
 import { J2000 } from '../coordinates/j2000'
 import { KeplerianElements } from '../coordinates/keplerian-elements'
 import { matchHalfPlane } from '../operations'
-import {
-  KeplerModel, KeplerOptions, Propagator, PropagatorType
-} from './propagator-interface'
+import { Propagator, PropagatorType } from './propagator-interface'
 
-/** Default propagator model. */
-const DEFAULT_MODEL: KeplerModel = {
-  atmosphericDrag: false,
-  j2Effect: false,
-  nDDot: 0,
-  nDot: 0
+/** Options for the Kepler propagation model. */
+export interface KeplerModel {
+  /** First derivative mean motion, in revolutions/day^2. */
+  nDot: number
+  /** Second derivative of mean motion, in revolutions/day^3 */
+  nDDot: number
+  /** Model effects of atmospheric drag, if true. */
+  atmosphericDrag: boolean
+  /** Model J2 effect, if true. */
+  j2Effect: boolean
 }
+
+/** Options for the Kepler propagation constructor. */
+export type KeplerOptions = Partial<KeplerModel>
 
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements Propagator {
+  /** Default propagator model. */
+  public static readonly DEFAULT_MODEL: KeplerModel = {
+    atmosphericDrag: false,
+    j2Effect: false,
+    nDDot: 0,
+    nDot: 0
+  }
   /** Propagator identifier string. */
-  public type: string
-  /** Keplerian element set. */
-  public elements: KeplerianElements
+  public readonly type: string
   /** Propagator force model. */
-  public model: KeplerModel
+  public readonly model: KeplerModel
   /** Cache for last computed statellite state. */
   public state: J2000
+  /** Keplerian element set. */
+  private readonly elements: KeplerianElements
 
   /**
-   * Create a new Kepler propagator object. If values are not specified in
-   * the model argument, the following options will be used:
-   *
-   *   nDot            = 0
-   *   nDDot           = 0
-   *   atmosphericDrag = false
-   *   j2Effect        = false
+   * Create a new Kepler propagator object. If values are not specified in the
+   * model argument, options are merged from: DEFAULT_MODEL
    *
    * @param elements element set
    * @param model propagator options
@@ -42,7 +49,7 @@ export class Kepler implements Propagator {
     this.elements = elements
     this.state = elements.toJ2K()
     model = model || {}
-    this.model = { ...DEFAULT_MODEL, ...model }
+    this.model = { ...Kepler.DEFAULT_MODEL, ...model }
   }
 
   /** Return a string representation of the object. */
@@ -59,7 +66,8 @@ export class Kepler implements Propagator {
   }
 
   /**
-   * Restore cached state to initial propagator state.
+   * Restore cached state to initial propagator state. Doesn't really do much
+   * for the Kepler propagator, since it doesn't rely on transient states.
    */
   public reset (): Kepler {
     this.state = this.elements.toJ2K()

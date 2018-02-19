@@ -7,65 +7,50 @@ import {
   NumericalModel, NumericalOptions, Propagator, PropagatorType
 } from './propagator-interface'
 
-/** Default propagator model. */
-const DEFAULT_MODEL: NumericalModel = {
-  area: 1,
-  atmosphericDrag: true,
-  drag: 2.2,
-  gravityMoon: true,
-  gravitySun: true,
-  j2Effect: true,
-  j3Effect: true,
-  j4Effect: true,
-  mass: 1000,
-  reflect: 1.4,
-  solarRadiation: true,
-  stepSize: 60
-}
-
-/** Default propagator model for two-body acceleration. */
-const DEFAULT_MODEL_TWOBODY: NumericalModel = {
-  area: 0,
-  atmosphericDrag: false,
-  drag: 0,
-  gravityMoon: false,
-  gravitySun: false,
-  j2Effect: false,
-  j3Effect: false,
-  j4Effect: false,
-  mass: 0,
-  reflect: 0,
-  solarRadiation: false,
-  stepSize: 60
-}
-
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements Propagator {
+  /** Default propagator model. */
+  public static readonly DEFAULT_MODEL: NumericalModel = {
+    area: 1,
+    atmosphericDrag: true,
+    drag: 2.2,
+    gravityMoon: true,
+    gravitySun: true,
+    j2Effect: true,
+    j3Effect: true,
+    j4Effect: true,
+    mass: 1000,
+    reflect: 1.4,
+    solarRadiation: true,
+    stepSize: 60
+  }
+  /** Default propagator model for two-body acceleration. */
+  public static readonly DEFAULT_MODEL_TWOBODY: NumericalModel = {
+    area: 0,
+    atmosphericDrag: false,
+    drag: 0,
+    gravityMoon: false,
+    gravitySun: false,
+    j2Effect: false,
+    j3Effect: false,
+    j4Effect: false,
+    mass: 0,
+    reflect: 0,
+    solarRadiation: false,
+    stepSize: 60
+  }
   /** Propagator identifier string. */
-  public type: string
-  /** Propagator initial state. */
-  public initState: J2000
+  public readonly type: string
+  /** Propagator force model. */
+  public readonly model: NumericalModel
   /** Cached state used in propagator calculations after initialization. */
   public state: J2000
-  /** Propagator force model. */
-  public model: NumericalModel
+  /** Propagator initial state. */
+  private readonly initState: J2000
 
   /**
-   * Create a new RungeKutta4 propagator object. If values are not specified
-   * in the model argument, the following options will be used:
-   *
-   *   stepSize        = 60      // seconds
-   *   j2Effect        = true    // enabled
-   *   j3Effect        = true    // enabled
-   *   j4Effect        = true    // enabled
-   *   gravitySun      = true    // enabled
-   *   gravityMoon     = true    // enabled
-   *   solarRadiation  = true    // enabled
-   *   atmosphericDrag = true    // enabled
-   *   mass            = 1000    // kilograms
-   *   area            = 1       // meters squared
-   *   drag            = 2.2     // coefficient
-   *   reflect         = 1.4     // coefficient
+   * Create a new RungeKutta4 propagator object. If values are not specified in
+   * the model argument, options are merged from: DEFAULT_MODEL
    *
    * @param state satellite state
    * @param model propagator options
@@ -75,16 +60,19 @@ export class RungeKutta4 implements Propagator {
     this.initState = state
     this.state = state
     model = model || {}
-    this.model = { ...DEFAULT_MODEL, ...model }
+    this.model = { ...RungeKutta4.DEFAULT_MODEL, ...model }
   }
 
   /**
-   * Create a new RungeKutta4 propagator object, using onlt two-body
-   * perturbation options.
+   * Create a new RungeKutta4 propagator object. If values are not specified in
+   * the model argument, options are merged from: DEFAULT_MODEL_TWOBODY
+   *
+   * @param state satellite state
+   * @param model propagator options
    */
   public static twoBody (state: J2000, model?: NumericalOptions): RungeKutta4 {
     model = model || {}
-    const mergeModel = { ...DEFAULT_MODEL_TWOBODY, ...model }
+    const mergeModel = { ...RungeKutta4.DEFAULT_MODEL_TWOBODY, ...model }
     return new RungeKutta4(state, mergeModel)
   }
 

@@ -112,24 +112,21 @@ export class Interpolator implements Propagator {
     stepSize: 60
   }
   /** Propagator identifier string. */
-  public type: string
-  /** Revert state on reset call. */
-  public resetState: J2000
+  public readonly type: string
   /** Interpolator model options. */
-  public model: InterpolatorModel
-  /** Time range available for interpolation, in UNIX milliseconds. */
-  public range: [number, number]
-  /** Closure used for interpolation. */
-  public closure: InterpClosure
-  /** Cache for last computed statellite state. */
+  public readonly model: InterpolatorModel
+  /** Cache for last computed state. */
   public state: J2000
+  /** Time range available for interpolation, in UNIX milliseconds. */
+  private readonly range: [number, number]
+  /** Closure used for interpolation. */
+  private readonly closure: InterpClosure
+  /** Revert state on reset call. */
+  private readonly resetState: J2000
 
   /**
    * Create a new Interpolator object. If values are not specified in the
-   * model argument, the following options are used:
-   *
-   *   method = VERLET
-   *   stepSize = 60
+   * model argument, options are merged from: DEFAULT_MODEL
    *
    * @param states a list of propagated J2000 states
    * @param model Interpolator model options
@@ -153,7 +150,8 @@ export class Interpolator implements Propagator {
   }
 
   /**
-   * Restore cached state to initial propagator state.
+   * Restore cached state to initial propagator state. Doesn't really do much
+   * for the Interpolator, since it doesn't rely on transient states.
    */
   public reset (): Interpolator {
     this.state = this.resetState

@@ -1,19 +1,25 @@
 import { J2000 } from '../coordinates/j2000'
 
-/** Options for the Kepler propagation model. */
-export interface KeplerModel {
-  /** First derivative mean motion, in revolutions/day^2. */
-  nDot: number
-  /** Second derivative of mean motion, in revolutions/day^3 */
-  nDDot: number
-  /** Model effects of atmospheric drag, if true. */
-  atmosphericDrag: boolean
-  /** Model J2 effect, if true. */
-  j2Effect: boolean
+/** Common interface for propagator objects. */
+export interface Propagator {
+  /** Propagator identifier string. */
+  type: string
+  /** Cache for last computed statellite state. */
+  state: J2000
+  /** Propagate state to a new epoch. */
+  propagate (millis: number): J2000
+  /** Propagate state by some number of seconds, repeatedly. */
+  step (millis: number, interval: number, count: number): J2000[]
+  /** Restore initial propagator state. */
+  reset (): Propagator
 }
 
-/** Options for the Kepler propagation constructor. */
-export type KeplerOptions = Partial<KeplerModel>
+/** Propagator type identifiers. */
+export enum PropagatorType {
+  RUNGE_KUTTA_4 = 'runge-kutta-4',
+  KEPLER = 'kepler',
+  INTERPOLATOR = 'interpolator'
+}
 
 /** Options for numerical integration propagation models. */
 export interface NumericalModel {
@@ -45,24 +51,3 @@ export interface NumericalModel {
 
 /** Options for numerical integration propagation constructors. */
 export type NumericalOptions = Partial<NumericalModel>
-
-/** Common interface for propagator objects. */
-export interface Propagator {
-  /** Propagator identifier string. */
-  type: string
-  /** Cache for last computed statellite state. */
-  state: J2000
-  /** Propagate state to a new epoch. */
-  propagate (millis: number): J2000
-  /** Propagate state by some number of seconds, repeatedly. */
-  step (millis: number, interval: number, count: number): J2000[]
-  /** Restore initial propagator state. */
-  reset (): Propagator
-}
-
-/** Propagator type identifiers. */
-export enum PropagatorType {
-  RUNGE_KUTTA_4 = 'runge-kutta-4',
-  KEPLER = 'kepler',
-  INTERPOLATOR = 'interpolator'
-}
