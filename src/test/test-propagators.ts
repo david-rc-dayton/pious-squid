@@ -74,29 +74,37 @@ describe('Interpolator', () => {
       -3.86234943730e4, 1.68697633760e4, 1.00434444900e3,
       -1.231249e0, -2.810612e0, -2.01294e-1
     )
-    const rk4 = RungeKutta4.twoBody(state)
-    const j2ks = rk4.step(Date.UTC(2017, 10, 17), 120, 60)
+    const rk4 = new RungeKutta4(state)
+    const j2ks = rk4.step(Date.UTC(2017, 10, 17), 900, 96)
+    rk4.reset()
+    const expected = rk4.step(Date.UTC(2017, 10, 17), 60, 1440)
     const interpLinear = new Interpolator(j2ks, {
       method: InterpolatorMethods.LINEAR
     })
-    const stepMillis = 60000
-    it('should follow source data using linear method', () => {
-      rk4.reset()
-      let epoch = j2ks[0].epoch.toMillis()
-      while (epoch < Date.UTC(2017, 10, 17, 2)) {
-        const iState = interpLinear.propagate(epoch)
-        const rState = rk4.propagate(epoch)
-        const d1 = iState.position.distance(rState.position) * 1000
-        assert.isBelow(d1, 1000)
-        epoch += stepMillis
-      }
+    const interpVerlet = new Interpolator(j2ks, {
+      method: InterpolatorMethods.VERLET,
+      stepSize: 60
     })
-    it('should error if linear interpolating outside data range', () => {
+    it('should be within 25km of expected using the linear method', () => {
+      expected.forEach(element => {
+        const actual = interpLinear.propagate(element.epoch.toMillis())
+        const dist = actual.position.distance(element.position)
+        assert.isBelow(dist, 25)
+      })
+    })
+    it('should be within 5m of expected data using the Verlet method', () => {
+      expected.forEach(element => {
+        const actual = interpVerlet.propagate(element.epoch.toMillis())
+        const dist = actual.position.distance(element.position) * 1000
+        assert.isBelow(dist, 5)
+      })
+    })
+    it('should throw RangeError if interpolating outside data range', () => {
       assert.throws(() => {
-        interpLinear.propagate(Date.UTC(2017, 10, 17, 2, 30))
+        interpLinear.propagate(Date.UTC(2017, 10, 16, 23, 59, 59, 999))
       }, RangeError)
       assert.throws(() => {
-        interpLinear.propagate(Date.UTC(2017, 10, 16, 23, 30))
+        interpLinear.propagate(Date.UTC(2017, 10, 18, 0, 0, 0, 1))
       }, RangeError)
     })
   })

@@ -78,7 +78,8 @@ export enum PropagatorType {
 
 /** Interpolator method identifiers. */
 export enum InterpolatorMethods {
-  LINEAR = 'linear'
-  // CUBIC_SPLINE = 'cubic-spline',
-  // VERLET = 'verlet'
+  LINEAR = 'linear',
+  VERLET = 'verlet'
+  // CUBIC_SPLINE = 'cubic-spline'
+  // EULER = 'euler'
 }

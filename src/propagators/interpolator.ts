@@ -1,5 +1,7 @@
 import { J2000 } from '../coordinates/j2000'
-import { linearInterpolate } from '../operations'
+import { gravityEarth } from '../forces'
+import { linearInterpolate, sign } from '../operations'
+import { Vector } from '../vector'
 import {
   IInterpolatorModel, InterpolatorMethods, InterpolatorOptions,
   IPropagator, PropagatorType
@@ -10,29 +12,70 @@ export type InterpClosure = (millis: number) => J2000
 
 /** Default interpolator model. */
 const DEFAULT_MODEL: IInterpolatorModel = {
-  method: InterpolatorMethods.LINEAR,
+  method: InterpolatorMethods.VERLET,
   stepSize: 60
 }
 
-type range = [number, number]
-type linRanges = [range, range, range, range, range, range, range]
+/**
+ * Create a closure for interpolating new states, using the Verlet method, from
+ * constructor data.
+ *
+ * @param states a list of J2000 states
+ * @param stepSize step size, in seconds
+ */
+function closureVerlet (states: J2000[], stepSize: number): InterpClosure {
+  type Internal = [number, Vector, Vector]
+  const cache: Internal[] = []
+  for (let i = 0; i < states.length; i++) {
+    const element = states[i]
+    cache.push([element.epoch.toMillis(), element.position, element.velocity])
+  }
+  return (millis: number): J2000 => {
+    let state = cache[0]
+    cache.forEach(element => {
+      const [elEpoch, crEpoch] = [element[0], state[0]]
+      if (Math.abs(millis - elEpoch) < Math.abs(millis - crEpoch)) {
+        state = element
+      }
+    })
+    while (state[0] !== millis) {
+      const [t0, x0, v0] = state
+      const delta = (millis - t0) / 1000
+      const sgn = sign(delta)
+      const dt = Math.min(Math.abs(delta), stepSize) * sgn
+      const t1 = t0 + (dt * 1000)
+      const a0 = gravityEarth(x0)
+      const x1 = x0.add(v0.scale(dt)).add(a0.scale(0.5 * dt * dt))
+      const a1 = gravityEarth(x1)
+      const v1 = v0.add(a0.add(a1).scale(0.5 * dt))
+      state = [t1, x1, v1]
+    }
+    const [epoch, position, velocity] = state
+    const [ri, rj, rk] = position.state
+    const [vi, vj, vk] = velocity.state
+    return new J2000(epoch, ri, rj, rk, vi, vj, vk)
+  }
+}
 
 /**
- * Create a closure for interpolating new states from constructor data.
+ * Create a closure for interpolating new states, using the linear method, from
+ * constructor data.
  *
  * @param states a list of J2000 states
  */
 function closureLinear (states: J2000[]): InterpClosure {
-  const cache: linRanges[] = []
+  type Range = [number, number]
+  type Internal = [Range, Range, Range, Range, Range, Range, Range]
+  const cache: Internal[] = []
   for (let i = 0; i < states.length - 1; i++) {
     const [stateA, stateB] = [states[i], states[i + 1]]
-    const t: range = [stateA.epoch.toMillis(), stateB.epoch.toMillis()]
-    const ri: range = [stateA.position.state[0], stateB.position.state[0]]
-    const rj: range = [stateA.position.state[1], stateB.position.state[1]]
-    const rk: range = [stateA.position.state[2], stateB.position.state[2]]
-    const vi: range = [stateA.velocity.state[0], stateB.velocity.state[0]]
-    const vj: range = [stateA.velocity.state[1], stateB.velocity.state[1]]
-    const vk: range = [stateA.velocity.state[2], stateB.velocity.state[2]]
+    const t: Range = [stateA.epoch.toMillis(), stateB.epoch.toMillis()]
+    const ri: Range = [stateA.position.state[0], stateB.position.state[0]]
+    const rj: Range = [stateA.position.state[1], stateB.position.state[1]]
+    const rk: Range = [stateA.position.state[2], stateB.position.state[2]]
+    const vi: Range = [stateA.velocity.state[0], stateB.velocity.state[0]]
+    const vj: Range = [stateA.velocity.state[1], stateB.velocity.state[1]]
+    const vk: Range = [stateA.velocity.state[2], stateB.velocity.state[2]]
     cache.push([t, ri, rj, rk, vi, vj, vk])
   }
   return (millis: number): J2000 => {
@@ -74,7 +117,7 @@ export class Interpolator implements IPropagator {
    * Create a new Interpolator object. If values are not specified in the
    * model argument, the following options are used:
    *
-   *   method = InterpolationMethods.LINEAR
+   *   method = InterpolationMethods.VERLET
    *   stepSize = 60
    *
    * @param states a list of propagated J2000 states
@@ -91,6 +134,8 @@ export class Interpolator implements IPropagator {
     this.state = states[0]
     if (this.model.method === InterpolatorMethods.LINEAR) {
       this.closure = closureLinear(states)
+    } else if (this.model.method === InterpolatorMethods.VERLET) {
+      this.closure = closureVerlet(states, this.model.stepSize)
     } else {
       this.closure = closureLinear(states)
     }
