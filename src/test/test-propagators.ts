@@ -76,20 +76,28 @@ describe('Interpolator', () => {
     )
     const rk4 = RungeKutta4.twoBody(state)
     const j2ks = rk4.step(Date.UTC(2017, 10, 17), 120, 60)
-    const stepMillis = 30000
+    const interpLinear = new Interpolator(j2ks, {
+      method: InterpolatorMethods.LINEAR
+    })
+    const stepMillis = 60000
     it('should follow source data using linear method', () => {
-      const interp = new Interpolator(j2ks, {
-        method: InterpolatorMethods.LINEAR
-      })
       rk4.reset()
       let epoch = j2ks[0].epoch.toMillis()
-      while (epoch < Date.UTC(2017, 10, 17, 1, 30)) {
-        const iState = interp.propagate(epoch)
+      while (epoch < Date.UTC(2017, 10, 17, 2)) {
+        const iState = interpLinear.propagate(epoch)
         const rState = rk4.propagate(epoch)
         const d1 = iState.position.distance(rState.position) * 1000
-        assert.isBelow(d1, 5000)
+        assert.isBelow(d1, 1000)
         epoch += stepMillis
       }
+    })
+    it('should error if linear interpolating outside data range', () => {
+      assert.throws(() => {
+        interpLinear.propagate(Date.UTC(2017, 10, 17, 2, 30))
+      }, RangeError)
+      assert.throws(() => {
+        interpLinear.propagate(Date.UTC(2017, 10, 16, 23, 30))
+      }, RangeError)
     })
   })
 })

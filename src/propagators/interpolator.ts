@@ -37,9 +37,9 @@ function closureLinear (states: J2000[]): InterpClosure {
   }
   return (millis: number): J2000 => {
     let dex = 0
-    for (let i = 0; i < cache.length - 1; i++) {
+    for (let i = 0; i < cache.length; i++) {
       const [start, end] = cache[i][0]
-      if (millis >= start && millis < end) {
+      if (millis >= start && millis <= end) {
         dex = i
         break
       }
