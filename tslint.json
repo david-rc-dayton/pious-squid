@@ -10,6 +10,7 @@
     "interface-name": true,
     "variable-name": true,
     "object-literal-sort-keys": true,
-    "prefer-const": true
+    "prefer-const": true,
+    "no-console": true
   }
 }

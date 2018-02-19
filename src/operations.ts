@@ -52,3 +52,17 @@ export function matchHalfPlane (angle: number, match: number): number {
   const d2 = Math.atan2(Math.sin(a2 - match), Math.cos(a2 - match))
   return (Math.abs(d1) < Math.abs(d2)) ? a1 : a2
 }
+
+/**
+ * Linearly interpolate between two known points.
+ *
+ * @param x value to interpolate
+ * @param x0 start x-value
+ * @param y0 start y-value
+ * @param x1 end x-value
+ * @param y1 end y-value
+ */
+export function linearInterpolate (x: number, x0: number, y0: number,
+  x1: number, y1: number): number {
+  return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0)
+}

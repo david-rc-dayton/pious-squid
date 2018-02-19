@@ -3,7 +3,7 @@ import { J2000 } from '../coordinates/j2000'
 import { KeplerianElements } from '../coordinates/keplerian-elements'
 import { matchHalfPlane } from '../operations'
 import {
-  IKeplerModel, IKeplerOptions, IPropagator, PropagatorType
+  IKeplerModel, IPropagator, KeplerOptions, PropagatorType
 } from './propagator-interface'
 
 /** Default propagator model. */
@@ -17,7 +17,7 @@ const DEFAULT_MODEL: IKeplerModel = {
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements IPropagator {
   /** Propagator identifier string. */
-  public type: string
+  public type: PropagatorType
   /** Keplerian element set. */
   public elements: KeplerianElements
   /** Propagator force model. */
@@ -37,7 +37,7 @@ export class Kepler implements IPropagator {
    * @param elements element set
    * @param model propagator options
    */
-  constructor (elements: KeplerianElements, model?: IKeplerOptions) {
+  constructor (elements: KeplerianElements, model?: KeplerOptions) {
     this.type = PropagatorType.KEPLER
     this.elements = elements
     this.state = elements.toJ2K()
@@ -59,7 +59,7 @@ export class Kepler implements IPropagator {
   }
 
   /**
-   * Restore initial propagator state.
+   * Restore cached state to initial propagator state.
    */
   public reset (): Kepler {
     this.state = this.elements.toJ2K()

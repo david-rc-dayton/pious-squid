@@ -4,7 +4,7 @@ import { derivative } from '../forces'
 import { sign } from '../operations'
 import { Vector } from '../vector'
 import {
-  INumericalModel, INumericalOptions, IPropagator, PropagatorType
+  INumericalModel, IPropagator, NumericalOptions, PropagatorType
 } from './propagator-interface'
 
 /** Default propagator model. */
@@ -36,13 +36,13 @@ const DEFAULT_MODEL_TWOBODY: INumericalModel = {
   mass: 0,
   reflect: 0,
   solarRadiation: false,
-  stepSize: 0
+  stepSize: 60
 }
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
   /** Propagator identifier string. */
-  public type: string
+  public type: PropagatorType
   /** Propagator initial state. */
   public initState: J2000
   /** Cached state used in propagator calculations after initialization. */
@@ -70,7 +70,7 @@ export class RungeKutta4 implements IPropagator {
    * @param state satellite state
    * @param model propagator options
    */
-  public constructor (state: J2000, model?: INumericalOptions) {
+  public constructor (state: J2000, model?: NumericalOptions) {
     this.type = PropagatorType.RUNGE_KUTTA_4
     this.initState = state
     this.state = state
@@ -82,7 +82,7 @@ export class RungeKutta4 implements IPropagator {
    * Create a new RungeKutta4 propagator object, using onlt two-body
    * perturbation options.
    */
-  public static twoBody (state: J2000, model?: INumericalOptions): RungeKutta4 {
+  public static twoBody (state: J2000, model?: NumericalOptions): RungeKutta4 {
     model = model || {}
     const mergeModel = { ...DEFAULT_MODEL_TWOBODY, ...model }
     return new RungeKutta4(state, mergeModel)

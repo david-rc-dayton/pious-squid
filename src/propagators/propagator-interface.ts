@@ -13,7 +13,7 @@ export interface IKeplerModel {
 }
 
 /** Options for the Kepler propagation constructor. */
-export type IKeplerOptions = Partial<IKeplerModel>
+export type KeplerOptions = Partial<IKeplerModel>
 
 /** Options for numerical integration propagation models. */
 export interface INumericalModel {
@@ -44,12 +44,21 @@ export interface INumericalModel {
 }
 
 /** Options for numerical integration propagation constructors. */
-export type INumericalOptions = Partial<INumericalModel>
+export type NumericalOptions = Partial<INumericalModel>
+
+export interface IInterpolatorModel {
+  /** Interpolator method string. */
+  method: string
+  /** Step size, in seconds. Only used for numerical interpolation methods. */
+  stepSize: number
+}
+
+export type InterpolatorOptions = Partial<IInterpolatorModel>
 
 /** Common interface for propagator objects. */
 export interface IPropagator {
   /** Propagator identifier string. */
-  type: string
+  type: PropagatorType
   /** Cache for last computed statellite state. */
   state: J2000
   /** Propagate state to a new epoch. */
@@ -62,6 +71,14 @@ export interface IPropagator {
 
 /** Propagator type identifiers. */
 export enum PropagatorType {
-  RUNGE_KUTTA_4 = 'rk4',
-  KEPLER = 'kepler'
+  RUNGE_KUTTA_4 = 'runge-kutta-4',
+  KEPLER = 'kepler',
+  INTERPOLATOR = 'interpolator'
+}
+
+/** Interpolator method identifiers. */
+export enum InterpolatorMethods {
+  LINEAR = 'linear'
+  // CUBIC_SPLINE = 'cubic-spline',
+  // VERLET = 'verlet'
 }

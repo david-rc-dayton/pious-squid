@@ -1,6 +1,8 @@
 import { assert } from 'chai'
 import { J2000 } from '../coordinates/j2000'
+import { Interpolator } from '../propagators/interpolator'
 import { Kepler } from '../propagators/kepler'
+import { InterpolatorMethods } from '../propagators/propagator-interface'
 import { RungeKutta4 } from '../propagators/runge-kutta-4'
 
 const GEO_STATE_1 = [
@@ -19,7 +21,7 @@ const GEO_STATE_1 = [
 ]
 
 describe('RungeKutta4', () => {
-  describe('#.propagate()', () => {
+  describe('#propagate()', () => {
     const [GEO_0HR, GEO_6HR, GEO_12HR, GEO_24HR] = GEO_STATE_1
     const rk4 = new RungeKutta4(GEO_0HR, { stepSize: 300 })
     it('should have an error less than 50 meters after 6 hours', () => {
@@ -41,7 +43,7 @@ describe('RungeKutta4', () => {
 })
 
 describe('Kepler', () => {
-  describe('#.step()', () => {
+  describe('#step()', () => {
     it('should match numerical two-body results', () => {
       const state = new J2000(
         Date.UTC(2017, 10, 16, 0, 11, 30, 195),
@@ -60,6 +62,33 @@ describe('Kepler', () => {
         const dist = resultRk[i].position
           .distance(resultKep[i].position) * 1000
         assert.isBelow(dist, 5)
+      }
+    })
+  })
+})
+
+describe('Interpolator', () => {
+  describe('#propagate()', () => {
+    const state = new J2000(
+      Date.UTC(2017, 10, 16, 0, 11, 30, 195),
+      -3.86234943730e4, 1.68697633760e4, 1.00434444900e3,
+      -1.231249e0, -2.810612e0, -2.01294e-1
+    )
+    const rk4 = RungeKutta4.twoBody(state)
+    const j2ks = rk4.step(Date.UTC(2017, 10, 17), 120, 60)
+    const stepMillis = 30000
+    it('should follow source data using linear method', () => {
+      const interp = new Interpolator(j2ks, {
+        method: InterpolatorMethods.LINEAR
+      })
+      rk4.reset()
+      let epoch = j2ks[0].epoch.toMillis()
+      while (epoch < Date.UTC(2017, 10, 17, 1, 30)) {
+        const iState = interp.propagate(epoch)
+        const rState = rk4.propagate(epoch)
+        const d1 = iState.position.distance(rState.position) * 1000
+        assert.isBelow(d1, 5000)
+        epoch += stepMillis
       }
     })
   })
