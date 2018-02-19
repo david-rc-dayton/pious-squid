@@ -95,10 +95,10 @@ describe('Interpolator', () => {
     })
     it('should throw RangeError if interpolating outside data range', () => {
       assert.throws(() => {
-        interpLinear.propagate(Date.UTC(2017, 10, 16, 23, 59, 59, 999))
+        interpVerlet.propagate(Date.UTC(2017, 10, 16, 23, 59, 59, 999))
       }, RangeError)
       assert.throws(() => {
-        interpLinear.propagate(Date.UTC(2017, 10, 18, 0, 0, 0, 1))
+        interpVerlet.propagate(Date.UTC(2017, 10, 18, 0, 0, 0, 1))
       }, RangeError)
     })
   })
