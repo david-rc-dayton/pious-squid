@@ -48,8 +48,8 @@ console.log(coordSph.toString())
 
 // convert to Topocentric-Horizon coordinates, relative to an observer
 let coordTopo = coordECEF.toTopocentric(new Geodetic(
-  30 * DEG2RAD,  // observer latitude (degrees)
-  70 * DEG2RAD,  // observer longitude (degrees)
+  30 * DEG2RAD,  // observer latitude (radians)
+  70 * DEG2RAD,  // observer longitude (radians)
   0.125          // observer altitude (km)
 ))
 
