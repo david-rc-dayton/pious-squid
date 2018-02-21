@@ -27,7 +27,10 @@ export class Kepler implements Propagator {
 
   /** Return a string representation of the object. */
   public toString () {
-    return '[Kepler]:  Two-Body Propagator'
+    return [
+      '[Kepler]',
+      '  Two-Body Propagator'
+    ].join('\n')
   }
 
   /**

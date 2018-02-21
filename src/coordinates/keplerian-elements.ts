@@ -52,12 +52,12 @@ export class KeplerianElements implements Coordinate {
     return [
       '[KeplerianElements]',
       `  Epoch:  ${epoch.toString()}`,
-      `  Semimajor Axis:  ${a.toFixed(3)} km`,
-      `  Eccentricity:  ${e.toFixed(6)}`,
-      `  Inclination:  ${(i * RAD2DEG).toFixed(4)}\u00b0`,
-      `  Right Ascension:  ${(o * RAD2DEG).toFixed(4)}\u00b0`,
-      `  Argument of Perigee:  ${(w * RAD2DEG).toFixed(4)}\u00b0`,
-      `  True Anomaly:  ${(v * RAD2DEG).toFixed(4)}\u00b0`
+      `  (a) Semimajor Axis:  ${a.toFixed(3)} km`,
+      `  (e) Eccentricity:  ${e.toFixed(6)}`,
+      `  (i) Inclination:  ${(i * RAD2DEG).toFixed(4)}\u00b0`,
+      `  (\u03a9) Right Ascension:  ${(o * RAD2DEG).toFixed(4)}\u00b0`,
+      `  (\u03c9) Argument of Perigee:  ${(w * RAD2DEG).toFixed(4)}\u00b0`,
+      `  (\u03bd) True Anomaly:  ${(v * RAD2DEG).toFixed(4)}\u00b0`
     ].join('\n')
   }
 

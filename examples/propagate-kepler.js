@@ -21,19 +21,20 @@ let initState = new KeplerianElements(
 console.log(initState.toString())
 //=> [KeplerianElements]
 //   Epoch:  Wed, 07 Feb 2018 12:00:00 GMT
-//   Semimajor Axis:  6787.234 km
-//   Eccentricity:  0.000879
-//   Inclination:  51.3447°
-//   Right Ascension:  304.5164°
-//   Argument of Perigee:  54.4453°
-//   True Anomaly:  279.6809°
+//   (a) Semimajor Axis:  6787.234 km
+//   (e) Eccentricity:  0.000879
+//   (i) Inclination:  51.3447°
+//   (Ω) Right Ascension:  304.5164°
+//   (ω) Argument of Perigee:  54.4453°
+//   (ν) True Anomaly:  279.6809°
 
 
 // initialize the propagator, using default two-body settings
 let kepProp = new Kepler(initState)
 
 console.log(kepProp.toString())
-//=> [Kepler]:  Two-Body Propagator
+//=> [Kepler]
+//   Two-Body Propagator
 
 
 // propagate the state one day forward
