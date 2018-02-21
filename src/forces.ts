@@ -10,13 +10,12 @@ import { Vector } from './vector'
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function j2Effect (position: Vector): Vector {
-  const pow = Math.pow
   const [i, j, k] = position.state
   const r = position.magnitude()
   const aPre = -((3 * c.EARTH_J2 * c.EARTH_MU
-    * pow(c.EARTH_RAD_EQ, 2)) / (2 * pow(r, 5)))
-  const aijPost = 1 - ((5 * pow(k, 2)) / pow(r, 2))
-  const akPost = 3 - ((5 * pow(k, 2)) / pow(r, 2))
+    * (c.EARTH_RAD_EQ ** 2)) / (2 * (r ** 5)))
+  const aijPost = 1 - ((5 * (k ** 2)) / (r ** 2))
+  const akPost = 3 - ((5 * (k ** 2)) / (r ** 2))
   return new Vector(
     aPre * i * aijPost,
     aPre * j * aijPost,
@@ -30,14 +29,13 @@ export function j2Effect (position: Vector): Vector {
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function j3Effect (position: Vector): Vector {
-  const pow = Math.pow
   const [i, j, k] = position.state
   const r = position.magnitude()
   const aPre = -((5 * c.EARTH_J3 * c.EARTH_MU
-    * pow(c.EARTH_RAD_EQ, 3)) / (2 * pow(r, 7)))
-  const aijPost = (3 * k) - ((7 * pow(k, 3)) / pow(r, 2))
-  const akPost = ((6 * pow(k, 2)) - ((7 * pow(k, 4)) / pow(r, 2))
-    - ((3 / 5) * pow(r, 2)))
+    * (c.EARTH_RAD_EQ ** 3)) / (2 * (r ** 7)))
+  const aijPost = (3 * k) - ((7 * (k ** 3)) / (r ** 2))
+  const akPost = ((6 * (k ** 2)) - ((7 * (k ** 4)) / (r ** 2))
+    - ((3 / 5) * (r ** 2)))
   return new Vector(
     aPre * i * aijPost,
     aPre * j * aijPost,
@@ -51,15 +49,14 @@ export function j3Effect (position: Vector): Vector {
  * @param position satellite J2000 position 3-vector, in kilometers
  */
 export function j4Effect (position: Vector): Vector {
-  const pow = Math.pow
   const [i, j, k] = position.state
   const r = position.magnitude()
   const aPre = (15 * c.EARTH_J4 * c.EARTH_MU
-    * pow(c.EARTH_RAD_EQ, 4)) / (8 * pow(r, 7))
-  const aijPost = (1 - ((14 * pow(k, 2)) / pow(r, 2))
-    + ((21 * pow(k, 4)) / pow(r, 4)))
-  const akPost = (5 - ((70 * pow(k, 2)) / (3 * pow(r, 2))) +
-    ((21 * pow(k, 4)) / pow(r, 4)))
+    * (c.EARTH_RAD_EQ ** 4)) / (8 * (r ** 7))
+  const aijPost = (1 - ((14 * (k ** 2)) / (r ** 2))
+    + ((21 * (k ** 4)) / (r ** 4)))
+  const akPost = (5 - ((70 * (k ** 2)) / (3 * (r ** 2)))
+    + ((21 * (k ** 4)) / (r ** 4)))
   return new Vector(
     aPre * i * aijPost,
     aPre * j * aijPost,
@@ -74,7 +71,7 @@ export function j4Effect (position: Vector): Vector {
  */
 export function gravityEarth (position: Vector): Vector {
   const dist = position.magnitude()
-  return position.scale(-c.EARTH_MU / Math.pow(dist, 3))
+  return position.scale(-c.EARTH_MU / (dist ** 3))
 }
 
 /**
@@ -86,9 +83,9 @@ export function gravityEarth (position: Vector): Vector {
 export function gravityMoon (epoch: Epoch, position: Vector): Vector {
   const rMoon = moonPosition(epoch)
   const aNum = rMoon.add(position.scale(-1))
-  const aDen = Math.pow(aNum.magnitude(), 3)
+  const aDen = aNum.magnitude() ** 3
   const bNum = rMoon
-  const bDen = Math.pow(rMoon.magnitude(), 3)
+  const bDen = rMoon.magnitude() ** 3
   const grav = aNum.scale(1 / aDen).add(bNum.scale(-1 / bDen))
   return grav.scale(c.MOON_MU)
 }
@@ -102,9 +99,9 @@ export function gravityMoon (epoch: Epoch, position: Vector): Vector {
 export function gravitySun (epoch: Epoch, position: Vector): Vector {
   const rSun = sunPosition(epoch)
   const aNum = rSun.add(position.scale(-1))
-  const aDen = Math.pow(aNum.magnitude(), 3)
+  const aDen = aNum.magnitude() ** 3
   const bNum = rSun
-  const bDen = Math.pow(rSun.magnitude(), 3)
+  const bDen = rSun.magnitude() ** 3
   const grav = aNum.scale(1 / aDen).add(bNum.scale(-1 / bDen))
   return grav.scale(c.SUN_MU)
 }
@@ -117,16 +114,16 @@ export function gravitySun (epoch: Epoch, position: Vector): Vector {
  * @param rSun Sun J2000 position 3-vector, in kilometers
  */
 function shadowFactor (rSat: Vector, rSun: Vector): number {
-  const n = Math.pow(rSat.magnitude(), 2) - rSat.dot(rSun)
-  const d = (Math.pow(rSat.magnitude(), 2)
-    + Math.pow(rSun.magnitude(), 2) - 2 * rSat.dot(rSun))
+  const n = (rSat.magnitude() ** 2) - rSat.dot(rSun)
+  const d = (rSat.magnitude() ** 2)
+    + (rSun.magnitude() ** 2) - 2 * rSat.dot(rSun)
   const tMin = (n / d)
-  const cVal = ((1 - tMin) * Math.pow(rSat.magnitude(), 2)
+  const cVal = ((1 - tMin) * (rSat.magnitude() ** 2)
     + rSat.dot(rSun) * tMin)
   if (tMin < 0 || tMin > 1) {
     return 1
   }
-  if (cVal >= Math.pow(c.EARTH_RAD_EQ, 2)) {
+  if (cVal >= c.EARTH_RAD_EQ ** 2) {
     return 1
   }
   return 0
@@ -147,11 +144,9 @@ export function solarRadiation (epoch: Epoch, position: Vector, mass: number,
   const rSun = sunPosition(epoch)
   const sFactor = shadowFactor(rSat, rSun)
   const rDist = rSat.add(rSun.scale(-1))
-  const fScale = (
-    (c.SOLAR_FLUX * Math.pow(c.ASTRONOMICAL_UNIT, 2)
-      * reflect * (area / 1000.0)) /
-    (mass * Math.pow(rDist.magnitude(), 2) * c.SPEED_OF_LIGHT)
-  )
+  const fScale = ((c.SOLAR_FLUX * (c.ASTRONOMICAL_UNIT ** 2)
+    * reflect * (area / 1000.0))
+    / (mass * (rDist.magnitude() ** 2) * c.SPEED_OF_LIGHT))
   const unitVec = rDist.normalize()
   return unitVec.scale(sFactor * fScale)
 }
@@ -171,7 +166,7 @@ export function atmosphericDrag (position: Vector, velocity: Vector,
   const vRel = velocity.add(rotVel.scale(-1)).scale(1000)
   const vMag = vRel.magnitude()
   const density = atmosphericDensity(position)
-  const fScale = -0.5 * ((drag * area) / mass) * density * Math.pow(vMag, 2)
+  const fScale = -0.5 * ((drag * area) / mass) * density * (vMag ** 2)
   const velVec = vRel.normalize()
   return velVec.scale(fScale / 1000)
 }

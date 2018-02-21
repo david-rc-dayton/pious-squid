@@ -28,8 +28,8 @@ export const EARTH_RAD_POL = EARTH_RAD_EQ * (1 - EARTH_FLAT)
 export const EARTH_RAD_MEAN = (2 * EARTH_RAD_EQ + EARTH_RAD_POL) / 3
 
 /** Earth eccentricity, squared. */
-export const EARTH_ECC_SQ = (Math.pow(EARTH_RAD_EQ, 2)
-  - Math.pow(EARTH_RAD_POL, 2)) / Math.pow(EARTH_RAD_EQ, 2)
+export const EARTH_ECC_SQ = ((EARTH_RAD_EQ ** 2) - (EARTH_RAD_POL ** 2))
+  / (EARTH_RAD_EQ ** 2)
 
 /** Earth J2 coefficient. */
 export const EARTH_J2 = 0.001082627

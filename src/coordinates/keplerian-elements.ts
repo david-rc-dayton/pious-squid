@@ -64,11 +64,11 @@ export class KeplerianElements implements Coordinate {
   /** Convert to the J2000 (J2K) inertial coordinate frame. */
   public toJ2K (): J2000 {
     const { epoch, a, e, i, o, w, v } = this
-    const { cos, sin, pow, sqrt } = Math
+    const { cos, sin, sqrt } = Math
     const rPqw = new Vector(cos(v), sin(v), 0)
-      .scale((a * (1 - pow(e, 2))) / (1 + e * cos(v)))
+      .scale((a * (1 - (e ** 2))) / (1 + e * cos(v)))
     const vPqw = new Vector(-sin(v), e + cos(v), 0)
-      .scale(sqrt(EARTH_MU / (a * (1 - pow(e, 2)))))
+      .scale(sqrt(EARTH_MU / (a * (1 - (e ** 2)))))
     const rJ2k = rPqw.rot3(-w).rot1(-i).rot3(-o)
     const vJ2k = vPqw.rot3(-w).rot1(-i).rot3(-o)
     const [ri, rj, rk, vi, vj, vk] = rJ2k.concat(vJ2k).state
@@ -77,7 +77,7 @@ export class KeplerianElements implements Coordinate {
 
   /** Calculate the satellite's mean motion, in radians per second. */
   public meanMotion (): number {
-    return Math.sqrt(EARTH_MU / Math.pow(this.a, 3))
+    return Math.sqrt(EARTH_MU / (this.a ** 3))
   }
 
   /** Calculate the number of revolutions the satellite completes per day. */

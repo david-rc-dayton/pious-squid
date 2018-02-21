@@ -23,7 +23,7 @@ export function factorial (n: number): number {
 export function evalPoly (x: number, coeffs: number[]): number {
   let output = 0
   for (let n = 0; n < coeffs.length; n++) {
-    output += coeffs[n] * Math.pow(x, n)
+    output += coeffs[n] * (x ** n)
   }
   return output
 }
