@@ -1,4 +1,4 @@
-// Example: using the EarthCenteredFixed coordinates
+// Example: using EarthCenteredFixed coordinates
 
 // import pious-squid module
 const PiousSquid = require('..')
