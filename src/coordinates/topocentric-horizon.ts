@@ -17,13 +17,24 @@ export class TopocentricHorizon implements Coordinate {
    *
    * @param s south component, in kilometers
    * @param e east component, in kilometers
-   * @param z surface-normal component, in kilometers
+   * @param z zenith component, in kilometers
    */
   constructor (s: number, e: number, z: number) {
     this.type = CoordinateType.TOPOCENTRIC_HORIZON
     this.s = s
     this.e = e
     this.z = z
+  }
+
+  /** Return a string representation of the object. */
+  public toString (): string {
+    const { s, e, z } = this
+    return [
+      '[Topocentric]',
+      `  (S)outh:  ${s.toFixed(3)} km`,
+      `  (E)ast:  ${e.toFixed(3)} km`,
+      `  (Z)enith:  ${z.toFixed(3)} km`
+    ].join('\n')
   }
 
   /** Convert to look angles. */

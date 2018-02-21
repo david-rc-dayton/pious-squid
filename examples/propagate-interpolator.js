@@ -20,27 +20,31 @@ let initState = new J2000(
   8228, 389, 6888,                         // position (km)
   -0.7, 6.6, -0.6                          // velocity (km/s)
 )
+
+console.log(initState.toString())
 //=> [J2000]
-//   Epoch: Wed, 10 Mar 2010 22:53:14 GMT
-//   Position: [ 8228, 389, 6888 ] km
-//   Velocity: [ -0.7, 6.6, -0.6 ] km/s
+//   Epoch:  Wed, 10 Mar 2010 22:53:14 GMT
+//   Position:  [ 8228, 389, 6888 ] km
+//   Velocity:  [ -0.7, 6.6, -0.6 ] km/s
 
 
 // initialize the propagator
 let rk4Prop = new RungeKutta4(initState)
+
+console.log(rk4Prop.toString())
 //=> [RungeKutta4]
-//   Step Size: 300 seconds
-//   Satellite Mass: 1000 kg
-//   Satellite Surface Area: 1 m^2
-//   Drag Coefficient: 2.2
-//   Reflectivity Coefficient: 1.4
-//   J2 Effect: ENABLED
-//   J3 Effect: ENABLED
-//   J4 Effect: ENABLED
-//   Sun Gravity: ENABLED
-//   Moon Gravity: ENABLED
-//   Solar Radiation Pressure: ENABLED
-//   Atmospheric Drag: ENABLED
+//   Step Size:  300 seconds
+//   Satellite Mass:  1000 kg
+//   Satellite Surface Area:  1 m^2
+//   Drag Coefficient:  2.2
+//   Reflectivity Coefficient:  1.4
+//   J2 Effect:  ENABLED
+//   J3 Effect:  ENABLED
+//   J4 Effect:  ENABLED
+//   Sun Gravity:  ENABLED
+//   Moon Gravity:  ENABLED
+//   Solar Radiation Pressure:  ENABLED
+//   Atmospheric Drag:  ENABLED
 
 
 // cache 24-hours of J2000 states, sampled every 300 seconds
@@ -49,6 +53,8 @@ let j2kCache = rk4Prop.step(
   300,                    // interval (seconds)
   288,                    // iterations (300 secs * 288 = 86400 secs = 24 hrs)
 )
+
+console.log(j2kCache.toString())
 //=> [J2000]
 //   Epoch: Wed, 10 Mar 2010 00:00:00 GMT
 //   Position: [ -7100.939, -13074.581, -6033.937 ] km
@@ -69,6 +75,8 @@ let j2kCache = rk4Prop.step(
 
 // create a new Interpolator using the cached state
 let interp = new Interpolator(j2kCache)
+
+console.log(interp.toString())
 //=> [Interpolator]
 //   Method: verlet
 //   Range: [Wed, 10 Mar 2010 00:00:00 GMT] -> [Thu, 11 Mar 2010 00:00:00 GMT]
@@ -77,6 +85,8 @@ let interp = new Interpolator(j2kCache)
 
 // interpolate a state in the cached timerange
 let newState = interp.propagate(Date.UTC(2010, 2, 10, 11, 23, 9))
+
+console.log(newState.toString())
 //=> [J2000]
 //   Epoch: Wed, 10 Mar 2010 11:23:09 GMT
 //   Position: [ -9175.343, 7168.625, -7667.659 ] km

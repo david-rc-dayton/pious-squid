@@ -156,9 +156,9 @@ export class Interpolator implements Propagator {
     const sStr = this.isNumerical() ? `${this.model.stepSize} seconds` : 'N/A'
     return [
       '[Interpolator]',
-      `  Method: ${this.model.method}`,
-      `  Range: [${tStart}] -> [${tEnd}]`,
-      `  Step Size: ${sStr}`
+      `  Method:  ${this.model.method}`,
+      `  Range:  [${tStart}] -> [${tEnd}]`,
+      `  Step Size:  ${sStr}`
     ].join('\n')
   }
 

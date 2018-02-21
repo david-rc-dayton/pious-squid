@@ -51,13 +51,13 @@ export class KeplerianElements implements Coordinate {
     const { epoch, a, e, i, o, w, v } = this
     return [
       '[KeplerianElements]',
-      `  Epoch: ${epoch.toString()}`,
-      `  Semimajor Axis: ${a.toFixed(3)} km`,
-      `  Eccentricity: ${e.toFixed(6)}`,
-      `  Inclination: ${(i * RAD2DEG).toFixed(4)}\u00b0`,
-      `  Right Ascension: ${(o * RAD2DEG).toFixed(4)}\u00b0`,
-      `  Argument of Perigee: ${(w * RAD2DEG).toFixed(4)}\u00b0`,
-      `  True Anomaly: ${(v * RAD2DEG).toFixed(4)}\u00b0`
+      `  Epoch:  ${epoch.toString()}`,
+      `  Semimajor Axis:  ${a.toFixed(3)} km`,
+      `  Eccentricity:  ${e.toFixed(6)}`,
+      `  Inclination:  ${(i * RAD2DEG).toFixed(4)}\u00b0`,
+      `  Right Ascension:  ${(o * RAD2DEG).toFixed(4)}\u00b0`,
+      `  Argument of Perigee:  ${(w * RAD2DEG).toFixed(4)}\u00b0`,
+      `  True Anomaly:  ${(v * RAD2DEG).toFixed(4)}\u00b0`
     ].join('\n')
   }
 

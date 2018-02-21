@@ -81,18 +81,18 @@ export class RungeKutta4 implements Propagator {
     const status = (p: boolean) => p ? 'ENABLED' : 'DISABLED'
     return [
       '[RungeKutta4]',
-      `  Step Size: ${this.model.stepSize} seconds`,
-      `  Satellite Mass: ${this.model.mass} kg`,
-      `  Satellite Surface Area: ${this.model.area} m^2`,
-      `  Drag Coefficient: ${this.model.drag}`,
-      `  Reflectivity Coefficient: ${this.model.reflect}`,
-      `  J2 Effect: ${status(this.model.j2Effect)}`,
-      `  J3 Effect: ${status(this.model.j3Effect)}`,
-      `  J4 Effect: ${status(this.model.j4Effect)}`,
-      `  Sun Gravity: ${status(this.model.gravitySun)}`,
-      `  Moon Gravity: ${status(this.model.gravityMoon)}`,
-      `  Solar Radiation Pressure: ${status(this.model.solarRadiation)}`,
-      `  Atmospheric Drag: ${status(this.model.atmosphericDrag)}`
+      `  Step Size:  ${this.model.stepSize} seconds`,
+      `  Satellite Mass:  ${this.model.mass} kg`,
+      `  Satellite Surface Area:  ${this.model.area} m^2`,
+      `  Drag Coefficient:  ${this.model.drag}`,
+      `  Reflectivity Coefficient:  ${this.model.reflect}`,
+      `  J2 Effect:  ${status(this.model.j2Effect)}`,
+      `  J3 Effect:  ${status(this.model.j3Effect)}`,
+      `  J4 Effect:  ${status(this.model.j4Effect)}`,
+      `  Sun Gravity:  ${status(this.model.gravitySun)}`,
+      `  Moon Gravity:  ${status(this.model.gravityMoon)}`,
+      `  Solar Radiation Pressure:  ${status(this.model.solarRadiation)}`,
+      `  Atmospheric Drag:  ${status(this.model.atmosphericDrag)}`
     ].join('\n')
   }
 

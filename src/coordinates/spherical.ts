@@ -1,3 +1,4 @@
+import { RAD2DEG } from '../constants'
 import { Coordinate, CoordinateType } from './coordinate-config'
 import { EarthCenteredFixed } from './earth-centered-fixed'
 
@@ -24,6 +25,19 @@ export class Spherical implements Coordinate {
     this.radius = radius
     this.inclination = inclination
     this.azimuth = azimuth
+  }
+
+  /** Return a string representation of the object. */
+  public toString (): string {
+    const { radius, inclination, azimuth } = this
+    const theta = inclination * RAD2DEG
+    const phi = azimuth * RAD2DEG
+    return [
+      '[Spherical]',
+      `  (r) Radius:  ${(radius).toFixed(3)} km`,
+      `  (\u03b8) Inclination:  ${theta.toFixed(3)}\u00b0`,
+      `  (\u03c6) Azimuth:  ${phi.toFixed(3)}\u00b0`
+    ].join('\n')
   }
 
   /** Convert to the Earth Centered Earth Fixed (ECEF) coordinate frame. */

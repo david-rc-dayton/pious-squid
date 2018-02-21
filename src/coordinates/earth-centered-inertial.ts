@@ -36,6 +36,16 @@ export class EarthCenteredInertial implements Coordinate {
     this.velocity = new Vector(vi, vj, vk)
   }
 
+  /** Return a string representation of the object. */
+  public toString (): string {
+    return [
+      '[EarthCenteredInertial]',
+      `  Epoch:  ${this.epoch.toString()}`,
+      `  Position:  ${this.position.toString()} km`,
+      `  Velocity:  ${this.velocity.toString()} km/s`
+    ].join('\n')
+  }
+
   /** Convert to the Earth Centered Earth Fixed (ECEF) coordinate frame. */
   public toECEF (): EarthCenteredFixed {
     const { epoch, position, velocity } = this

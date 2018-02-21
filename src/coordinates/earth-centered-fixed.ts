@@ -34,6 +34,15 @@ export class EarthCenteredFixed implements Coordinate {
     this.velocity = new Vector(vx, vy, vz)
   }
 
+  /** Return a string representation of the object. */
+  public toString (): string {
+    return [
+      '[EarthCenteredFixed]',
+      `  Position:  ${this.position.toString()} km`,
+      `  Velocity:  ${this.velocity.toString()} km/s`
+    ].join('\n')
+  }
+
   /**
    * Convert to the Earth Centered Inertial (ECI) coordinate frame.
    *

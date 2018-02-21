@@ -41,9 +41,9 @@ export class J2000 implements Coordinate {
     const { epoch, position, velocity } = this
     const output = [
       '[J2000]',
-      `  Epoch: ${epoch.toString()}`,
-      `  Position: ${position.toString()} km`,
-      `  Velocity: ${velocity.toString()} km/s`
+      `  Epoch:  ${epoch.toString()}`,
+      `  Position:  ${position.toString()} km`,
+      `  Velocity:  ${velocity.toString()} km/s`
     ]
     return output.join('\n')
   }
