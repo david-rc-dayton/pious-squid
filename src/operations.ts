@@ -3,9 +3,14 @@ import { TWO_PI } from "./constants";
 /**
  * Calculate the factorial of a number.
  *
+ * Throws an error if argument is not a positive integer.
+ *
  * @param n a positive integer
  */
 export function factorial(n: number): number {
+    if (n <= 0) {
+        throw new Error("Argument must be a positive integer.");
+    }
     let output = 1;
     for (let i = n; i > 1; i--) {
         output *= i;

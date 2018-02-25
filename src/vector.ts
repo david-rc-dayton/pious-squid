@@ -58,8 +58,8 @@ export class Vector {
         return Vector.fromArray(this.state.slice(start, end));
     }
 
-    /** Calculate the magnitude of this object. */
-    public magnitude(): number {
+    /** Return the magnitude of this object. */
+    get magnitude(): number {
         const sq = this.state.map((x) => x * x);
         const sum = sq.reduce((a, b) => a + b);
         return Math.sqrt(sum);
@@ -124,11 +124,16 @@ export class Vector {
         return Vector.fromArray(this.state.map((x) => x * n));
     }
 
+    public pow(n: number): Vector {
+        const pState = this.state.map((x) => Math.pow(x, n));
+        return Vector.fromArray(pState);
+    }
+
     /**
      * Return the normalized (unit vector) form of this as a new Vector object.
      */
-    public normalize(): Vector {
-        const m = this.magnitude();
+    get normalized(): Vector {
+        const m = this.magnitude;
         return Vector.fromArray(this.state.map((x) => x / m));
     }
 
@@ -234,7 +239,7 @@ export class Vector {
      */
     public angle(v: Vector): number {
         this.isDimensionMatched(v);
-        return Math.acos(this.dot(v) / (this.magnitude() * v.magnitude()));
+        return Math.acos(this.dot(v) / (this.magnitude * v.magnitude));
     }
 
     /**

@@ -71,7 +71,7 @@ export function nutation(epoch: Epoch): [number, number, number] {
  * @param position satellite position 3-vector, in kilometers
  */
 export function atmosphericDensity(position: Vector): number {
-    const rDist = position.magnitude() - c.EARTH_RAD_EQ;
+    const rDist = position.magnitude - c.EARTH_RAD_EQ;
     let fields = [0.0, 0.0, 0.0];
     if (rDist <= c.EXP_ATMOSPHERE[0][0]) {
         fields = c.EXP_ATMOSPHERE[0];

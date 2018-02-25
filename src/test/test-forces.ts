@@ -85,9 +85,9 @@ describe("forces", () => {
             const srAcc = forces.solarRadiation(TEST_EPOCH, TEST_POSITION,
                 1000, 1, 1.4);
             assert.deepEqual(srAcc.state, [
-                6.259125160767262e-13,
-                -5.6010407852157446e-12,
-                -2.4283627011082955e-12,
+                -6.468125663392147e-13,
+                5.788066976458911e-12,
+                2.5094489571027267e-12,
             ]);
         });
     });

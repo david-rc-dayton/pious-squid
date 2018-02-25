@@ -66,21 +66,21 @@ export class J2000 implements ICoordinate {
     /** Convert to Keplerian elements. */
     public toKeplerian(): KeplerianElements {
         const { epoch, position, velocity } = this;
-        const [R, V] = [position.magnitude(), velocity.magnitude()];
+        const [R, V] = [position.magnitude, velocity.magnitude];
         const energy = ((V * V) / 2) - (EARTH_MU / R);
         const a = -(EARTH_MU / (2 * energy));
         const eVecA = position.scale((V * V) - (EARTH_MU / R));
         const eVecB = velocity.scale(position.dot(velocity));
         const eVec = eVecA.add(eVecB.scale(-1)).scale(1 / EARTH_MU);
-        const e = eVec.magnitude();
+        const e = eVec.magnitude;
         const h = position.cross(velocity);
-        const i = Math.acos(h.state[2] / h.magnitude()) % 180;
+        const i = Math.acos(h.state[2] / h.magnitude) % 180;
         const n = new Vector(0, 0, 1).cross(h);
-        let o = Math.acos(n.state[0] / n.magnitude());
+        let o = Math.acos(n.state[0] / n.magnitude);
         if (n.state[1] < 0) {
             o = TWO_PI - o;
         }
-        let w = Math.acos(n.dot(eVec) / (n.magnitude() * e));
+        let w = Math.acos(n.dot(eVec) / (n.magnitude * e));
         if (eVec.state[2] < 0) {
             w = TWO_PI - w;
         }

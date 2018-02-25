@@ -18,7 +18,7 @@ describe("Vector", () => {
     });
 
     describe("#magnitude()", () => {
-        const vecAMag = vecA.magnitude();
+        const vecAMag = vecA.magnitude;
         it("should return the vector magnitude", () => {
             assert.equal(vecAMag, 3.7416573867739413);
         });
@@ -60,14 +60,14 @@ describe("Vector", () => {
     });
 
     describe("#normalize()", () => {
-        const vecNorm = vecA.normalize();
+        const vecNorm = vecA.normalized;
         it("should return a unit vector", () => {
             assert.deepEqual(vecNorm.state, [
                 0.2672612419124244,
                 0.5345224838248488,
                 0.8017837257372732,
             ]);
-            assert.equal(vecNorm.magnitude(), 1);
+            assert.equal(vecNorm.magnitude, 1);
         });
     });
 
