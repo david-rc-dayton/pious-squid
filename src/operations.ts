@@ -1,16 +1,16 @@
-import { TWO_PI } from './constants'
+import { TWO_PI } from "./constants";
 
 /**
  * Calculate the factorial of a number.
  *
  * @param n a positive integer
  */
-export function factorial (n: number): number {
-  let output = 1
-  for (let i = n; i > 1; i--) {
-    output *= i
-  }
-  return output
+export function factorial(n: number): number {
+    let output = 1;
+    for (let i = n; i > 1; i--) {
+        output *= i;
+    }
+    return output;
 }
 
 /**
@@ -20,12 +20,12 @@ export function factorial (n: number): number {
  * @param x variable
  * @param coeffs coefficients, from lowest to highest
  */
-export function evalPoly (x: number, coeffs: number[]): number {
-  let output = 0
-  for (let n = 0; n < coeffs.length; n++) {
-    output += coeffs[n] * (x ** n)
-  }
-  return output
+export function evalPoly(x: number, coeffs: number[]): number {
+    let output = 0;
+    for (let n = 0; n < coeffs.length; n++) {
+        output += coeffs[n] * (x ** n);
+    }
+    return output;
 }
 
 /**
@@ -33,10 +33,10 @@ export function evalPoly (x: number, coeffs: number[]): number {
  *
  * @param n a number
  */
-export function sign (n: number): number {
-  if (n < 0) { return -1 }
-  if (n > 0) { return 1 }
-  return 0
+export function sign(n: number): number {
+    if (n < 0) { return -1; }
+    if (n > 0) { return 1; }
+    return 0;
 }
 
 /**
@@ -46,11 +46,11 @@ export function sign (n: number): number {
  * @param angle angle to (possibly) adjust
  * @param match reference angle
  */
-export function matchHalfPlane (angle: number, match: number): number {
-  const [a1, a2] = [angle, TWO_PI - angle]
-  const d1 = Math.atan2(Math.sin(a1 - match), Math.cos(a1 - match))
-  const d2 = Math.atan2(Math.sin(a2 - match), Math.cos(a2 - match))
-  return (Math.abs(d1) < Math.abs(d2)) ? a1 : a2
+export function matchHalfPlane(angle: number, match: number): number {
+    const [a1, a2] = [angle, TWO_PI - angle];
+    const d1 = Math.atan2(Math.sin(a1 - match), Math.cos(a1 - match));
+    const d2 = Math.atan2(Math.sin(a2 - match), Math.cos(a2 - match));
+    return (Math.abs(d1) < Math.abs(d2)) ? a1 : a2;
 }
 
 /**
@@ -62,7 +62,7 @@ export function matchHalfPlane (angle: number, match: number): number {
  * @param x1 end x-value
  * @param y1 end y-value
  */
-export function linearInterpolate (x: number, x0: number, y0: number,
-  x1: number, y1: number): number {
-  return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0)
+export function linearInterpolate(x: number, x0: number, y0: number,
+                                  x1: number, y1: number): number {
+    return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
 }

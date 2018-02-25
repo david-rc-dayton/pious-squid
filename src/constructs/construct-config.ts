@@ -1,13 +1,13 @@
 /** Options for the Satellite constructor. */
-export interface SatelliteOptions {
-  /** Satellite name. */
-  name?: string
+export interface ISatelliteOptions {
+    /** Satellite name. */
+    name?: string;
 }
 
 /** Options for the GroundStation constructor. */
-export interface GroundStationOptions {
-  /** Ground station name. */
-  name?: string
-  /** Site minimum elevation, in radians. */
-  minEl?: number
+export interface IGroundStationOptions {
+    /** Ground station name. */
+    name?: string;
+    /** Site minimum elevation, in radians. */
+    minEl?: number;
 }
