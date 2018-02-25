@@ -29,27 +29,27 @@ export class Vector {
      * Create a new Vector object.
      *
      * Vectors can have an arbitrary number state elements, but cannot be empty.
-     * An error will be thrown if no values are provided.
+     * An error will be thrown if no elements are provided.
      *
-     * @param values vector elements
-     * @returns a new Vector object
+     * @param elements vector elements
      */
-    constructor(...values: number[]) {
-        if (values.length === 0) {
-            throw new Error("Vector values cannot be empty.");
+    constructor(...elements: number[]) {
+        if (elements.length === 0) {
+            throw new Error("Vector elements cannot be empty.");
         }
-        this.state = values;
+        this.state = elements;
     }
 
-    /** Return the string representation of the state array. */
+    /** Return a string representation of this state. */
     public toString(): string {
         const fixArray = this.state.map((x) => parseFloat(x.toFixed(3)));
         return `[ ${fixArray.join(", ")} ]`;
     }
 
     /**
-     * Return a subset of the state elements as a new Vector object. Works in
-     * a similar way to JavaScript's Array.slice().
+     * Return a subset of the state elements as a new Vector object.
+     *
+     * Works in a similar way to JavaScript's Array.slice().
      *
      * @param start integer specifying the selection start
      * @param end integer specifying where to end the selection
@@ -58,7 +58,7 @@ export class Vector {
         return Vector.fromArray(this.state.slice(start, end));
     }
 
-    /** Calculate the magnitude of the Vector object. */
+    /** Calculate the magnitude of this object. */
     public magnitude(): number {
         const sq = this.state.map((x) => x * x);
         const sum = sq.reduce((a, b) => a + b);
@@ -66,11 +66,14 @@ export class Vector {
     }
 
     /**
-     * Calculate the Euclidean distance between two Vector objects.
+     * Calculate the Euclidean distance between this and another Vector.
+     *
+     * Throws an error if argument and this dimensions do not match.
      *
      * @param v the other vector
      */
     public distance(v: Vector): number {
+        this.isDimensionMatched(v);
         let sqDiff = 0;
         for (let i = 0; i < this.state.length; i++) {
             const diff = this.state[i] - v.state[i];
@@ -80,12 +83,15 @@ export class Vector {
     }
 
     /**
-     * Perform element-wise addition of two Vector objects and return a new
-     * Vector object containing the sum.
+     * Perform element-wise addition of this and another Vector.
+     *
+     * Returns a new Vector object containing the sum. Throws an error if
+     * argument and this dimensions do not match.
      *
      * @param v the other vector
      */
     public add(v: Vector): Vector {
+        this.isDimensionMatched(v);
         const output = [];
         for (let i = 0; i < this.state.length; i++) {
             output.push(this.state[i] + v.state[i]);
@@ -94,8 +100,9 @@ export class Vector {
     }
 
     /**
-     * Concatinate the elements of two Vector objects and return a new Vector
-     * object containing the combined state.
+     * Concatinate the elements of this and another Vector.
+     *
+     * Returns a new Vector object containing the combined state.
      *
      * @param v the other vector
      */
@@ -107,8 +114,9 @@ export class Vector {
     }
 
     /**
-     * Linearly scale the elements of a Vector object and return a new Vector
-     * object containing the scaled values.
+     * Linearly scale the elements of this.
+     *
+     * Returns a new Vector object containing the scaled state.
      *
      * @param n a scalar value
      */
@@ -117,8 +125,7 @@ export class Vector {
     }
 
     /**
-     * Return the normalized (unit vector) form of the Vector object as a new
-     * Vector object.
+     * Return the normalized (unit vector) form of this as a new Vector object.
      */
     public normalize(): Vector {
         const m = this.magnitude();
@@ -126,12 +133,16 @@ export class Vector {
     }
 
     /**
-     * Calculate the cross product of two vectors and return the result as a
-     * new Vector object.
+     * Calculate the cross product of this and another Vector.
+     *
+     * Returns the result as a new Vector object. Throws an error if both Vector
+     * dimensions are not equal to `3`.
      *
      * @param v the other vector
      */
     public cross(v: Vector): Vector {
+        this.isDimensionMatched(v);
+        this.isDimensionEqual(3);
         const [x, y, z] = this.state;
         const [vx, vy, vz] = v.state;
         return new Vector(
@@ -142,12 +153,14 @@ export class Vector {
     }
 
     /**
-     * Calculate the dot product of two vectors and return the result as a new
-     * Vector object.
+     * Calculate the dot product this and another Vector.
+     *
+     * Throws an error if argument and this dimensions do not match.
      *
      * @param v the other vector
      */
     public dot(v: Vector): number {
+        this.isDimensionMatched(v);
         let output = 0;
         for (let i = 0; i < this.state.length; i++) {
             output += this.state[i] * v.state[i];
@@ -156,11 +169,14 @@ export class Vector {
     }
 
     /**
-     * Rotate the Vector state elements along the x-axis.
+     * Rotate the elements of this along the x-axis.
+     *
+     * Throws an error if this dimension is not equal to `3`.
      *
      * @param theta rotation angle, in radians
      */
     public rot1(theta: number): Vector {
+        this.isDimensionEqual(3);
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
@@ -172,11 +188,14 @@ export class Vector {
     }
 
     /**
-     * Rotate the Vector state elements along the y-axis.
+     * Rotate the elements of this along the y-axis.
+     *
+     * Throws an error if this dimension is not equal to `3`.
      *
      * @param theta rotation angle, in radians
      */
     public rot2(theta: number): Vector {
+        this.isDimensionEqual(3);
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
@@ -188,11 +207,14 @@ export class Vector {
     }
 
     /**
-     * Rotate the Vector state elements along the z-axis.
+     * Rotate the elements of this along the z-axis.
+     *
+     * Throws an error if this dimension is not equal to `3`.
      *
      * @param theta rotation angle, in radians
      */
     public rot3(theta: number): Vector {
+        this.isDimensionEqual(3);
         const cosT = Math.cos(theta);
         const sinT = Math.sin(theta);
         const [x, y, z] = this.state;
@@ -204,18 +226,46 @@ export class Vector {
     }
 
     /**
-     * Calculate the angle, in radians, between this Vector object, and another
-     * vector object.
+     * Calculate the angle, in radians, between this and another Vector.
+     *
+     * Throws an error if argument and this dimensions do not match.
      *
      * @param v the other vector
      */
     public angle(v: Vector): number {
+        this.isDimensionMatched(v);
         return Math.acos(this.dot(v) / (this.magnitude() * v.magnitude()));
     }
 
-    /** Change coordinates to the relative position from a new origin. */
+    /**
+     * Change coordinates of this to the relative position from a new origin.
+     *
+     * Throws an error if argument and this dimensions do not match.
+     *
+     * @param origin new origin
+     */
     public changeOrigin(origin: Vector): Vector {
+        this.isDimensionMatched(origin);
         const delta = origin.scale(-1);
         return this.add(delta);
+    }
+
+    /** Return the vector state dimension. */
+    get dimension(): number {
+        return this.state.length;
+    }
+
+    /** Throw an error if dimensions do not match argument. */
+    private isDimensionMatched(v: Vector): void {
+        if (this.dimension !== v.dimension) {
+            throw new Error("Argument dimension doesn't match this.");
+        }
+    }
+
+    /** Throw an error if dimensions do not equal argument. */
+    private isDimensionEqual(n: number): void {
+        if (this.dimension !== n) {
+            throw new Error(`This dimension must equal: ${n}`);
+        }
     }
 }
