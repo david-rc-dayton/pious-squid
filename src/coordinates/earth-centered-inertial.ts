@@ -51,7 +51,7 @@ export class EarthCenteredInertial implements ICoordinate {
         const { epoch, position, velocity } = this;
         const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
-        const ast = epoch.getGMSTAngle() + dLon * Math.cos(obliq);
+        const ast = epoch.gmstAngle + dLon * Math.cos(obliq);
         const rPef = position.rot3(ast);
         let vPef = velocity.rot3(ast);
         const rotVec = EARTH_ROTATION.cross(rPef);
@@ -71,6 +71,6 @@ export class EarthCenteredInertial implements ICoordinate {
         const rj2k = rmod.rot3(zed).rot2(-theta).rot3(zeta);
         const vj2k = vmod.rot3(zed).rot2(-theta).rot3(zeta);
         const [ri, rj, rk, vi, vj, vk] = rj2k.concat(vj2k).state;
-        return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk);
+        return new J2000(epoch.millis, ri, rj, rk, vi, vj, vk);
     }
 }

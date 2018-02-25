@@ -68,7 +68,7 @@ export class GroundStation {
      */
     public sunAngle(state: J2000): number {
         const sensor = this.location.toECEF()
-            .toECI(state.epoch.toMillis()).toJ2K().position;
+            .toECI(state.epoch.millis).toJ2K().position;
         const sun = sunPosition(state.epoch).changeOrigin(sensor);
         const target = state.position.changeOrigin(sensor);
         return target.angle(sun);

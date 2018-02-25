@@ -13,33 +13,33 @@ describe("Epoch", () => {
 
     describe("#toJulianDate()", () => {
         it("should calculate the Julian Date", () => {
-            assert.equal(testEpoch.toJulianDate(), 2457931.796222037);
+            assert.equal(testEpoch.julianDate, 2457931.796222037);
         });
     });
 
     describe("#getLeapSecondOffset()", () => {
         it("should return the leap-second offset", () => {
-            assert.equal(testEpoch.getLeapSecondOffset(), 37);
+            assert.equal(testEpoch.leapSecondsOffset, 37);
         });
     });
 
     describe("#toTerrestrialCenturies()", () => {
         it("should calculate Terrestrial Centuries", () => {
-            assert.equal(testEpoch.toTerrestrialCenturies(),
+            assert.equal(testEpoch.terrestrialCenturies,
                 0.17486097256065913);
         });
     });
 
     describe("#toJulianCenturies()", () => {
         it("should calculate Julian Centuries", () => {
-            assert.equal(testEpoch.toJulianCenturies(),
+            assert.equal(testEpoch.julianCenturies,
                 0.17486095063756796);
         });
     });
 
     describe("#getGMSTAngle()", () => {
         it("should calculate the GMST angle", () => {
-            assert.equal(testEpoch.getGMSTAngle(),
+            assert.equal(testEpoch.gmstAngle,
                 0.38797689926765666);
         });
     });

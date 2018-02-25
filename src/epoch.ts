@@ -26,8 +26,8 @@ export class Epoch {
     }
 
     /** Convert to milliseconds since 1 January 1970, 00:00 UTC. */
-    public toMillis(): number {
-        return this.toDate().getTime();
+    get millis(): number {
+        return this.unix * 1000;
     }
 
     /** Convert to a UTC string. */
@@ -44,21 +44,21 @@ export class Epoch {
         return new Epoch((this.unix + seconds) * 1000);
     }
 
-    /** Convert to Julian date. */
-    public toJulianDate(): number {
+    /** Return this as a Julian date. */
+    get julianDate(): number {
         return (this.unix / 86400) + 2440587.5;
     }
 
-    /** Get leap second offset. Lookup table found in: constants.LEAP_SECONDS */
-    public getLeapSecondOffset(): number {
-        const julian = this.toJulianDate();
+    /** Fetch the number of leap seconds used in offset. */
+    get leapSecondsOffset(): number {
+        const julian = this.julianDate;
         if (julian < LEAP_SECONDS[0][0]) {
             return 0;
         }
         if (julian > LEAP_SECONDS[LEAP_SECONDS.length - 1][0]) {
             return LEAP_SECONDS[LEAP_SECONDS.length - 1][1];
         }
-        for (let i = 0; i < LEAP_SECONDS.length - 1; i++) {
+        for (let i = 0; i < LEAP_SECONDS.length - 2; i++) {
             if (LEAP_SECONDS[i][0] <= julian
                 && julian < LEAP_SECONDS[i + 1][0]) {
                 return LEAP_SECONDS[i][1];
@@ -67,23 +67,23 @@ export class Epoch {
         return 0;
     }
 
-    /** Convert to terrestrial centuries. */
-    public toTerrestrialCenturies(): number {
-        const julian = this.toJulianDate();
-        const offset = this.getLeapSecondOffset() + 32.184;
+    /** Return this in terrestrial centuries. */
+    get terrestrialCenturies(): number {
+        const julian = this.julianDate;
+        const offset = this.leapSecondsOffset + 32.184;
         const jdtt = julian + (offset * SEC2DAY);
         return (jdtt - 2451545.0) / 36525;
     }
 
-    /** Convert to Julian centuries. */
-    public toJulianCenturies(): number {
-        const julian = this.toJulianDate();
+    /** Return this in Julian centuries. */
+    get julianCenturies(): number {
+        const julian = this.julianDate;
         return (julian - 2451545.0) / 36525;
     }
 
-    /** Calculate the Greenwich Mean Sidereal Time angle, in radians. */
-    public getGMSTAngle(): number {
-        const t = this.toJulianCenturies();
+    /** Return the Greenwich Mean Sidereal Time angle, in radians. */
+    get gmstAngle(): number {
+        const t = this.julianCenturies;
         const seconds = evalPoly(t,
             [67310.54841, ((876600.0 * 3600) + 8640184.812866),
                 0.093104, -6.2e-6]);

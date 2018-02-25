@@ -79,7 +79,7 @@ export class KeplerianElements implements ICoordinate {
         const rJ2k = rPqw.rot3(-w).rot1(-i).rot3(-o);
         const vJ2k = vPqw.rot3(-w).rot1(-i).rot3(-o);
         const [ri, rj, rk, vi, vj, vk] = rJ2k.concat(vJ2k).state;
-        return new J2000(epoch.toMillis(), ri, rj, rk, vi, vj, vk);
+        return new J2000(epoch.millis, ri, rj, rk, vi, vj, vk);
     }
 
     /** Calculate the satellite's mean motion, in radians per second. */

@@ -59,7 +59,7 @@ export class J2000 implements ICoordinate {
         const rtod = rmod.rot1(mObliq).rot3(-dLon).rot1(-obliq);
         const vtod = vmod.rot1(mObliq).rot3(-dLon).rot1(-obliq);
         const [ri, rj, rk, vi, vj, vk] = rtod.concat(vtod).state;
-        return new EarthCenteredInertial(epoch.toMillis(),
+        return new EarthCenteredInertial(epoch.millis,
             ri, rj, rk, vi, vj, vk);
     }
 
@@ -88,6 +88,6 @@ export class J2000 implements ICoordinate {
         if (position.dot(velocity) < 0) {
             v = TWO_PI - v;
         }
-        return new KeplerianElements(epoch.toMillis(), a, e, i, o, w, v);
+        return new KeplerianElements(epoch.millis, a, e, i, o, w, v);
     }
 }

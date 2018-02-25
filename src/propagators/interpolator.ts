@@ -18,7 +18,7 @@ function closureVerlet(states: J2000[], stepSize: number): InterpClosure {
     type Internal = [number, Vector, Vector];
     const cache: Internal[] = [];
     states.forEach((element) => cache.push([
-        element.epoch.toMillis(), element.position, element.velocity,
+        element.epoch.millis, element.position, element.velocity,
     ]));
     return (millis: number): J2000 => {
         let state = cache[0];
@@ -59,7 +59,7 @@ function closureLinear(states: J2000[]): InterpClosure {
     const cache: Internal[] = [];
     for (let i = 0; i < states.length - 1; i++) {
         const [stateA, stateB] = [states[i], states[i + 1]];
-        const t: Range = [stateA.epoch.toMillis(), stateB.epoch.toMillis()];
+        const t: Range = [stateA.epoch.millis, stateB.epoch.millis];
         const ri: Range = [stateA.position.state[0], stateB.position.state[0]];
         const rj: Range = [stateA.position.state[1], stateB.position.state[1]];
         const rk: Range = [stateA.position.state[2], stateB.position.state[2]];
@@ -135,8 +135,8 @@ export class Interpolator implements IPropagator {
         model = model || {};
         this.model = { ...Interpolator.DEFAULT_MODEL, ...model };
         this.range = [
-            states[0].epoch.toMillis(),
-            states[states.length - 1].epoch.toMillis(),
+            states[0].epoch.millis,
+            states[states.length - 1].epoch.millis,
         ];
         this.resetState = states[0];
         this.state = states[0];

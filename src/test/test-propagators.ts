@@ -24,17 +24,17 @@ describe("RungeKutta4", () => {
         const [GEO_0HR, GEO_6HR, GEO_12HR, GEO_24HR] = GEO_STATE_1;
         const rk4 = new RungeKutta4(GEO_0HR, { stepSize: 300 });
         it("should have an error less than 50 meters after 6 hours", () => {
-            const { position } = rk4.propagate(GEO_6HR.epoch.toMillis());
+            const { position } = rk4.propagate(GEO_6HR.epoch.millis);
             const dist = position.distance(GEO_6HR.position) * 1000;
             assert.isBelow(dist, 50);
         });
         it("should have an error less than 100 meters after 12 hours", () => {
-            const { position } = rk4.propagate(GEO_12HR.epoch.toMillis());
+            const { position } = rk4.propagate(GEO_12HR.epoch.millis);
             const dist = position.distance(GEO_12HR.position) * 1000;
             assert.isBelow(dist, 100);
         });
         it("should have an error less than 200 meters after 24 hours", () => {
-            const { position } = rk4.propagate(GEO_24HR.epoch.toMillis());
+            const { position } = rk4.propagate(GEO_24HR.epoch.millis);
             const dist = position.distance(GEO_24HR.position) * 1000;
             assert.isBelow(dist, 200);
         });
@@ -81,14 +81,14 @@ describe("Interpolator", () => {
         const interpVerlet = new Interpolator(j2ks, { method: "verlet" });
         it("should be within 25km of expected using the linear method", () => {
             expected.forEach((element) => {
-                const actual = interpLinear.propagate(element.epoch.toMillis());
+                const actual = interpLinear.propagate(element.epoch.millis);
                 const dist = actual.position.distance(element.position);
                 assert.isBelow(dist, 25);
             });
         });
         it("should be within 5m of expected using the Verlet method", () => {
             expected.forEach((element) => {
-                const actual = interpVerlet.propagate(element.epoch.toMillis());
+                const actual = interpVerlet.propagate(element.epoch.millis);
                 const dist = actual.position.distance(element.position) * 1000;
                 assert.isBelow(dist, 5);
             });

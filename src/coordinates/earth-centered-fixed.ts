@@ -53,7 +53,7 @@ export class EarthCenteredFixed implements ICoordinate {
         const epoch = new Epoch(millis);
         const [dLon, dObliq, mObliq] = nutation(epoch);
         const obliq = mObliq + dObliq;
-        const ast = epoch.getGMSTAngle() + dLon * Math.cos(obliq);
+        const ast = epoch.gmstAngle + dLon * Math.cos(obliq);
         const rotVec = EARTH_ROTATION.cross(position);
         const vpef = velocity.add(rotVec);
         const rtod = position.rot3(-ast);

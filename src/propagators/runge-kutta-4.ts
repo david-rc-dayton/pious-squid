@@ -165,6 +165,6 @@ export class RungeKutta4 implements IPropagator {
         const k4 = drv(epoch.roll(step), posVel.add(k3.scale(step)));
         const [ri, rj, rk, vi, vj, vk] = posVel.add(k1.add(k2.scale(2))
             .add(k3.scale(2)).add(k4).scale(step / 6)).state;
-        return new J2000(epoch.roll(step).toMillis(), ri, rj, rk, vi, vj, vk);
+        return new J2000(epoch.roll(step).millis, ri, rj, rk, vi, vj, vk);
     }
 }

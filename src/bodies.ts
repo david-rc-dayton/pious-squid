@@ -9,7 +9,7 @@ import { Vector } from "./vector";
  * @param epoch satellite state epoch
  */
 export function precession(epoch: Epoch): [number, number, number] {
-    const t = epoch.toTerrestrialCenturies();
+    const t = epoch.terrestrialCenturies;
     const zeta = evalPoly(t, [0.0, 0.6406161, 0.0000839, 5.0e-6]) * c.DEG2RAD;
     const theta = evalPoly(t,
         [0.0, 0.5567530, -0.0001185, -1.16e-5]) * c.DEG2RAD;
@@ -25,7 +25,7 @@ export function precession(epoch: Epoch): [number, number, number] {
  */
 export function nutation(epoch: Epoch): [number, number, number] {
     const degRev = 360;
-    const t = epoch.toTerrestrialCenturies();
+    const t = epoch.terrestrialCenturies;
     const moonAnom = (evalPoly(t,
         [134.96340251, 1325.0 * degRev + 198.8675605, 0.0088553, 1.4343e-5])
         % degRev * c.DEG2RAD);
@@ -98,7 +98,7 @@ export function atmosphericDensity(position: Vector): number {
  */
 export function moonPosition(epoch: Epoch): Vector {
     const { sin, cos } = Math;
-    const jCent = epoch.toJulianCenturies();
+    const jCent = epoch.julianCenturies;
     const lamEcl = ((218.32 + 481267.883 * jCent
         + 6.29 * sin((134.9 + 477198.85 * jCent) * c.DEG2RAD)
         - 1.27 * sin((259.2 - 413335.38 * jCent) * c.DEG2RAD)
@@ -135,7 +135,7 @@ export function moonPosition(epoch: Epoch): Vector {
  */
 export function sunPosition(epoch: Epoch): Vector {
     const { sin, cos } = Math;
-    const jCent = epoch.toJulianCenturies();
+    const jCent = epoch.julianCenturies;
     const lamSun = (280.460 + 36000.770 * jCent) % 360;
     const mSun = ((357.5277233 + 35999.05034 * jCent) % 360) * c.DEG2RAD;
     const lamEc = ((lamSun + 1.914666471 * sin(mSun)
