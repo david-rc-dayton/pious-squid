@@ -1,5 +1,7 @@
 # Pious Squid
 
+[![npm version](https://badge.fury.io/js/pious-squid.svg)](https://badge.fury.io/js/pious-squid)
+
 Orbital mechanics and satellite mission analysis library, for NodeJS and the
 browser.
 
