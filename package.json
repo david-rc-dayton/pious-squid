@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "bundle": "webpack",
+    "bundle": "webpack-cli",
     "clean-build": "npm run clean && npm run build",
     "clean-bundle": "npm run clean-build && npm run bundle",
     "clean": "rimraf dist bundle pious-squid-*.tgz",
@@ -34,13 +34,13 @@
     "@types/chai": "^4.1.4",
     "@types/mocha": "^5.2.4",
     "@types/node": "^10.5.1",
-    "@types/webpack": "^4.4.4",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.2",
     "tslint": "^5.10.0",
     "typescript": "^2.9.2",
     "uglifyjs-webpack-plugin": "^1.2.7",
-    "webpack": "^4.14.0"
+    "webpack": "^4.14.0",
+    "webpack-cli": "^3.0.8"
   }
 }
