@@ -8,30 +8,32 @@
  */
 
 // import pious-squid module
-const PiousSquid = require('..')
-const J2000 = PiousSquid.J2000
-const RungeKutta4 = PiousSquid.RungeKutta4
-const Interpolator = PiousSquid.Interpolator
-
+const PiousSquid = require("..");
+const J2000 = PiousSquid.J2000;
+const RungeKutta4 = PiousSquid.RungeKutta4;
+const Interpolator = PiousSquid.Interpolator;
 
 // create the initial state
 let initState = new J2000(
-  Date.UTC(2010, 2, 10, 22, 53, 14, 697),  // UTC epoch
-  8228, 389, 6888,                         // position (km)
-  -0.7, 6.6, -0.6                          // velocity (km/s)
-)
+  Date.UTC(2010, 2, 10, 22, 53, 14, 697), // UTC epoch
+  8228,
+  389,
+  6888, // position (km)
+  -0.7,
+  6.6,
+  -0.6 // velocity (km/s)
+);
 
-console.log(initState.toString())
+console.log(initState.toString());
 //=> [J2000]
 //   Epoch:  Wed, 10 Mar 2010 22:53:14 GMT
 //   Position:  [ 8228, 389, 6888 ] km
 //   Velocity:  [ -0.7, 6.6, -0.6 ] km/s
 
-
 // initialize the propagator
-let rk4Prop = new RungeKutta4(initState)
+let rk4Prop = new RungeKutta4(initState);
 
-console.log(rk4Prop.toString())
+console.log(rk4Prop.toString());
 //=> [RungeKutta4]
 //   Step Size:  300 seconds
 //   Satellite Mass:  1000 kg
@@ -46,15 +48,14 @@ console.log(rk4Prop.toString())
 //   Solar Radiation Pressure:  ENABLED
 //   Atmospheric Drag:  ENABLED
 
-
 // cache 24-hours of J2000 states, sampled every 300 seconds
 let j2kCache = rk4Prop.step(
-  Date.UTC(2010, 2, 10),  // start epoch
-  300,                    // interval (seconds)
-  288,                    // iterations (300 secs * 288 = 86400 secs = 24 hrs)
-)
+  Date.UTC(2010, 2, 10), // start epoch
+  300, // interval (seconds)
+  288 // iterations (300 secs * 288 = 86400 secs = 24 hrs)
+);
 
-console.log(j2kCache.toString())
+console.log(j2kCache.toString());
 //=> [J2000]
 //   Epoch: Wed, 10 Mar 2010 00:00:00 GMT
 //   Position: [ -7100.939, -13074.581, -6033.937 ] km
@@ -72,21 +73,19 @@ console.log(j2kCache.toString())
 //   Position: [ -6906.88, 9505.758, -5809.635 ] km
 //   Velocity: [ -3.669, -2.853, -3.065 ] km/s
 
-
 // create a new Interpolator using the cached state
-let interp = new Interpolator(j2kCache)
+let interp = new Interpolator(j2kCache);
 
-console.log(interp.toString())
+console.log(interp.toString());
 //=> [Interpolator]
 //   Method: verlet
 //   Range: [Wed, 10 Mar 2010 00:00:00 GMT] -> [Thu, 11 Mar 2010 00:00:00 GMT]
 //   Step Size: 60 seconds
 
-
 // interpolate a state in the cached timerange
-let newState = interp.propagate(Date.UTC(2010, 2, 10, 11, 23, 9))
+let newState = interp.propagate(Date.UTC(2010, 2, 10, 11, 23, 9));
 
-console.log(newState.toString())
+console.log(newState.toString());
 //=> [J2000]
 //   Epoch: Wed, 10 Mar 2010 11:23:09 GMT
 //   Position: [ -9175.343, 7168.625, -7667.659 ] km
