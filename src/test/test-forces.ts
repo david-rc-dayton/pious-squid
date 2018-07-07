@@ -49,7 +49,7 @@ describe("forces", () => {
 
     describe("#gravityEarth()", () => {
         it("should compute acceleration due to Earth gravity", () => {
-            const earthAcc = forces.gravityEarth(TEST_POSITION);
+            const earthAcc = forces.earthSpherical(TEST_POSITION);
             assert.deepEqual(earthAcc.state, [
                 -0.00022037980931088386,
                 -0.00003968628342053639,

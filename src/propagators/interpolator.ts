@@ -1,5 +1,5 @@
 import { J2000 } from "../coordinates/j2000";
-import { gravityEarth } from "../forces";
+import { earthSpherical } from "../forces";
 import { linearInterpolate, sign } from "../operations";
 import { Vector } from "../vector";
 import { IPropagator, PropagatorType } from "./propagator-interface";
@@ -34,9 +34,9 @@ function closureVerlet(states: J2000[], stepSize: number): InterpClosure {
             const sgn = sign(delta);
             const dt = Math.min(Math.abs(delta), stepSize) * sgn;
             const t1 = t0 + (dt * 1000);
-            const a0 = gravityEarth(x0);
+            const a0 = earthSpherical(x0);
             const x1 = x0.add(v0.scale(dt)).add(a0.scale(0.5 * dt * dt));
-            const a1 = gravityEarth(x1);
+            const a1 = earthSpherical(x1);
             const v1 = v0.add(a0.add(a1).scale(0.5 * dt));
             state = [t1, x1, v1];
         }
