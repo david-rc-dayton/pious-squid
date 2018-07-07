@@ -86,7 +86,7 @@ export class EarthCenteredFixed implements ICoordinate {
     public toSpherical(): Spherical {
         const [x, y, z] = this.position.state;
         const radius = Math.sqrt(x * x + y * y + z * z);
-        const inclination = Math.acos(z / radius);
+        const inclination = (2 * Math.PI) - Math.acos(z / radius);
         const azimuth = Math.atan(y / x);
         return new Spherical(radius, inclination, azimuth);
     }
