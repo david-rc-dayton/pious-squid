@@ -4,7 +4,7 @@ import { Interpolator } from "../propagators/interpolator";
 import { Kepler } from "../propagators/kepler";
 import { RungeKutta4 } from "../propagators/runge-kutta-4";
 
-const GEO_STATE_1 = [
+const GEO_PERIOD = [
   new J2000(
     Date.UTC(2017, 5, 27, 7, 6, 33, 584),
     4.1285334206e4,
@@ -43,9 +43,93 @@ const GEO_STATE_1 = [
   )
 ];
 
+const TEST_STATE_1 = [
+  new J2000(
+    Date.UTC(2019, 10, 10, 19, 18, 1, 259),
+    1886.241127,
+    -3045.971781,
+    -19841.316189,
+    4.163012315,
+    -1.6277958,
+    0.572183403
+  ),
+  new J2000(
+    Date.UTC(2019, 10, 12, 9, 36, 4, 449),
+    -15086.432881,
+    7555.644808,
+    12268.091553,
+    -2.427587367,
+    0.578532906,
+    -3.571952678
+  )
+];
+
+const TEST_STATE_2 = [
+  new J2000(
+    Date.UTC(2018, 7, 2, 3, 19, 30, 764),
+    10766.413859,
+    17060.152654,
+    -744.501313,
+    -0.504478539,
+    0.389800939,
+    4.529557487
+  ),
+  new J2000(
+    Date.UTC(2018, 7, 3, 18, 1, 28, 409),
+    -12257.2953,
+    -18305.120151,
+    4979.283427,
+    -0.095936284,
+    -1.187562397,
+    -3.912693552
+  )
+];
+
+const TEST_STATE_3 = [
+  new J2000(
+    Date.UTC(2018, 10, 30, 16, 14, 2, 696),
+    -33154.628126,
+    941.711796,
+    5736.970031,
+    -0.112147894,
+    -0.143809195,
+    3.137874036
+  ),
+  new J2000(
+    Date.UTC(2018, 11, 2, 14, 25, 29, 102),
+    8510.666216,
+    -1738.198088,
+    30240.749743,
+    2.940719342,
+    -0.027613773,
+    -1.697921358
+  )
+];
+
+const TEST_STATE_4 = [
+  new J2000(
+    Date.UTC(2018, 6, 6, 12, 0, 0, 0),
+    4012.3318,
+    -3811.33296,
+    3917.51571,
+    1.941806414,
+    6.215850084,
+    4.05032976
+  ),
+  new J2000(
+    Date.UTC(2018, 6, 7, 12, 0, 0, 0),
+    -4170.83299,
+    2275.13615,
+    -4844.49545,
+    -1.056742703,
+    -7.178017864,
+    -2.460646905
+  )
+];
+
 describe("RungeKutta4", () => {
   describe("#propagate()", () => {
-    const [GEO_0HR, GEO_6HR, GEO_12HR, GEO_24HR] = GEO_STATE_1;
+    const [GEO_0HR, GEO_6HR, GEO_12HR, GEO_24HR] = GEO_PERIOD;
     const rk4 = new RungeKutta4(GEO_0HR, { stepSize: 300 });
     it("should have an error less than 50 meters after 6 hours", () => {
       const { position } = rk4.propagate(GEO_6HR.epoch.millis);
@@ -61,6 +145,34 @@ describe("RungeKutta4", () => {
       const { position } = rk4.propagate(GEO_24HR.epoch.millis);
       const dist = position.distance(GEO_24HR.position) * 1000;
       assert.isBelow(dist, 200);
+    });
+    it("should propagate test state #1 within 200 meters", () => {
+      const [testStart, testEnd] = TEST_STATE_1;
+      const testProp = new RungeKutta4(testStart, { stepSize: 60 });
+      const { position } = testProp.propagate(testEnd.epoch.millis);
+      const dist = position.distance(testEnd.position) * 1000;
+      assert.isBelow(dist, 200);
+    });
+    it("should propagate test state #2 within 200 meters", () => {
+      const [testStart, testEnd] = TEST_STATE_2;
+      const testProp = new RungeKutta4(testStart, { stepSize: 60 });
+      const { position } = testProp.propagate(testEnd.epoch.millis);
+      const dist = position.distance(testEnd.position) * 1000;
+      assert.isBelow(dist, 200);
+    });
+    it("should propagate test state #3 within 200 meters", () => {
+      const [testStart, testEnd] = TEST_STATE_3;
+      const testProp = new RungeKutta4(testStart, { stepSize: 60 });
+      const { position } = testProp.propagate(testEnd.epoch.millis);
+      const dist = position.distance(testEnd.position) * 1000;
+      assert.isBelow(dist, 200);
+    });
+    it("should propagate test state #4 within 3 kilometers", () => {
+      const [testStart, testEnd] = TEST_STATE_4;
+      const testProp = new RungeKutta4(testStart, { stepSize: 30 });
+      const { position } = testProp.propagate(testEnd.epoch.millis);
+      const dist = position.distance(testEnd.position);
+      assert.isBelow(dist, 3);
     });
   });
 });
