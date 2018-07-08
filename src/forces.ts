@@ -3,11 +3,34 @@ import * as c from "./constants";
 import { EarthCenteredFixed } from "./coordinates/earth-centered-fixed";
 import { J2000 } from "./coordinates/j2000";
 import { Epoch } from "./epoch";
-import { legendreFunction, normFactor } from "./operations";
+import { factorial, legendreFunction } from "./operations";
 import { INumericalModel } from "./propagators/propagator-interface";
 import { Vector } from "./vector";
 
 type Egm96Properties = [number, number, number[][]];
+
+// export function normFactor(l: number, m: number): number {
+//   let k = 2;
+//   if (m === 0) {
+//     k = 1;
+//   }
+//   const a = factorial(l + m);
+//   const b = factorial(l - m) * k * (2 * l + 1);
+//   return Math.sqrt(a / b);
+// }
+
+const EGM_96_DENORMALIZED = (() => {
+  const output = [];
+  for (const coeffs of c.EGM_96_NORMALIZED) {
+    const [l, m, clm, slm] = coeffs;
+    const k = m === 0 ? 1 : 2;
+    const a = factorial(l + m);
+    const b = factorial(l - m) * k * (2 * l + 1);
+    const nFac = Math.sqrt(a / b);
+    output.push([l, m, clm / nFac, slm / nFac]);
+  }
+  return output;
+})();
 
 /**
  * Calculate acceleration in km/s^2 due to J2 effect.
@@ -65,11 +88,10 @@ function egm96Properties(
   const mu = c.EARTH_MU;
   const radius = c.EARTH_RAD_EQ;
   const coeffs: number[][] = [];
-  c.EGM_96.forEach(element => {
+  EGM_96_DENORMALIZED.forEach(element => {
     const [l, m, clm, slm] = element;
     if (!(l > degree || m > order)) {
-      const nFac = normFactor(l, m);
-      coeffs.push([l, m, clm / nFac, slm / nFac]);
+      coeffs.push([l, m, clm, slm]);
     }
   });
   return [mu, radius, coeffs];
@@ -320,16 +342,6 @@ export function derivative(
   const velocity = posVel.slice(3, 6);
   const { mass, area, drag, reflect, degree, order } = flags;
   let acceleration = gravityEarth(epoch, position, velocity, degree, order);
-  // let acceleration = earthSpherical(position);
-  // if (flags.j2Effect) {
-  //   acceleration = acceleration.add(j2Effect(position));
-  // }
-  // if (flags.j3Effect) {
-  //   acceleration = acceleration.add(j3Effect(position));
-  // }
-  // if (flags.j4Effect) {
-  //   acceleration = acceleration.add(j4Effect(position));
-  // }
   if (flags.gravitySun) {
     acceleration = acceleration.add(gravitySun(epoch, position));
   }

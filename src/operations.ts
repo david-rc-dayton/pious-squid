@@ -136,13 +136,3 @@ export function legendreFunction(l: number, m: number, phi: number): number {
   }
   return 0;
 }
-
-export function normFactor(l: number, m: number): number {
-  let k = 2;
-  if (m === 0) {
-    k = 1;
-  }
-  const a = factorial(l + m);
-  const b = factorial(l - m) * k * (2 * l + 1);
-  return Math.sqrt(a / b);
-}
