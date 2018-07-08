@@ -26,8 +26,8 @@ describe("bodies", () => {
     it("should calculate nutation angles", () => {
       const nVals = bodies.nutation(testEpoch);
       assert.deepEqual(nVals, [
-        -0.00004379744379460419,
-        -0.00004024870006662178,
+        -0.000043867325425733865,
+        -0.000040239886445427816,
         0.4090531153388292
       ]);
     });
