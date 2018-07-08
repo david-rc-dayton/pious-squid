@@ -30,13 +30,13 @@ export class Spherical implements ICoordinate {
   /** Return a string representation of the object. */
   public toString(): string {
     const { radius, inclination, azimuth } = this;
-    const theta = inclination * RAD2DEG;
-    const phi = azimuth * RAD2DEG;
+    const phi = inclination * RAD2DEG;
+    const theta = azimuth * RAD2DEG;
     return [
       "[Spherical]",
       `  (r) Radius:  ${radius.toFixed(3)} km`,
-      `  (\u03b8) Inclination:  ${theta.toFixed(3)}\u00b0`,
-      `  (\u03c6) Azimuth:  ${phi.toFixed(3)}\u00b0`
+      `  (\u03c6) Inclination:  ${phi.toFixed(3)}\u00b0`,
+      `  (\u03b8) Azimuth:  ${theta.toFixed(3)}\u00b0`
     ].join("\n");
   }
 
