@@ -8,6 +8,7 @@ export interface ICoordinate {
 export enum CoordinateType {
   EARTH_CENTERED_FIXED = "ecef",
   EARTH_CENTERED_INERTIAL = "eci",
+  GEOCENTRIC = "geocentric",
   GEODETIC = "geodetic",
   J2000 = "j2k",
   KEPLERIAN_ELEMENTS = "keplerian",

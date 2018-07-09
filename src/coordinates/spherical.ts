@@ -43,10 +43,9 @@ export class Spherical implements ICoordinate {
   /** Convert to the Earth Centered Earth Fixed (ECEF) coordinate frame. */
   public toECEF(): EarthCenteredFixed {
     const { radius, inclination, azimuth } = this;
-    const i2 = Math.PI / 2 + inclination;
-    const rx = radius * Math.sin(i2) * Math.cos(azimuth);
-    const ry = radius * Math.sin(i2) * Math.sin(azimuth);
-    const rz = radius * Math.cos(i2);
+    const rx = radius * Math.sin(inclination) * Math.cos(azimuth);
+    const ry = radius * Math.sin(inclination) * Math.sin(azimuth);
+    const rz = radius * Math.cos(inclination);
     return new EarthCenteredFixed(rx, ry, rz);
   }
 }

@@ -1,9 +1,15 @@
 import { nutation } from "../bodies";
-import { EARTH_ECC_SQ, EARTH_RAD_EQ, EARTH_ROTATION } from "../constants";
+import {
+  EARTH_ECC_SQ,
+  EARTH_FLAT,
+  EARTH_RAD_EQ,
+  EARTH_ROTATION
+} from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
+import { Geocentric } from "./geocentric";
 import { Geodetic } from "./geodetic";
 import { Spherical } from "./spherical";
 import { TopocentricHorizon } from "./topocentric-horizon";
@@ -81,12 +87,19 @@ export class EarthCenteredFixed implements ICoordinate {
     return new Geodetic(lat, lon, alt);
   }
 
+  public toGeocentric(): Geocentric {
+    // NOTE: this actually parametric...
+    const { latitude, longitude, altitude } = this.toGeodetic();
+    const cLat = Math.atan((1 - EARTH_FLAT) * Math.tan(latitude));
+    return new Geocentric(cLat, longitude, altitude);
+  }
+
   /** Convert to the Spherical coordinate frame. */
   public toSpherical(): Spherical {
     const [x, y, z] = this.position.state;
     const radius = Math.sqrt(x * x + y * y + z * z);
-    const inclination = Math.PI / 2 - Math.acos(z / radius);
-    const azimuth = Math.atan2(y, x);
+    const inclination = Math.acos(z / radius);
+    const azimuth = Math.atan(y / x);
     return new Spherical(radius, inclination, azimuth);
   }
 
