@@ -1,15 +1,9 @@
 import { nutation } from "../bodies";
-import {
-  EARTH_ECC_SQ,
-  EARTH_FLAT,
-  EARTH_RAD_EQ,
-  EARTH_ROTATION
-} from "../constants";
+import { EARTH_ECC_SQ, EARTH_RAD_EQ, EARTH_ROTATION } from "../constants";
 import { Epoch } from "../epoch";
 import { Vector } from "../vector";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
-import { Geocentric } from "./geocentric";
 import { Geodetic } from "./geodetic";
 import { Spherical } from "./spherical";
 import { TopocentricHorizon } from "./topocentric-horizon";
@@ -77,7 +71,7 @@ export class EarthCenteredFixed implements ICoordinate {
     let phi = Math.atan(z / r);
     let lat = phi;
     let c = 0;
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 5; i++) {
       phi = lat;
       const slat = Math.sin(lat);
       c = 1 / Math.sqrt(1 - esq * slat * slat);
@@ -85,13 +79,6 @@ export class EarthCenteredFixed implements ICoordinate {
     }
     const alt = r / Math.cos(lat) - sma * c;
     return new Geodetic(lat, lon, alt);
-  }
-
-  public toGeocentric(): Geocentric {
-    // NOTE: this actually parametric...
-    const { latitude, longitude, altitude } = this.toGeodetic();
-    const cLat = Math.atan((1 - EARTH_FLAT) * Math.tan(latitude));
-    return new Geocentric(cLat, longitude, altitude);
   }
 
   /** Convert to the Spherical coordinate frame. */

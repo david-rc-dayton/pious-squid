@@ -177,10 +177,10 @@ export function earthAspherical(
 ) {
   const ecef = j2kState.toECI().toECEF();
   const [ri, rj, rk] = ecef.position.state;
-  const gCent = ecef.toGeocentric();
+  const geoCoord = ecef.toGeodetic();
   const r = ecef.position.magnitude;
-  const phi = gCent.latitude;
-  const lam = gCent.longitude;
+  const phi = geoCoord.geocentricLatitude;
+  const lam = geoCoord.longitude;
   const props = egm96Properties(degree, order);
   const [duR, duPhi, duLam] = gravityGradient(r, phi, lam, props);
   const rInv = (1 / r) * duR;

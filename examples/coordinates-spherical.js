@@ -25,13 +25,3 @@ console.log(coordECEF.toString());
 //=> [EarthCenteredFixed]
 //   Position:  [ 1389.426, 4631.199, 4145.674 ] km
 //   Velocity:  [ 0, 0, 0 ] km/s
-
-coordECEF = new Spherical(
-  10000,
-  60 * DEG2RAD,
-  90 * DEG2RAD,
-).toECEF()
-console.log(coordECEF.toString())
-console.log(coordECEF.toSpherical().toString())
-console.log(coordECEF.toGeodetic().toString())
-console.log(coordECEF.toGeocentric().toString())
