@@ -71,7 +71,7 @@ export class EarthCenteredFixed implements ICoordinate {
     let phi = Math.atan(z / r);
     let lat = phi;
     let c = 0;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       phi = lat;
       const slat = Math.sin(lat);
       c = 1 / Math.sqrt(1 - esq * slat * slat);
