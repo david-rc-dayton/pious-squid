@@ -14,9 +14,6 @@ import {
 export class RungeKutta4 implements IPropagator {
   /** Default propagator model. */
   public static readonly DEFAULT_MODEL: INumericalModel = {
-    // j2Effect: true,
-    // j3Effect: true,
-    // j4Effect: true,
     area: 1,
     atmosphericDrag: true,
     degree: 4,
@@ -31,9 +28,6 @@ export class RungeKutta4 implements IPropagator {
   };
   /** Default propagator model for two-body acceleration. */
   public static readonly DEFAULT_MODEL_TWOBODY: INumericalModel = {
-    // j2Effect: false,
-    // j3Effect: false,
-    // j4Effect: false,
     area: 0,
     atmosphericDrag: false,
     degree: 0,
@@ -96,9 +90,6 @@ export class RungeKutta4 implements IPropagator {
       `  Reflectivity Coefficient:  ${this.model.reflect}`,
       `  Geopotential Degree:  ${this.model.degree}`,
       `  Geopotential Order:  ${this.model.order}`,
-      //   `  J2 Effect:  ${status(this.model.j2Effect)}`,
-      //   `  J3 Effect:  ${status(this.model.j3Effect)}`,
-      //   `  J4 Effect:  ${status(this.model.j4Effect)}`,
       `  Sun Gravity:  ${status(this.model.gravitySun)}`,
       `  Moon Gravity:  ${status(this.model.gravityMoon)}`,
       `  Solar Radiation Pressure:  ${status(this.model.solarRadiation)}`,

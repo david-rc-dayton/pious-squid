@@ -25,12 +25,6 @@ export enum PropagatorType {
 export interface INumericalModel {
   /** Step size, in seconds. */
   stepSize: number;
-  //   /** Model J2 effect, if true. */
-  //   j2Effect: boolean;
-  //   /** Model J3 effect, if true. */
-  //   j3Effect: boolean;
-  //   /** Model J4 effect, if true. */
-  //   j4Effect: boolean;
   /** Model Solar gravity, if true. */
   gravitySun: boolean;
   /** Model Lunar gravity, if true. */

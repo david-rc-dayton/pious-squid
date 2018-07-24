@@ -9,16 +9,6 @@ import { Vector } from "./vector";
 
 type Egm96Properties = [number, number, number[][]];
 
-// export function normFactor(l: number, m: number): number {
-//   let k = 2;
-//   if (m === 0) {
-//     k = 1;
-//   }
-//   const a = factorial(l + m);
-//   const b = factorial(l - m) * k * (2 * l + 1);
-//   return Math.sqrt(a / b);
-// }
-
 const EGM_96_DENORMALIZED = (() => {
   const output = [];
   for (const coeffs of c.EGM_96_NORMALIZED) {
@@ -31,55 +21,6 @@ const EGM_96_DENORMALIZED = (() => {
   }
   return output;
 })();
-
-/**
- * Calculate acceleration in km/s^2 due to J2 effect.
- *
- * @param position satellite J2000 position 3-vector, in kilometers
- */
-export function j2Effect(position: Vector): Vector {
-  const [i, j, k] = position.state;
-  const r = position.magnitude;
-  const aPre = -(
-    (3 * c.EARTH_J2 * c.EARTH_MU * c.EARTH_RAD_EQ ** 2) /
-    (2 * r ** 5)
-  );
-  const aijPost = 1 - (5 * k ** 2) / r ** 2;
-  const akPost = 3 - (5 * k ** 2) / r ** 2;
-  return new Vector(aPre * i * aijPost, aPre * j * aijPost, aPre * k * akPost);
-}
-
-/**
- * Calculate acceleration in km/s^2 due to J3 effect.
- *
- * @param position satellite J2000 position 3-vector, in kilometers
- */
-export function j3Effect(position: Vector): Vector {
-  const [i, j, k] = position.state;
-  const r = position.magnitude;
-  const aPre = -(
-    (5 * c.EARTH_J3 * c.EARTH_MU * c.EARTH_RAD_EQ ** 3) /
-    (2 * r ** 7)
-  );
-  const aijPost = 3 * k - (7 * k ** 3) / r ** 2;
-  const akPost = 6 * k ** 2 - (7 * k ** 4) / r ** 2 - (3 / 5) * r ** 2;
-  return new Vector(aPre * i * aijPost, aPre * j * aijPost, aPre * akPost);
-}
-
-/**
- * Calculate acceleration in km/s^2 due to J4 effect.
- *
- * @param position satellite J2000 position 3-vector, in kilometers
- */
-export function j4Effect(position: Vector): Vector {
-  const [i, j, k] = position.state;
-  const r = position.magnitude;
-  const aPre =
-    (15 * c.EARTH_J4 * c.EARTH_MU * c.EARTH_RAD_EQ ** 4) / (8 * r ** 7);
-  const aijPost = 1 - (14 * k ** 2) / r ** 2 + (21 * k ** 4) / r ** 4;
-  const akPost = 5 - (70 * k ** 2) / (3 * r ** 2) + (21 * k ** 4) / r ** 4;
-  return new Vector(aPre * i * aijPost, aPre * j * aijPost, aPre * k * akPost);
-}
 
 function egm96Properties(
   degree: number,
