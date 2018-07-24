@@ -4,6 +4,12 @@ import { Interpolator } from "../propagators/interpolator";
 import { Kepler } from "../propagators/kepler";
 import { RungeKutta4 } from "../propagators/runge-kutta-4";
 
+/**
+ * (a) Semimajor Axis:  42165.052 km
+ * (e) Eccentricity:  0.001723
+ * (i) Inclination:  5.3802°
+ * (Ω) Right Ascension:  78.7240°
+ */
 const GEO_PERIOD = [
   new J2000(
     Date.UTC(2017, 5, 27, 7, 6, 33, 584),
@@ -43,6 +49,12 @@ const GEO_PERIOD = [
   )
 ];
 
+/**
+ * (a) Semimajor Axis:  20726.300 km
+ * (e) Eccentricity:  0.031591
+ * (i) Inclination:  83.9278°
+ * (Ω) Right Ascension:  337.8636°
+ */
 const TEST_STATE_1 = [
   new J2000(
     Date.UTC(2019, 10, 10, 19, 18, 1, 259),
@@ -64,6 +76,12 @@ const TEST_STATE_1 = [
   )
 ];
 
+/**
+ * (a) Semimajor Axis:  21467.888 km
+ * (e) Eccentricity:  0.064043
+ * (i) Inclination:  82.0279°
+ * (Ω) Right Ascension:  58.0407°
+ */
 const TEST_STATE_2 = [
   new J2000(
     Date.UTC(2018, 7, 2, 3, 19, 30, 764),
@@ -85,6 +103,12 @@ const TEST_STATE_2 = [
   )
 ];
 
+/**
+ * (a) Semimajor Axis:  28875.588 km
+ * (e) Eccentricity:  0.260648
+ * (i) Inclination:  87.3031°
+ * (Ω) Right Ascension:  177.9062°
+ */
 const TEST_STATE_3 = [
   new J2000(
     Date.UTC(2018, 10, 30, 16, 14, 2, 696),
@@ -106,6 +130,12 @@ const TEST_STATE_3 = [
   )
 ];
 
+/**
+ * (a) Semimajor Axis:  6783.063 km
+ * (e) Eccentricity:  0.000745
+ * (i) Inclination:  51.5397°
+ * (Ω) Right Ascension:  282.2575°
+ */
 const TEST_STATE_4 = [
   new J2000(
     Date.UTC(2018, 6, 6, 12, 0, 0, 0),

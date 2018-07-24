@@ -47,7 +47,9 @@ export interface INumericalModel {
   drag: number;
   /** Satellite reflectivity coefficient. */
   reflect: number;
+  /** Geopotential coefficient degree. (max=4) */
   degree: number;
+  /** Geopotential coefficient order. (max=4) */
   order: number;
 }
 

@@ -27,7 +27,8 @@ export class Geodetic implements ICoordinate {
     this.altitude = altitude;
   }
 
-  get geocentricLatitude() {
+  /** Geocentric latitude of the object. */
+  get geocentric(): number {
     return Math.atan((1 - EARTH_ECC_SQ) * Math.tan(this.latitude));
   }
 
