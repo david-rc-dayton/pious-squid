@@ -10,39 +10,6 @@ const TEST_POSITION = new Vector(4.1285334206e4, 7.434716817e3, -3.676240106e3);
 const TEST_VELOCITY = new Vector(-5.3281e-1, 3.030355, 1.05016e-1);
 
 describe("forces", () => {
-  describe("#j2Effect()", () => {
-    it("should compute acceleration due to J2 effect", () => {
-      const j2Acc = forces.j2Effect(TEST_POSITION);
-      assert.deepEqual(j2Acc.state, [
-        -7.89735779856068e-9,
-        -1.4221664899661197e-9,
-        2.1653716113911034e-9
-      ]);
-    });
-  });
-
-  describe("#j3Effect()", () => {
-    it("should compute acceleration due to J3 effect", () => {
-      const j3Acc = forces.j3Effect(TEST_POSITION);
-      assert.deepEqual(j3Acc.state, [
-        -1.2469250342100464e-12,
-        -2.245478860634352e-13,
-        -2.7423810542307405e-12
-      ]);
-    });
-  });
-
-  describe("#j4Effect()", () => {
-    it("should compute acceleration due to J4 effect", () => {
-      const j4Acc = forces.j4Effect(TEST_POSITION);
-      assert.deepEqual(j4Acc.state, [
-        -3.151407529719577e-13,
-        -5.675095771665454e-14,
-        1.513123852324999e-13
-      ]);
-    });
-  });
-
   describe("#gravityEarth()", () => {
     it("should compute acceleration due to Earth gravity", () => {
       const earthAcc = forces.earthSpherical(TEST_POSITION);
