@@ -1,9 +1,9 @@
 .gitignore
-.vscode
-bundle
-dist/test
-examples
-src
+.vscode/
+bundle/
+dist/test/
+examples/
+src/
 tsconfig.json
 tslint.json
 webpack.config.js

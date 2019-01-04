@@ -1,4 +1,5 @@
-bundle
-dist
-node_modules
+.vscode/
+bundle/
+dist/
+node_modules/
 pious-squid-*.tgz
