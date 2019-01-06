@@ -1,4 +1,4 @@
-/** Interface for coordinate objects. */
+/** Interface for state vector objects. */
 export interface ICoordinate {
   /** Coordinate identifier string. */
   type: string;
@@ -6,12 +6,7 @@ export interface ICoordinate {
 
 /** Coordinate type identifiers. */
 export enum CoordinateType {
-  EARTH_CENTERED_FIXED = "ecef",
-  EARTH_CENTERED_INERTIAL = "eci",
+  ITRF = "itrf",
   GEODETIC = "geodetic",
-  J2000 = "j2k",
-  KEPLERIAN_ELEMENTS = "keplerian",
-  LOOK_ANGLE = "look-angle",
-  SPHERICAL = "spherical",
-  TOPOCENTRIC_HORIZON = "topocentric-horizon"
+  J2000 = "j2000"
 }

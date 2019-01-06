@@ -1,11 +1,10 @@
-import { nutation } from "../bodies";
-import { EARTH_ECC_SQ, EARTH_RAD_EQ, EARTH_ROTATION } from "../constants";
-import { Epoch } from "../epoch";
-import { Vector } from "../vector";
+import { nutation } from "../bodies/earth-body";
+import { EARTH_ECC_SQ, EARTH_RAD_EQ, EARTH_ROTATION } from "../math/constants";
+import { EpochUTC } from "../time/epoch-utc";
+import { Vector3D } from "../math/vector-3d";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
 import { Geodetic } from "./geodetic";
-import { Spherical } from "./spherical";
 import { TopocentricHorizon } from "./topocentric-horizon";
 
 /** Class representing Earth Centered Earth Fixed (ECEF) coordinates. */
@@ -13,7 +12,7 @@ export class EarthCenteredFixed implements ICoordinate {
   /** Coordinate identifier string. */
   public readonly type: string;
   /** Position 3-vector, in kilometers. */
-  public readonly position: Vector;
+  public readonly position: Vector3D;
   /** Velocity 3-vector, in kilometers per second. */
   public readonly velocity: Vector;
 
@@ -49,7 +48,7 @@ export class EarthCenteredFixed implements ICoordinate {
    */
   public toECI(millis: number): EarthCenteredInertial {
     const { position, velocity } = this;
-    const epoch = new Epoch(millis);
+    const epoch = new EpochUTC(millis);
     const [dLon, dObliq, mObliq] = nutation(epoch);
     const obliq = mObliq + dObliq;
     const ast = epoch.gmstAngle + dLon * Math.cos(obliq);

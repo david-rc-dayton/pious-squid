@@ -1,11 +1,11 @@
 import { atmosphericDensity, moonPosition, sunPosition } from "./bodies";
-import * as c from "./constants";
+import * as c from "./math/constants";
 import { EarthCenteredFixed } from "./coordinates/earth-centered-fixed";
 import { J2000 } from "./coordinates/j2000";
-import { Epoch } from "./epoch";
-import { factorial, legendreFunction } from "./operations";
+import { EpochUTC } from "./time/epoch-utc";
+import { factorial, legendreFunction } from "./math/operations";
 import { INumericalModel } from "./propagators/propagator-interface";
-import { Vector } from "./vector";
+import { Vector3D } from "./math/vector-3d";
 
 type Egm96Properties = [number, number, number[][]];
 
@@ -117,7 +117,7 @@ export function earthAspherical(
   order: number
 ) {
   const ecef = j2kState.toECI().toECEF();
-  const [ri, rj, rk] = ecef.position.state;
+  const { x: ri, y: rj, z: rk } = ecef.position;
   const geoCoord = ecef.toGeodetic();
   const r = ecef.position.magnitude;
   const phi = geoCoord.geocentric;
@@ -139,27 +139,27 @@ export function earthAspherical(
  *
  * @param position satellite J2000 position 3-vector, in kilometers
  */
-export function earthSpherical(position: Vector): Vector {
+export function earthSpherical(position: Vector3D) {
   const rMag = position.magnitude;
   return position.scale(-c.EARTH_MU / rMag ** 3);
 }
 
 export function gravityEarth(
-  epoch: Epoch,
-  position: Vector,
-  velocity: Vector,
+  epoch: EpochUTC,
+  position: Vector3D,
+  velocity: Vector3D,
   degree = 4,
   order = 4
 ) {
-  const [ri, rj, rk] = position.state;
-  const [vi, vj, vk] = velocity.state;
+  const { x: vi, y: vj, z: vk } = velocity;
+  const { x: ri, y: rj, z: rk } = position;
   const j2kState = new J2000(epoch.millis, ri, rj, rk, vi, vj, vk);
-  const [si, sj, sk] = earthSpherical(position).state;
-  const [ai, aj, ak] = earthAspherical(j2kState, degree, order).state;
+  const { x: si, y: sj, z: sk } = earthSpherical(position);
+  const { x: ai, y: aj, z: ak } = earthAspherical(j2kState, degree, order);
   const gx = si + ai;
   const gy = sj + aj;
   const gz = sk + ak;
-  return new Vector(gx, gy, gz);
+  return new Vector3D(gx, gy, gz);
 }
 
 /**
@@ -168,7 +168,7 @@ export function gravityEarth(
  * @param epoch satellite state epoch
  * @param position satellite J2000 position 3-vector, in kilometers
  */
-export function gravityMoon(epoch: Epoch, position: Vector): Vector {
+export function gravityMoon(epoch: EpochUTC, position: Vector3D) {
   const rMoon = moonPosition(epoch);
   const aNum = rMoon.add(position.scale(-1));
   const aDen = aNum.magnitude ** 3;
@@ -184,7 +184,7 @@ export function gravityMoon(epoch: Epoch, position: Vector): Vector {
  * @param epoch satellite state epoch
  * @param position satellite J2000 position 3-vector, in kilometers
  */
-export function gravitySun(epoch: Epoch, position: Vector): Vector {
+export function gravitySun(epoch: EpochUTC, position: Vector3D) {
   const rSun = sunPosition(epoch);
   const aNum = rSun.add(position.scale(-1));
   const aDen = aNum.magnitude ** 3;
@@ -201,7 +201,7 @@ export function gravitySun(epoch: Epoch, position: Vector): Vector {
  * @param rSat satellite J2000 position 3-vector, in kilometers
  * @param rSun Sun J2000 position 3-vector, in kilometers
  */
-function shadowFactor(rSat: Vector, rSun: Vector): number {
+function shadowFactor(rSat: Vector3D, rSun: Vector3D) {
   const n = rSat.magnitude ** 2 - rSat.dot(rSun);
   const d = rSat.magnitude ** 2 + rSun.magnitude ** 2 - 2 * rSat.dot(rSun);
   const tMin = n / d;
@@ -225,12 +225,12 @@ function shadowFactor(rSat: Vector, rSun: Vector): number {
  * @param reflect satellite reflectivity coefficient
  */
 export function solarRadiation(
-  epoch: Epoch,
-  position: Vector,
+  epoch: EpochUTC,
+  position: Vector3D,
   mass: number,
   area: number,
   reflect: number
-): Vector {
+) {
   const rSat = position;
   const rSun = sunPosition(epoch);
   const sFactor = shadowFactor(rSat, rSun);
@@ -250,12 +250,12 @@ export function solarRadiation(
  * @param drag satellite drag coefficient
  */
 export function atmosphericDrag(
-  position: Vector,
-  velocity: Vector,
+  position: Vector3D,
+  velocity: Vector3D,
   mass: number,
   area: number,
   drag: number
-): Vector {
+) {
   const rotVel = c.EARTH_ROTATION.cross(position);
   const vRel = velocity.add(rotVel.scale(-1)).scale(1000);
   const vMag = vRel.magnitude;
@@ -274,10 +274,10 @@ export function atmosphericDrag(
  * @param flags options for calculating acceleration
  */
 export function derivative(
-  epoch: Epoch,
-  posVel: Vector,
+  epoch: EpochUTC,
+  posVel: Vector3D,
   flags: INumericalModel
-): Vector {
+) {
   const position = posVel.slice(0, 3);
   const velocity = posVel.slice(3, 6);
   const { mass, area, drag, reflect, degree, order } = flags;

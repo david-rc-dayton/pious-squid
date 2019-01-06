@@ -1,4 +1,4 @@
-import { EARTH_ECC_SQ, EARTH_RAD_EQ, RAD2DEG } from "../constants";
+import { EARTH_ECC_SQ, EARTH_RAD_EQ, RAD2DEG } from "../math/constants";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 

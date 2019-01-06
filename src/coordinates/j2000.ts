@@ -1,17 +1,17 @@
 import { nutation, precession } from "../bodies";
-import { EARTH_MU, TWO_PI } from "../constants";
-import { Epoch } from "../epoch";
-import { Vector } from "../vector";
+import { EARTH_MU, TWO_PI } from "../math/constants";
+import { EpochUTC } from "../time/epoch-utc";
+import { Vector } from "../math/vector-3d";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredInertial } from "./earth-centered-inertial";
-import { KeplerianElements } from "./keplerian-elements";
+import { KeplerianElements } from "./classical-elements";
 
 /** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 implements ICoordinate {
   /** Coordinate identifier string. */
   public readonly type: string;
   /** Satellite state epoch. */
-  public readonly epoch: Epoch;
+  public readonly epoch: EpochUTC;
   /** Position 3-vector, in kilometers. */
   public readonly position: Vector;
   /** Velocity 3-vector, in kilometers per second. */
@@ -38,7 +38,7 @@ export class J2000 implements ICoordinate {
     vk: number
   ) {
     this.type = CoordinateType.J2000;
-    this.epoch = new Epoch(millis);
+    this.epoch = new EpochUTC(millis);
     this.position = new Vector(ri, rj, rk);
     this.velocity = new Vector(vi, vj, vk);
   }

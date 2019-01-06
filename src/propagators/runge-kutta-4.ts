@@ -1,8 +1,8 @@
 import { J2000 } from "../coordinates/j2000";
-import { Epoch } from "../epoch";
+import { EpochUTC } from "../time/epoch-utc";
 import { derivative } from "../forces";
-import { sign } from "../operations";
-import { Vector } from "../vector";
+import { sign } from "../math/operations";
+import { Vector3D } from "../math/vector-3d";
 import {
   INumericalModel,
   IPropagator,
@@ -141,8 +141,8 @@ export class RungeKutta4 implements IPropagator {
    * Generate a derivative function given the propagator's current model
    * options.
    */
-  private genDerivative(): (epoch: Epoch, posVel: Vector) => Vector {
-    return (epoch: Epoch, posVel: Vector) => {
+  private genDerivative(): (epoch: EpochUTC, posVel: Vector3D) => Vector3D {
+    return (epoch: EpochUTC, posVel: Vector3D) => {
       return derivative(epoch, posVel, this.model);
     };
   }

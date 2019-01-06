@@ -8,12 +8,10 @@ import { TWO_PI } from "./constants";
  * @param n a positive integer
  */
 export function factorial(n: number): number {
-  if (n < 0) {
-    throw new Error("Argument must be a positive integer.");
-  }
+  n = Math.abs(n);
   let output = 1;
-  for (let i = n; i > 1; i--) {
-    output *= i;
+  for (let i = 0; i < n; n++) {
+    output *= i + 1;
   }
   return output;
 }

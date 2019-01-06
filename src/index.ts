@@ -1,14 +1,14 @@
 import * as bodies from "./bodies";
 export { bodies };
 
-import * as constants from "./constants";
+import * as constants from "./math/constants";
 export { constants };
 
 export { EarthCenteredFixed } from "./coordinates/earth-centered-fixed";
 
 export { EarthCenteredInertial } from "./coordinates/earth-centered-inertial";
 
-export { Epoch } from "./epoch";
+export { EpochUTC as Epoch } from "./time/epoch-utc";
 
 import * as forces from "./forces";
 export { forces };
@@ -23,7 +23,7 @@ export { J2000 } from "./coordinates/j2000";
 
 export { Kepler } from "./propagators/kepler";
 
-export { KeplerianElements } from "./coordinates/keplerian-elements";
+export { KeplerianElements } from "./coordinates/classical-elements";
 
 export { LookAngle } from "./coordinates/look-angle";
 
@@ -38,4 +38,4 @@ export { Spherical } from "./coordinates/spherical";
 
 export { TopocentricHorizon } from "./coordinates/topocentric-horizon";
 
-export { Vector } from "./vector";
+export { Vector } from "./math/vector-3d";

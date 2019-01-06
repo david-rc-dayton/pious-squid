@@ -1,4 +1,4 @@
-import { EARTH_RAD_MEAN } from "../constants";
+import { EARTH_RAD_MEAN } from "../math/constants";
 import { J2000 } from "../coordinates/j2000";
 import { IPropagator } from "../propagators/propagator-interface";
 import { ISatelliteOptions } from "./construct-config";

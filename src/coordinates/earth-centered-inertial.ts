@@ -1,7 +1,7 @@
 import { nutation, precession } from "../bodies";
-import { EARTH_ROTATION } from "../constants";
-import { Epoch } from "../epoch";
-import { Vector } from "../vector";
+import { EARTH_ROTATION } from "../math/constants";
+import { EpochUTC } from "../time/epoch-utc";
+import { Vector } from "../math/vector-3d";
 import { CoordinateType, ICoordinate } from "./coordinate-config";
 import { EarthCenteredFixed } from "./earth-centered-fixed";
 import { J2000 } from "./j2000";
@@ -11,7 +11,7 @@ export class EarthCenteredInertial implements ICoordinate {
   /** Coordinate identifier string. */
   public readonly type: string;
   /** Satellite state epoch. */
-  public readonly epoch: Epoch;
+  public readonly epoch: EpochUTC;
   /** Position 3-vector, in kilometers. */
   public readonly position: Vector;
   /** Velocity 3-vector, in kilometers per second. */
@@ -38,7 +38,7 @@ export class EarthCenteredInertial implements ICoordinate {
     vk: number
   ) {
     this.type = CoordinateType.EARTH_CENTERED_INERTIAL;
-    this.epoch = new Epoch(millis);
+    this.epoch = new EpochUTC(millis);
     this.position = new Vector(ri, rj, rk);
     this.velocity = new Vector(vi, vj, vk);
   }

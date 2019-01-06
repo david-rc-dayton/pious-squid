@@ -1,15 +1,12 @@
-import { EARTH_MU, RAD2DEG, TWO_PI } from "../constants";
-import { Epoch } from "../epoch";
-import { Vector } from "../vector";
-import { CoordinateType, ICoordinate } from "./coordinate-config";
+import { EARTH_MU, RAD2DEG, TWO_PI } from "../math/constants";
+import { EpochUTC } from "../time/epoch-utc";
+import { Vector3D } from "../math/vector-3d";
 import { J2000 } from "./j2000";
 
 /** Class representing Keplerian orbital elements. */
-export class KeplerianElements implements ICoordinate {
-  /** Coordinate identifier string. */
-  public readonly type: string;
+export class KeplerianElements {
   /** Satellite state epoch. */
-  public readonly epoch: Epoch;
+  public readonly epoch: EpochUTC;
   /** Semimajor axis, in kilometers. */
   public readonly a: number;
   /** Orbit eccentricity (unitless). */
@@ -43,8 +40,7 @@ export class KeplerianElements implements ICoordinate {
     w: number,
     v: number
   ) {
-    this.type = CoordinateType.KEPLERIAN_ELEMENTS;
-    this.epoch = new Epoch(millis);
+    this.epoch = new EpochUTC(millis);
     this.a = a;
     this.e = e;
     this.i = i;
@@ -79,10 +75,10 @@ export class KeplerianElements implements ICoordinate {
   public toJ2K(): J2000 {
     const { epoch, a, e, i, o, w, v } = this;
     const { cos, sin, sqrt } = Math;
-    const rPqw = new Vector(cos(v), sin(v), 0).scale(
+    const rPqw = new Vector3D(cos(v), sin(v), 0).scale(
       (a * (1 - e ** 2)) / (1 + e * cos(v))
     );
-    const vPqw = new Vector(-sin(v), e + cos(v), 0).scale(
+    const vPqw = new Vector3D(-sin(v), e + cos(v), 0).scale(
       sqrt(EARTH_MU / (a * (1 - e ** 2)))
     );
     const rJ2k = rPqw

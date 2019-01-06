@@ -1,7 +1,7 @@
-import { TWO_PI } from "../constants";
+import { TWO_PI } from "../math/constants";
 import { J2000 } from "../coordinates/j2000";
-import { KeplerianElements } from "../coordinates/keplerian-elements";
-import { matchHalfPlane } from "../operations";
+import { KeplerianElements } from "../coordinates/classical-elements";
+import { matchHalfPlane } from "../math/operations";
 import { IPropagator, PropagatorType } from "./propagator-interface";
 
 /** Satellite ephemeris propagator, using Kepler's method. */

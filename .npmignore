@@ -1,9 +1,8 @@
 .gitignore
 .vscode/
 bundle/
-dist/test/
 examples/
 src/
+test/
 tsconfig.json
-tslint.json
 webpack.config.js
