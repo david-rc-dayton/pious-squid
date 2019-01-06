@@ -6,18 +6,22 @@ import { evalPoly } from "../math/operations";
 
 /** Class representing a UTC astrodynamic epoch. */
 export class EpochUTC extends AbstractEpoch {
-  /** Return a new Epoch object, containing current time. */
-  public static now(): EpochUTC {
-    return new EpochUTC(new Date().getTime());
-  }
-
   /**
    * Create a new Epoch object.
    *
-   * @param value milliseconds since 1 January 1970, 00:00 UTC, or Date string
+   * @param millis milliseconds since 1 January 1970, 00:00 UTC
    */
-  constructor(value: string | number) {
-    super(value)
+  constructor(millis: number) {
+    super(millis);
+  }
+
+  public static fromDateString(dateStr: string) {
+    return new EpochUTC(new Date(dateStr).getTime());
+  }
+
+  /** Return a new Epoch object, containing current time. */
+  public static now(): EpochUTC {
+    return new EpochUTC(new Date().getTime());
   }
 
   /**

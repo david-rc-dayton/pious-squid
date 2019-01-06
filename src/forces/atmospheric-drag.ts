@@ -1,28 +1,35 @@
-/**
- * Calculate the density of the Earth's atmosphere, in kg/m^3, for a given
- * position using the exponential atmospheric density model.
- *
- * @param position satellite position 3-vector, in kilometers
- */
-export function atmosphericDensity(position: Vector): number {
-    const rDist = position.magnitude - c.EARTH_RAD_EQ;
-    let fields = [0.0, 0.0, 0.0];
-    if (rDist <= c.EXP_ATMOSPHERE[0][0]) {
-      fields = c.EXP_ATMOSPHERE[0];
-    } else if (rDist >= c.EXP_ATMOSPHERE[c.EXP_ATMOSPHERE.length - 1][0]) {
-      fields = c.EXP_ATMOSPHERE[c.EXP_ATMOSPHERE.length - 1];
-    } else {
-      for (let i = 0; i < c.EXP_ATMOSPHERE.length - 1; i++) {
-        if (
-          c.EXP_ATMOSPHERE[i][0] <= rDist &&
-          rDist < c.EXP_ATMOSPHERE[i + 1][0]
-        ) {
-          fields = c.EXP_ATMOSPHERE[i];
-        }
-      }
-    }
-    const base = fields[0];
-    const density = fields[1];
-    const height = fields[2];
-    return density * Math.exp(-(rDist - base) / height);
+import { EarthBody } from "../bodies/earth-body";
+import { J2000 } from "../coordinates/j2000";
+import { getExpAtmosphericDensity } from "../data/data-handler";
+import { AccelerationForce, AccelerationMap } from "./forces-interface";
+
+export class AtmosphericDrag implements AccelerationForce {
+  private mass: number;
+  private area: number;
+  private dragCoeff: number;
+
+  constructor(mass: number, area: number, dragCoeff: number) {
+    this.mass = mass;
+    this.area = area;
+    this.dragCoeff = dragCoeff;
   }
+
+  public expAtmosphereDrag(j2kState: J2000) {
+    const { position, velocity } = j2kState;
+    const { mass, area, dragCoeff } = this;
+    var density = getExpAtmosphericDensity(position);
+    var vRel = velocity
+      .add(EarthBody.ROTATION.negate().cross(position))
+      .scale(1000);
+    var fScale =
+      -0.5 *
+      density *
+      ((dragCoeff * area) / mass) *
+      Math.pow(vRel.magnitude(), 2);
+    return vRel.normalized().scale(fScale / 1000);
+  }
+
+  public acceleration(j2kState: J2000, accMap: AccelerationMap) {
+    accMap["atmospheric_drag"] = this.expAtmosphereDrag(j2kState);
+  }
+}

@@ -1,4 +1,4 @@
-import { sunPosition } from "../bodies";
+import { SunBody } from "../bodies/sun-body";
 import { Geodetic } from "../coordinates/geodetic";
 import { J2000 } from "../coordinates/j2000";
 import { LookAngle } from "../coordinates/look-angle";
@@ -74,7 +74,7 @@ export class GroundStation {
       .toECEF()
       .toECI(state.epoch.millis)
       .toJ2K().position;
-    const sun = sunPosition(state.epoch).changeOrigin(sensor);
+    const sun = SunBody.position(state.epoch).changeOrigin(sensor);
     const target = state.position.changeOrigin(sensor);
     return target.angle(sun);
   }

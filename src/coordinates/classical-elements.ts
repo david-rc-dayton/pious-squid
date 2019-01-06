@@ -1,10 +1,11 @@
-import { EARTH_MU, RAD2DEG, TWO_PI } from "../math/constants";
+import { EarthBody } from "../bodies/earth-body";
+import { RAD2DEG, TWO_PI } from "../math/constants";
 import { EpochUTC } from "../time/epoch-utc";
 import { Vector3D } from "../math/vector-3d";
 import { J2000 } from "./j2000";
 
 /** Class representing Keplerian orbital elements. */
-export class KeplerianElements {
+export class ClassicalElements {
   /** Satellite state epoch. */
   public readonly epoch: EpochUTC;
   /** Semimajor axis, in kilometers. */
@@ -23,7 +24,7 @@ export class KeplerianElements {
   /**
    * Create a new Keplerian object.
    *
-   * @param millis milliseconds since 1 January 1970, 00:00 UTC
+   * @param epoch UTC epoch
    * @param a semimajor axis, in kilometers
    * @param e orbit eccentricity (unitless)
    * @param i inclination, in radians
@@ -32,7 +33,7 @@ export class KeplerianElements {
    * @param v true anomaly, in radians
    */
   constructor(
-    millis: number,
+    epoch: EpochUTC,
     a: number,
     e: number,
     i: number,
@@ -40,7 +41,7 @@ export class KeplerianElements {
     w: number,
     v: number
   ) {
-    this.epoch = new EpochUTC(millis);
+    this.epoch = epoch;
     this.a = a;
     this.e = e;
     this.i = i;
@@ -71,35 +72,33 @@ export class KeplerianElements {
     ].join("\n");
   }
 
-  /** Convert to the J2000 (J2K) inertial coordinate frame. */
-  public toJ2K(): J2000 {
-    const { epoch, a, e, i, o, w, v } = this;
-    const { cos, sin, sqrt } = Math;
-    const rPqw = new Vector3D(cos(v), sin(v), 0).scale(
-      (a * (1 - e ** 2)) / (1 + e * cos(v))
-    );
-    const vPqw = new Vector3D(-sin(v), e + cos(v), 0).scale(
-      sqrt(EARTH_MU / (a * (1 - e ** 2)))
-    );
-    const rJ2k = rPqw
-      .rot3(-w)
-      .rot1(-i)
-      .rot3(-o);
-    const vJ2k = vPqw
-      .rot3(-w)
-      .rot1(-i)
-      .rot3(-o);
-    const [ri, rj, rk, vi, vj, vk] = rJ2k.concat(vJ2k).state;
-    return new J2000(epoch.millis, ri, rj, rk, vi, vj, vk);
-  }
-
   /** Calculate the satellite's mean motion, in radians per second. */
   public meanMotion(): number {
-    return Math.sqrt(EARTH_MU / this.a ** 3);
+    return Math.sqrt(EarthBody.MU / this.a ** 3);
   }
 
   /** Calculate the number of revolutions the satellite completes per day. */
   public revsPerDay(): number {
     return this.meanMotion() * (86400 / TWO_PI);
+  }
+
+  public toJ2000() {
+    const { epoch, a, e, i, o, w, v } = this;
+    const { cos, sin, sqrt } = Math;
+    const rPQW = new Vector3D(cos(v), sin(v), 0).scale(
+      (a * (1 - e ** 2)) / (1 + e * cos(v))
+    );
+    const vPQW = new Vector3D(-sin(v), e + cos(v), 0).scale(
+      sqrt(EarthBody.MU / (a * (1 - e ** 2)))
+    );
+    const rJ2k = rPQW
+      .rot3(-w)
+      .rot1(-i)
+      .rot3(-o);
+    const vJ2k = vPQW
+      .rot3(-w)
+      .rot1(-i)
+      .rot3(-o);
+    return new J2000(epoch, rJ2k, vJ2k);
   }
 }

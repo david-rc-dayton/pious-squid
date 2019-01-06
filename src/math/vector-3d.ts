@@ -37,7 +37,7 @@ export class Vector3D {
   }
 
   /** Return the magnitude of this object. */
-  get magnitude(): number {
+  public magnitude(): number {
     const { x, y, z } = this;
     return Math.sqrt(x * x + y * y + z * z);
   }
@@ -87,9 +87,10 @@ export class Vector3D {
   /**
    * Return the normalized (unit vector) form of this as a new Vector3D object.
    */
-  get normalized(): Vector3D {
-    const { x, y, z, magnitude } = this;
-    return new Vector3D(x / magnitude, y / magnitude, z / magnitude);
+  public normalized(): Vector3D {
+    const { x, y, z } = this;
+    const m = this.magnitude();
+    return new Vector3D(x / m, y / m, z / m);
   }
 
   /**
@@ -172,7 +173,7 @@ export class Vector3D {
    * @param v the other vector
    */
   public angle(v: Vector3D): number {
-    var m = this.magnitude;
+    var m = this.magnitude();
     return Math.acos(this.dot(v) / (m * m));
   }
 

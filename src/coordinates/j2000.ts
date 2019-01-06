@@ -1,46 +1,31 @@
-import { nutation, precession } from "../bodies";
-import { EARTH_MU, TWO_PI } from "../math/constants";
+import { EarthBody } from "../bodies/earth-body";
+import { getFinalsData } from "../data/data-handler";
+import { TWO_PI } from "../math/constants";
+import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
-import { Vector } from "../math/vector-3d";
-import { CoordinateType, ICoordinate } from "./coordinate-config";
-import { EarthCenteredInertial } from "./earth-centered-inertial";
-import { KeplerianElements } from "./classical-elements";
+import { ClassicalElements } from "./classical-elements";
+import { ITRF } from "./itrf";
 
 /** Class representing J2000 (J2K) inertial coordinates. */
-export class J2000 implements ICoordinate {
-  /** Coordinate identifier string. */
-  public readonly type: string;
+export class J2000 {
   /** Satellite state epoch. */
   public readonly epoch: EpochUTC;
   /** Position 3-vector, in kilometers. */
-  public readonly position: Vector;
+  public readonly position: Vector3D;
   /** Velocity 3-vector, in kilometers per second. */
-  public readonly velocity: Vector;
+  public readonly velocity: Vector3D;
 
   /**
    * Create a new J2000 object.
    *
-   * @param millis milliseconds since 1 January 1970, 00:00 UTC
-   * @param ri i-axis position, in kilometers
-   * @param rj j-axis position, in kilometers
-   * @param rk j-axis position, in kilometers
-   * @param vi i-axis velocity, in kilometers per second
-   * @param vj j-axis velocity, in kilometers per second
-   * @param vk k-axis velocity, in kilometers per second
+   * @param epoch UTC epoch
+   * @param position J2000 position, in kilometers
+   * @param velocity J2000 velocity, in kilometers per second
    */
-  constructor(
-    millis: number,
-    ri: number,
-    rj: number,
-    rk: number,
-    vi: number,
-    vj: number,
-    vk: number
-  ) {
-    this.type = CoordinateType.J2000;
-    this.epoch = new EpochUTC(millis);
-    this.position = new Vector(ri, rj, rk);
-    this.velocity = new Vector(vi, vj, vk);
+  constructor(epoch: EpochUTC, position: Vector3D, velocity?: Vector3D) {
+    this.epoch = epoch;
+    this.position = position;
+    this.velocity = velocity || Vector3D.origin();
   }
 
   /** Return a string representation of the object. */
@@ -55,57 +40,67 @@ export class J2000 implements ICoordinate {
     return output.join("\n");
   }
 
-  /** Convert to the Earth Centered Inertial (ECI) coordinate frame. */
-  public toECI(): EarthCenteredInertial {
-    const { epoch, position, velocity } = this;
-    const [zeta, theta, zed] = precession(epoch);
-    const [dLon, dObliq, mObliq] = nutation(epoch);
-    const obliq = mObliq + dObliq;
-    const rmod = position
-      .rot3(-zeta)
-      .rot2(theta)
-      .rot3(-zed);
-    const vmod = velocity
-      .rot3(-zeta)
-      .rot2(theta)
-      .rot3(-zed);
-    const rtod = rmod
-      .rot1(mObliq)
-      .rot3(-dLon)
-      .rot1(-obliq);
-    const vtod = vmod
-      .rot1(mObliq)
-      .rot3(-dLon)
-      .rot1(-obliq);
-    const [ri, rj, rk, vi, vj, vk] = rtod.concat(vtod).state;
-    return new EarthCenteredInertial(epoch.millis, ri, rj, rk, vi, vj, vk);
+  private mechanicalEnergy() {
+    const r = this.position.magnitude();
+    const v = this.velocity.magnitude();
+    return (v * v) / 2.0 - EarthBody.MU / r;
   }
 
-  /** Convert to Keplerian elements. */
-  public toKeplerian(): KeplerianElements {
-    const { epoch, position, velocity } = this;
-    const [R, V] = [position.magnitude, velocity.magnitude];
-    const energy = (V * V) / 2 - EARTH_MU / R;
-    const a = -(EARTH_MU / (2 * energy));
-    const eVecA = position.scale(V * V - EARTH_MU / R);
-    const eVecB = velocity.scale(position.dot(velocity));
-    const eVec = eVecA.add(eVecB.scale(-1)).scale(1 / EARTH_MU);
-    const e = eVec.magnitude;
-    const h = position.cross(velocity);
-    const i = Math.acos(h.state[2] / h.magnitude) % 180;
-    const n = new Vector(0, 0, 1).cross(h);
-    let o = Math.acos(n.state[0] / n.magnitude);
-    if (n.state[1] < 0) {
+  /** Convert to Classical Orbit Elements. */
+  public toClassicalElements(): ClassicalElements {
+    const { epoch, position: pos, velocity: vel } = this;
+    var mu = EarthBody.MU;
+    var energy = this.mechanicalEnergy();
+    var a = -(mu / (2 * energy));
+    var eVecA = pos.scale(Math.pow(vel.magnitude(), 2) - mu / pos.magnitude());
+    var eVecB = vel.scale(pos.dot(vel));
+    var eVec = eVecA.add(eVecB.negate()).scale(1.0 / mu);
+    var e = eVec.magnitude();
+    var h = pos.cross(vel);
+    var i = Math.acos(h.z / h.magnitude());
+    var n = new Vector3D(0, 0, 1).cross(h);
+    var o = Math.acos(n.x / n.magnitude());
+    if (n.y < 0) {
       o = TWO_PI - o;
     }
-    let w = Math.acos(n.dot(eVec) / (n.magnitude * e));
-    if (eVec.state[2] < 0) {
+    var w = Math.acos(n.dot(eVec) / (n.magnitude() * eVec.magnitude()));
+    if (eVec.z < 0) {
       w = TWO_PI - w;
     }
-    let v = Math.acos(eVec.dot(position) / (e * R));
-    if (position.dot(velocity) < 0) {
+    var v = Math.acos(eVec.dot(pos) / (eVec.magnitude() * pos.magnitude()));
+    if (pos.dot(vel) < 0) {
       v = TWO_PI - v;
     }
-    return new KeplerianElements(epoch.millis, a, e, i, o, w, v);
+    return new ClassicalElements(epoch, a, e, i, o, w, v);
+  }
+
+  public toITRF() {
+    const { epoch, position, velocity } = this;
+    const prec = EarthBody.precession(epoch);
+    const rMOD = position
+      .rot3(-prec[0])
+      .rot2(prec[1])
+      .rot3(-prec[2]);
+    const vMOD = velocity
+      .rot3(-prec[0])
+      .rot2(prec[1])
+      .rot3(-prec[2]);
+    const nut = EarthBody.nutation(epoch);
+    const epsilon = nut[2] + nut[1];
+    const rTOD = rMOD
+      .rot1(nut[2])
+      .rot3(-nut[0])
+      .rot1(-epsilon);
+    const vTOD = vMOD
+      .rot1(nut[2])
+      .rot3(-nut[0])
+      .rot1(-epsilon);
+    const ast = epoch.gmstAngle() + nut[0] * Math.cos(epsilon);
+    const rPEF = rTOD.rot3(ast);
+    const vPEF = vTOD.rot3(ast).add(EarthBody.ROTATION.negate().cross(rPEF));
+    const { pmX, pmY } = getFinalsData(epoch.toMjd());
+    const rITRF = rPEF.rot1(-pmY).rot2(-pmX);
+    const vITRF = vPEF.rot1(-pmY).rot2(-pmX);
+    return new ITRF(epoch, rITRF, vITRF);
   }
 }

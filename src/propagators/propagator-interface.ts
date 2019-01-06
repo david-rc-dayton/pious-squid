@@ -1,24 +1,16 @@
 import { J2000 } from "../coordinates/j2000";
+import { EpochUTC } from "../time/epoch-utc";
 
 /** Common interface for propagator objects. */
 export interface IPropagator {
-  /** Propagator identifier string. */
-  type: string;
   /** Cache for last computed statellite state. */
   state: J2000;
   /** Propagate state to a new epoch. */
-  propagate(millis: number): J2000;
+  propagate(epoch: EpochUTC): J2000;
   /** Propagate state by some number of seconds, repeatedly. */
-  step(millis: number, interval: number, count: number): J2000[];
+  step(epoch: EpochUTC, interval: number, count: number): J2000[];
   /** Restore initial propagator state. */
-  reset(): IPropagator;
-}
-
-/** Propagator type identifiers. */
-export enum PropagatorType {
-  RUNGE_KUTTA_4 = "runge-kutta-4",
-  KEPLER = "kepler",
-  INTERPOLATOR = "interpolator"
+  reset(): void;
 }
 
 /** Options for numerical integration propagation models. */
@@ -38,12 +30,12 @@ export interface INumericalModel {
   /** Satellite surface area, in meters squared */
   area: number;
   /** Satellite drag coefficient. */
-  drag: number;
+  dragCoeff: number;
   /** Satellite reflectivity coefficient. */
-  reflect: number;
-  /** Geopotential coefficient degree. (max=4) */
+  reflectCoeff: number;
+  /** Geopotential coefficient degree. (max=20) */
   degree: number;
-  /** Geopotential coefficient order. (max=4) */
+  /** Geopotential coefficient order. (max=20) */
   order: number;
 }
 

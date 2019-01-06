@@ -1,17 +1,16 @@
 import { TWO_PI } from "../math/constants";
 import { J2000 } from "../coordinates/j2000";
-import { KeplerianElements } from "../coordinates/classical-elements";
+import { ClassicalElements } from "../coordinates/classical-elements";
 import { matchHalfPlane } from "../math/operations";
-import { IPropagator, PropagatorType } from "./propagator-interface";
+import { IPropagator } from "./propagator-interface";
+import { EpochUTC } from "../time/epoch-utc";
 
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class Kepler implements IPropagator {
-  /** Propagator identifier string. */
-  public readonly type: string;
   /** Cache for last computed statellite state. */
   public state: J2000;
   /** Keplerian element set. */
-  private readonly elements: KeplerianElements;
+  private readonly elements: ClassicalElements;
 
   /**
    * Create a new Kepler propagator object. This propagator only models
@@ -19,10 +18,9 @@ export class Kepler implements IPropagator {
    *
    * @param elements Keplerian element set
    */
-  constructor(elements: KeplerianElements) {
-    this.type = PropagatorType.KEPLER;
+  constructor(elements: ClassicalElements) {
     this.elements = elements;
-    this.state = elements.toJ2K();
+    this.state = elements.toJ2000();
   }
 
   /** Return a string representation of the object. */
@@ -35,18 +33,18 @@ export class Kepler implements IPropagator {
    * for the Kepler propagator, since it doesn't rely on transient states.
    */
   public reset(): Kepler {
-    this.state = this.elements.toJ2K();
+    this.state = this.elements.toJ2000();
     return this;
   }
 
   /**
    * Propagate satellite state to a new epoch.
    *
-   * @param millis milliseconds since 1 January 1970, 00:00 UTC
+   * @param epoch UTC epoch
    */
-  public propagate(millis: number): J2000 {
-    const { epoch, a, e, i, o, w, v } = this.elements;
-    const delta = millis / 1000 - epoch.unix;
+  public propagate(epoch: EpochUTC): J2000 {
+    const { epoch: t, a, e, i, o, w, v } = this.elements;
+    const delta = epoch.difference(t);
     const n = this.elements.meanMotion();
     let eaInit = Math.acos((e + Math.cos(v)) / (1 + e * Math.cos(v)));
     eaInit = matchHalfPlane(eaInit, v);
@@ -65,7 +63,7 @@ export class Kepler implements IPropagator {
       (Math.cos(eaFinal) - e) / (1 - e * Math.cos(eaFinal))
     );
     vFinal = matchHalfPlane(vFinal, eaFinal);
-    this.state = new KeplerianElements(millis, a, e, i, o, w, vFinal).toJ2K();
+    this.state = new ClassicalElements(epoch, a, e, i, o, w, vFinal).toJ2000();
     return this.state;
   }
 
@@ -73,15 +71,15 @@ export class Kepler implements IPropagator {
    * Propagate state by some number of seconds, repeatedly, starting at a
    * specified epoch.
    *
-   * @param millis propagation start time
+   * @param epoch UTC epoch
    * @param interval seconds between output states
    * @param count number of steps to take
    */
-  public step(millis: number, interval: number, count: number): J2000[] {
-    const output: J2000[] = [this.propagate(millis)];
-    let tempEpoch = millis;
+  public step(epoch: EpochUTC, interval: number, count: number): J2000[] {
+    const output: J2000[] = [this.propagate(epoch)];
+    let tempEpoch = epoch;
     for (let i = 0; i < count; i++) {
-      tempEpoch += interval * 1000;
+      tempEpoch = tempEpoch.roll(interval);
       output.push(this.propagate(tempEpoch));
     }
     return output;

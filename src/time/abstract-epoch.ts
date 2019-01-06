@@ -5,17 +5,10 @@ export abstract class AbstractEpoch {
   /**
    * Create a new Epoch object.
    *
-   * @param value milliseconds since 1 January 1970, 00:00 UTC, or Date string
+   * @param millis milliseconds since 1 January 1970, 00:00 UTC
    */
-  constructor(value: string | number) {
-    if (typeof value == "number") {
-      this.unix = value / 1000;
-    }
-    if (typeof value === "string") {
-      this.unix = new Date(value).getTime();
-    } else {
-      this.unix = 0;
-    }
+  constructor(millis: number) {
+    this.unix = millis / 1000;
   }
 
   public difference(epoch: AbstractEpoch) {
