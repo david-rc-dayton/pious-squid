@@ -6,13 +6,13 @@ import { EpochUTC } from "../time/epoch-utc";
 
 export class EarthBody {
   /** Earth gravitational parameter, in km^3/s^2. */
-  public static readonly MU = 398600.4418;
+  public static readonly MU = 398600.4415;
 
   /** Earth equatorial radius, in kilometers. */
-  public static readonly RADIUS_EQUATOR = 6378.137;
+  public static readonly RADIUS_EQUATOR = 6378.1363;
 
   /** Earth coefficient of flattening. */
-  public static readonly FLATTENING = 1 / 298.257223563;
+  public static readonly FLATTENING = 1 / 298.257;
 
   /** Earth rotation vector, in radians per second. */
   public static readonly ROTATION = new Vector3D(0, 0, 7.2921158553e-5);
@@ -48,7 +48,7 @@ export class EarthBody {
    *
    * @param epoch satellite state epoch
    */
-  public static nutation(epoch: EpochUTC): [number, number, number] {
+  public static nutation(epoch: EpochUTC, n = 4): [number, number, number] {
     const r = 360;
     const t = epoch.toTDB().toJulianCenturies();
     const moonAnom = evalPoly(t, [
@@ -83,7 +83,7 @@ export class EarthBody {
     ]);
     let deltaPsi = 0;
     let deltaEpsilon = 0;
-    IAU_1980.map(iauLine => {
+    IAU_1980.slice(0, n).map(iauLine => {
       let [a1, a2, a3, a4, a5, Ai, Bi, Ci, Di] = iauLine;
       const arg =
         (a1 * moonAnom +

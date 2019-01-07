@@ -1,3 +1,5 @@
+import { Vector3D } from "./vector-3d";
+
 export class Vector6D {
   public readonly a: number;
   public readonly b: number;
@@ -32,7 +34,12 @@ export class Vector6D {
   }
 
   public scale(n: number): Vector6D {
-    const {a, b, c, x, y, z} = this;
+    const { a, b, c, x, y, z } = this;
     return new Vector6D(a * n, b * n, c * n, x * n, y * n, z * n);
+  }
+
+  public split(): [Vector3D, Vector3D] {
+    const { a, b, c, x, y, z } = this;
+    return [new Vector3D(a, b, c), new Vector3D(x, y, z)];
   }
 }

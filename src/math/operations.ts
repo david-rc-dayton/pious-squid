@@ -10,7 +10,7 @@ import { TWO_PI } from "./constants";
 export function factorial(n: number): number {
   n = Math.abs(n);
   let output = 1;
-  for (let i = 0; i < n; n++) {
+  for (let i = 0; i < n; i++) {
     output *= i + 1;
   }
   return output;
@@ -79,58 +79,8 @@ export function linearInterpolate(
   return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
 }
 
-export function legendreFunction(l: number, m: number, phi: number): number {
-  if (m > l) {
-    return 0;
-  }
-  if (l === 0 && m === 0) {
-    return 1;
-  }
-  if (l === 1 && m === 0) {
-    return Math.sin(phi);
-  }
-  if (l === 1 && m === 1) {
-    return Math.cos(phi);
-  }
-  if (l === 2 && m === 0) {
-    return (1.0 / 2.0) * (3 * Math.sin(phi) ** 2 - 1);
-  }
-  if (l === 2 && m === 1) {
-    return 3 * Math.sin(phi) * Math.cos(phi);
-  }
-  if (l === 2 && m === 2) {
-    return 3 * Math.cos(phi) ** 2;
-  }
-  if (l === 3 && m === 0) {
-    return (1.0 / 2.0) * (5 * Math.sin(phi) ** 3 - 3 * Math.sin(phi));
-  }
-  if (l === 3 && m === 1) {
-    return (1.0 / 2.0) * Math.cos(phi) * (15 * Math.sin(phi) ** 2 - 3);
-  }
-  if (l === 3 && m === 2) {
-    return 15 * Math.cos(phi) ** 2 * Math.sin(phi);
-  }
-  if (l === 3 && m === 3) {
-    return 15 * Math.cos(phi) ** 3;
-  }
-  if (l === 4 && m === 0) {
-    return (
-      (1.0 / 8.0) * (35 * Math.sin(phi) ** 4 - 30 * Math.sin(phi) ** 2 + 3)
-    );
-  }
-  if (l === 4 && m === 1) {
-    return (
-      (5.0 / 2.0) * Math.cos(phi) * (7 * Math.sin(phi) ** 3 - 3 * Math.sin(phi))
-    );
-  }
-  if (l === 4 && m === 2) {
-    return (15.0 / 2.0) * Math.cos(phi) ** 2 * (7 * Math.sin(phi) ** 2 - 1);
-  }
-  if (l === 4 && m === 3) {
-    return 105 * Math.cos(phi) ** 3 * Math.sin(phi);
-  }
-  if (l === 4 && m === 4) {
-    return 105 * Math.cos(phi) ** 4;
-  }
-  return 0;
+export function copySign(magnitude: number, sign: number) {
+  const m = Math.abs(magnitude);
+  const s = sign >= 0 ? 1 : -1;
+  return s * m;
 }

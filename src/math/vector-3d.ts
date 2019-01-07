@@ -1,3 +1,5 @@
+import { Vector6D } from "./vector-6d";
+
 /** Class representing a vector of length 3. */
 export class Vector3D {
   /** Vector x-axis component. */
@@ -185,5 +187,11 @@ export class Vector3D {
   public changeOrigin(origin: Vector3D): Vector3D {
     const delta = origin.negate();
     return this.add(delta);
+  }
+
+  public join(v: Vector3D) {
+    const { x: a, y: b, z: c } = this;
+    const { x, y, z } = v;
+    return new Vector6D(a, b, c, x, y, z);
   }
 }

@@ -24,7 +24,7 @@ export class SphericalHarmonics {
 
   public buildCache(phi: number) {
     this.clearTable();
-    const { d, P, getP } = this;
+    const { d, P } = this;
     const sPhi = Math.sin(phi);
     const cPhi = Math.cos(phi);
     P[0][0] = 1.0;
@@ -35,12 +35,14 @@ export class SphericalHarmonics {
       for (let m = 0; m <= l; m++) {
         if (l >= 2 && m == 0) {
           P[l][0] =
-            ((2 * l - 1) * sPhi * getP(l - 1, 0) - (l - 1) * getP(l - 2, 0)) /
+            ((2 * l - 1) * sPhi * this.getP(l - 1, 0) -
+              (l - 1) * this.getP(l - 2, 0)) /
             l;
         } else if (m != 0 && m < l) {
-          P[l][m] = getP(l - 2, m) + (2 * l - 1) * cPhi * getP(l - 1, m - 1);
+          P[l][m] =
+            this.getP(l - 2, m) + (2 * l - 1) * cPhi * this.getP(l - 1, m - 1);
         } else if (l == m && l != 0) {
-          P[l][l] = (2 * l - 1) * cPhi * getP(l - 1, l - 1);
+          P[l][l] = (2 * l - 1) * cPhi * this.getP(l - 1, l - 1);
         }
       }
     }

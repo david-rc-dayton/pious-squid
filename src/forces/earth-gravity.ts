@@ -78,9 +78,12 @@ export class EarthGravity implements AccelerationForce {
   private earthAspherical(j2kState: J2000) {
     const itrf = j2kState.toITRF();
     const pos = itrf.position;
-    const geo = itrf.toGeodetic();
-    const phi = geo.geocentricLatitude();
-    const lambda = geo.longitude;
+    // const geo = itrf.toGeodetic();
+    // const phi = geo.geocentricLatitude();
+    // const lambda = geo.longitude;
+    const p = Math.sqrt(pos.x ** 2 + pos.y ** 2);
+    const phi = Math.atan2(pos.z, p);
+    const lambda = Math.atan2(pos.y, pos.x);
     const r = pos.magnitude();
     this.harmonics.buildCache(phi);
     const [dR, dPhi, dLambda] = this.calcGradient(phi, lambda, r);
