@@ -77,17 +77,13 @@ export class EarthGravity implements AccelerationForce {
 
   private earthAspherical(j2kState: J2000) {
     const itrf = j2kState.toITRF();
-    const pos = itrf.position;
-    // const geo = itrf.toGeodetic();
-    // const phi = geo.geocentricLatitude();
-    // const lambda = geo.longitude;
-    const p = Math.sqrt(pos.x ** 2 + pos.y ** 2);
-    const phi = Math.atan2(pos.z, p);
-    const lambda = Math.atan2(pos.y, pos.x);
-    const r = pos.magnitude();
+    const { x: ri, y: rj, z: rk } = itrf.position;
+    const p = Math.sqrt(ri * ri + rj * rj);
+    const phi = Math.atan2(rk, p);
+    const lambda = Math.atan2(rj, ri);
+    const r = itrf.position.magnitude();
     this.harmonics.buildCache(phi);
     const [dR, dPhi, dLambda] = this.calcGradient(phi, lambda, r);
-    const { x: ri, y: rj, z: rk } = pos;
     const r2 = r * r;
     const ri2 = ri * ri;
     const rj2 = rj * rj;
@@ -101,9 +97,11 @@ export class EarthGravity implements AccelerationForce {
   }
 
   public acceleration(j2kState: J2000, accMap: AccelerationMap) {
-    accMap["earth_gravity_spherical"] = this.earthSpherical(j2kState);
+    accMap["earth_gravity"] = this.earthSpherical(j2kState);
     if (this.earthAsphericalFlag) {
-      accMap["earth_gravity_aspherical"] = this.earthAspherical(j2kState);
+      accMap["earth_gravity"] = accMap["earth_gravity"].add(
+        this.earthAspherical(j2kState)
+      );
     }
   }
 }
