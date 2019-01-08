@@ -1,38 +1,31 @@
-import * as EarthBody from "./bodies/earth-body";
-import * as MoonBody from "./bodies/moon-body";
-import * as SunBody from "./bodies/sun-body";
-export { EarthBody, MoonBody, SunBody };
+// bodies
+export { EarthBody } from "./bodies/earth-body";
+export { MoonBody } from "./bodies/moon-body";
+export { SunBody } from "./bodies/sun-body";
 
-import * as constants from "./math/constants";
-export { constants };
+// constructs
+// (nothing yet...)
 
-export { ITRF } from "./coordinates/itrf";
-
-export { EpochUTC as Epoch } from "./time/epoch-utc";
-
+// coordinates
+export { ClassicalElements } from "./coordinates/classical-elements";
 export { Geodetic } from "./coordinates/geodetic";
-
-export { GroundStation } from "./constructs/ground-station";
-
+export { ITRF } from "./coordinates/itrf";
 export { J2000 } from "./coordinates/j2000";
-
-export { Kepler } from "./propagators/kepler";
-
-export {
-  ClassicalElements as KeplerianElements
-} from "./coordinates/classical-elements";
-
 export { LookAngle } from "./coordinates/look-angle";
-
-import * as operations from "./math/operations";
-export { operations };
-
-export { RungeKutta4 } from "./propagators/runge-kutta-4";
-
-export { Satellite } from "./constructs/satellite";
-
 export { TopocentricHorizon } from "./coordinates/topocentric-horizon";
 
+// data
+export { DataHandler } from "./data/data-handler";
+
+// forces
+export { ForceModel } from "./forces/force-model";
+
+// math
 export { Vector3D } from "./math/vector-3d";
 
-export { Vector6D } from "./math/vector-6d";
+// propagators
+export { Kepler } from "./propagators/kepler";
+export { RungeKutta4 } from "./propagators/runge-kutta-4";
+
+// time
+export { EpochUTC } from "./time/epoch-utc";

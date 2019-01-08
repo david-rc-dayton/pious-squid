@@ -1,5 +1,5 @@
 import { EarthBody } from "../bodies/earth-body";
-import { getFinalsData } from "../data/data-handler";
+import { DataHandler } from "../data/data-handler";
 import { TWO_PI } from "../math/constants";
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
@@ -98,7 +98,7 @@ export class J2000 {
     const ast = epoch.gmstAngle() + nut[0] * Math.cos(epsilon);
     const rPEF = rTOD.rot3(ast);
     const vPEF = vTOD.rot3(ast).add(EarthBody.ROTATION.negate().cross(rPEF));
-    const { pmX, pmY } = getFinalsData(epoch.toMjd());
+    const { pmX, pmY } = DataHandler.getFinalsData(epoch.toMjd());
     const rITRF = rPEF.rot1(-pmY).rot2(-pmX);
     const vITRF = vPEF.rot1(-pmY).rot2(-pmX);
     return new ITRF(epoch, rITRF, vITRF);

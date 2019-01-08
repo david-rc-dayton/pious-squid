@@ -1,7 +1,7 @@
 import { EarthBody } from "../bodies/earth-body";
 import { ITRF } from "../coordinates/itrf";
 import { J2000 } from "../coordinates/j2000";
-import { getEgm96Coeffs } from "../data/data-handler";
+import { DataHandler } from "../data/data-handler";
 import { SphericalHarmonics } from "../math/spherical-harmonics";
 import { Vector3D } from "../math/vector-3d";
 import { AccelerationForce, AccelerationMap } from "./forces-interface";
@@ -41,7 +41,7 @@ export class EarthGravity implements AccelerationForce {
     let sumLambda = 0;
     for (let l = 2; l <= degree; l++) {
       for (let m = 0; m <= Math.min(l, order); m++) {
-        const { clm, slm } = getEgm96Coeffs(l, m);
+        const { clm, slm } = DataHandler.getEgm96Coeffs(l, m);
         const [smLam, cmLam, mtPhi] = recurExp(m, lambda, phi);
         // r derivative
         const aR =

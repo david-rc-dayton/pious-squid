@@ -1,6 +1,6 @@
 import { EarthBody } from "../bodies/earth-body";
 import { J2000 } from "../coordinates/j2000";
-import { getExpAtmosphericDensity } from "../data/data-handler";
+import { DataHandler } from "../data/data-handler";
 import { AccelerationForce, AccelerationMap } from "./forces-interface";
 
 export class AtmosphericDrag implements AccelerationForce {
@@ -17,7 +17,7 @@ export class AtmosphericDrag implements AccelerationForce {
   public expAtmosphereDrag(j2kState: J2000) {
     const { position, velocity } = j2kState;
     const { mass, area, dragCoeff } = this;
-    var density = getExpAtmosphericDensity(position);
+    var density = DataHandler.getExpAtmosphericDensity(position);
     var vRel = velocity
       .add(EarthBody.ROTATION.negate().cross(position))
       .scale(1000);

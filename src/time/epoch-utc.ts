@@ -1,6 +1,6 @@
 import { AbstractEpoch } from "./abstract-epoch";
 import { EpochUT1, EpochTAI, EpochTT, EpochTDB } from "./time-scales";
-import { leapSecondsOffset, getFinalsData } from "../data/data-handler";
+import { DataHandler } from "../data/data-handler";
 import { DEG2RAD, TWO_PI } from "../math/constants";
 import { evalPoly } from "../math/operations";
 
@@ -42,12 +42,12 @@ export class EpochUTC extends AbstractEpoch {
   }
 
   public toUT1() {
-    const { dut1 } = getFinalsData(this.toMjd());
+    const { dut1 } = DataHandler.getFinalsData(this.toMjd());
     return new EpochUT1((this.unix + dut1) * 1000);
   }
 
   public toTAI() {
-    const ls = leapSecondsOffset(this.toJulianDate());
+    const ls = DataHandler.leapSecondsOffset(this.toJulianDate());
     return new EpochTAI((this.unix + ls) * 1000);
   }
 

@@ -3,71 +3,29 @@ import { ForceModel } from "../forces/force-model";
 import { copySign } from "../math/operations";
 import { Vector6D } from "../math/vector-6d";
 import { EpochUTC } from "../time/epoch-utc";
-import {
-  INumericalModel,
-  IPropagator,
-  NumericalOptions
-} from "./propagator-interface";
+import { IPropagator } from "./propagator-interface";
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4 implements IPropagator {
+  public readonly forceModel: ForceModel;
   private readonly initState: J2000;
   private cacheState: J2000;
-  private forceModel: ForceModel;
   private stepSize: number;
-  private static readonly DEFAULT_MODEL: INumericalModel = {
-    stepSize: 5,
-    degree: 0,
-    order: 0,
-    area: 16,
-    mass: 1400,
-    dragCoeff: 2.2,
-    reflectCoeff: 1.4,
-    gravityMoon: false,
-    gravitySun: false,
-    atmosphericDrag: false,
-    solarRadiation: false
-  };
 
-  constructor(state: J2000, model?: NumericalOptions) {
+  constructor(state: J2000) {
     this.initState = state;
     this.cacheState = this.initState;
+    this.stepSize = 15;
     this.forceModel = new ForceModel();
-    this.stepSize = RungeKutta4.DEFAULT_MODEL.stepSize;
-    this.initialize(model || {});
-  }
-
-  private initialize(model: NumericalOptions) {
-    const modelMerge = {
-      ...RungeKutta4.DEFAULT_MODEL,
-      ...model
-    } as INumericalModel;
-    this.stepSize = modelMerge.stepSize;
-    this.forceModel.setEarthGravity(modelMerge.degree, modelMerge.order);
-    if (modelMerge.gravityMoon || modelMerge.gravitySun) {
-      this.forceModel.setThirdBody(
-        modelMerge.gravityMoon,
-        modelMerge.gravitySun
-      );
-    }
-    if (modelMerge.atmosphericDrag) {
-      this.forceModel.setAtmosphericDrag(
-        modelMerge.mass,
-        modelMerge.area,
-        modelMerge.dragCoeff
-      );
-    }
-    if (modelMerge.solarRadiation) {
-      this.forceModel.setSolarRadiationPressure(
-        modelMerge.mass,
-        modelMerge.area,
-        modelMerge.reflectCoeff
-      );
-    }
+    this.forceModel.setEarthGravity(0, 0);
   }
 
   get state() {
     return this.cacheState;
+  }
+
+  public setStepSize(seconds: number) {
+    this.stepSize = Math.abs(seconds);
   }
 
   public reset() {
@@ -105,5 +63,23 @@ export class RungeKutta4 implements IPropagator {
       this.cacheState = this.integrate(this.cacheState, step);
     }
     return this.cacheState;
+  }
+
+  /**
+   * Propagate state by some number of seconds, repeatedly, starting at a
+   * specified epoch.
+   *
+   * @param epoch UTC epoch
+   * @param interval seconds between output states
+   * @param count number of steps to take
+   */
+  public step(epoch: EpochUTC, interval: number, count: number): J2000[] {
+    const output: J2000[] = [this.propagate(epoch)];
+    let tempEpoch = epoch;
+    for (let i = 0; i < count; i++) {
+      tempEpoch = tempEpoch.roll(interval);
+      output.push(this.propagate(tempEpoch));
+    }
+    return output;
   }
 }

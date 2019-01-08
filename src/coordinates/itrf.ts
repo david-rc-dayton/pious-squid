@@ -1,5 +1,5 @@
 import { EarthBody } from "../bodies/earth-body";
-import { getFinalsData } from "../data/data-handler";
+import { DataHandler } from "../data/data-handler";
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
 import { Geodetic } from "./geodetic";
@@ -29,7 +29,7 @@ export class ITRF {
 
   public toJ2000() {
     const { epoch, position, velocity } = this;
-    const finals = getFinalsData(epoch.toMjd());
+    const finals = DataHandler.getFinalsData(epoch.toMjd());
     const pmX = finals.pmX;
     const pmY = finals.pmY;
     const rPEF = position.rot2(pmX).rot1(pmY);

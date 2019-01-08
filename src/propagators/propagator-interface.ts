@@ -12,32 +12,3 @@ export interface IPropagator {
   /** Restore initial propagator state. */
   reset(): void;
 }
-
-/** Options for numerical integration propagation models. */
-export interface INumericalModel {
-  /** Step size, in seconds. */
-  stepSize: number;
-  /** Model Solar gravity, if true. */
-  gravitySun: boolean;
-  /** Model Lunar gravity, if true. */
-  gravityMoon: boolean;
-  /** Model Solar radiation pressure, if true. */
-  solarRadiation: boolean;
-  /** Model atmospheric drag, if true. */
-  atmosphericDrag: boolean;
-  /** Satellite mass, in kilograms */
-  mass: number;
-  /** Satellite surface area, in meters squared */
-  area: number;
-  /** Satellite drag coefficient. */
-  dragCoeff: number;
-  /** Satellite reflectivity coefficient. */
-  reflectCoeff: number;
-  /** Geopotential coefficient degree. (max=20) */
-  degree: number;
-  /** Geopotential coefficient order. (max=20) */
-  order: number;
-}
-
-/** Options for numerical integration propagation constructors. */
-export type NumericalOptions = Partial<INumericalModel>;
