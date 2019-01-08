@@ -4,7 +4,7 @@ const {
   Vector3D,
   RungeKutta4,
   Kepler
-} = require("./dist/index");
+} = require(".");
 
 //==============================================================================
 // define a j2000 state
