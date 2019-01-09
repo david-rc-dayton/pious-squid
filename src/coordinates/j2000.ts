@@ -5,6 +5,7 @@ import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
 import { ClassicalElements } from "./classical-elements";
 import { ITRF } from "./itrf";
+import { RIC } from "./ric";
 
 /** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 {
@@ -102,5 +103,34 @@ export class J2000 {
     const rITRF = rPEF.rot1(-pmY).rot2(-pmX);
     const vITRF = vPEF.rot1(-pmY).rot2(-pmX);
     return new ITRF(epoch, rITRF, vITRF);
+  }
+
+  public toRIC(target: J2000) {
+    const { position: r1J2K, velocity: v1J2K } = this;
+    const { position: r2J2K, velocity: v2J2K } = target;
+    const { o, i, w, v } = target.toClassicalElements();
+    // self
+    const r1PQW = r1J2K
+      .rot3(o)
+      .rot1(i)
+      .rot3(w);
+    const v1PQW = v1J2K
+      .rot3(o)
+      .rot1(i)
+      .rot3(w);
+    const r1RSW = r1PQW.rot3(v);
+    const v1RSW = v1PQW.rot3(v);
+    // target
+    const r2PQW = r2J2K
+      .rot3(o)
+      .rot1(i)
+      .rot3(w);
+    const v2PQW = v2J2K
+      .rot3(o)
+      .rot1(i)
+      .rot3(w);
+    const r2RSW = r2PQW.rot3(v);
+    const v2RSW = v2PQW.rot3(v);
+    return new RIC(r1RSW.changeOrigin(r2RSW), v1RSW.changeOrigin(v2RSW));
   }
 }

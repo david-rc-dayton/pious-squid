@@ -3,3 +3,4 @@ bundle/
 dist/
 node_modules/
 pious-squid-*.tgz
+scratchpad.js

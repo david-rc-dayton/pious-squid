@@ -2,6 +2,7 @@
 .vscode/
 bundle/
 examples/
+scratchpad.js
 src/
 test/
 tsconfig.json
