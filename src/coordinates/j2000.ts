@@ -105,32 +105,16 @@ export class J2000 {
     return new ITRF(epoch, rITRF, vITRF);
   }
 
-  public toRIC(target: J2000) {
-    const { position: r1J2K, velocity: v1J2K } = this;
-    const { position: r2J2K, velocity: v2J2K } = target;
-    const { o, i, w, v } = target.toClassicalElements();
-    // self
-    const r1PQW = r1J2K
-      .rot3(o)
-      .rot1(i)
-      .rot3(w);
-    const v1PQW = v1J2K
-      .rot3(o)
-      .rot1(i)
-      .rot3(w);
-    const r1RSW = r1PQW.rot3(v);
-    const v1RSW = v1PQW.rot3(v);
-    // target
-    const r2PQW = r2J2K
-      .rot3(o)
-      .rot1(i)
-      .rot3(w);
-    const v2PQW = v2J2K
-      .rot3(o)
-      .rot1(i)
-      .rot3(w);
-    const r2RSW = r2PQW.rot3(v);
-    const v2RSW = v2PQW.rot3(v);
-    return new RIC(r1RSW.changeOrigin(r2RSW), v1RSW.changeOrigin(v2RSW));
+  public toRIC(reference: J2000) {
+    const ru = this.position.normalized();
+    const cu = this.position.cross(this.velocity).normalized();
+    const iu = cu.cross(ru);
+
+    const dp = this.position.changeOrigin(reference.position);
+    const dv = this.velocity.changeOrigin(reference.velocity);
+    return new RIC(
+      new Vector3D(ru.dot(dp), iu.dot(dp), cu.dot(dp)),
+      new Vector3D(ru.dot(dv), iu.dot(dv), cu.dot(dv))
+    );
   }
 }
