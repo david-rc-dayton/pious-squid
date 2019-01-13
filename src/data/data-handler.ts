@@ -12,7 +12,11 @@ interface FinalsData {
 }
 
 export class DataHandler {
-  /** Fetch the number of leap seconds used in offset. */
+  /**
+   * Fetch the number of leap seconds used in offset.
+   *
+   * @param jd julian date
+   */
   public static leapSecondsOffset(jd: number) {
     if (jd > LEAP_SECONDS[LEAP_SECONDS.length - 1][0]) {
       return LEAP_SECONDS[LEAP_SECONDS.length - 1][1];
@@ -28,6 +32,11 @@ export class DataHandler {
     return 0;
   }
 
+  /**
+   * Get finals data. Currently returns all values as zero.
+   *
+   * @param mjd USNO modified julian date
+   */
   public static getFinalsData(mjd: number): FinalsData {
     const fmjd = Math.floor(mjd);
     return { mjd: fmjd, pmX: 0, pmY: 0, dut1: 0 };
@@ -61,10 +70,17 @@ export class DataHandler {
     return density * Math.exp(-(rDist - base) / height);
   }
 
+  /** Calculate appropritate 1D index for 2D coefficient lookup. */
   private static egm96Index(l: number, m: number) {
     return ((l - 2) * (l + 2) + l) / 2 - 1 + m;
   }
 
+  /**
+   * Lookup denormalized EGM96 coefficients.
+   *
+   * @param l first P index
+   * @param m second P index
+   */
   public static getEgm96Coeffs(l: number, m: number) {
     return EGM_96_DENORMALIZED[DataHandler.egm96Index(l, m)];
   }

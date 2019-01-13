@@ -1,3 +1,7 @@
+/**
+ * Exponential Atmospheric Model base altitude (km), nominal density (kg/m^3),
+ * and scale height (km).
+ */
 export const EXPONENTIAL_ATMOSPHERE = [
   [0, 1.225, 7.249],
   [25, 3.899e-2, 6.349],

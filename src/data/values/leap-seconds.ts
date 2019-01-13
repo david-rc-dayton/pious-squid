@@ -1,3 +1,4 @@
+/** List of leap seconds by Julian Date. */
 export let LEAP_SECONDS = [
   [2437300.5, 1.422818],
   [2437512.5, 1.372818],

@@ -1,12 +1,17 @@
 import { factorial } from "../../math/operations";
 
 export interface Egm96Data {
+  /** l-index */
   l: number;
+  /** m-index */
   m: number;
+  /** C[l][m] value */
   clm: number;
+  /** S[l][m] value */
   slm: number;
 }
 
+/** Normalized EGM96 coefficients. */
 const EGM_96_NORMALIZED = [
   [2, 0, -0.000484165371736, 0],
   [2, 1, -1.86987635955e-10, 1.19528012031e-9],
@@ -2563,6 +2568,7 @@ const EGM_96_NORMALIZED = [
   [70, 70, -4.70375138826e-10, -6.48306137833e-10]
 ];
 
+/** Denormalized EGM96 coefficients. */
 export const EGM_96_DENORMALIZED = (() => {
   const output: Egm96Data[] = [];
   for (const coeffs of EGM_96_NORMALIZED) {
