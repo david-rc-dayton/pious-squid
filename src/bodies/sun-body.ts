@@ -8,12 +8,16 @@ export class SunBody {
   /** Moon gravitational parameter, in km^3/s^2. */
   public static readonly MU = 132712440017.987;
 
+  /** Solar flux, in W/m^2 */
   public static readonly SOLAR_FLUX = 1353;
 
+  /** Solar Radiation Pressure, in N/m^2. */
   public static readonly SOLAR_PRESSURE = SunBody.SOLAR_FLUX / SPEED_OF_LIGHT;
 
+  /** Solar umbra angle, in radians. */
   public static readonly UMBRA_ANGLE = 0.26411888 * DEG2RAD;
 
+  /** Solar penumbra angle, in radians. */
   public static readonly PENUMBRA_ANGLE = 0.26900424 * DEG2RAD;
 
   /**
@@ -41,6 +45,11 @@ export class SunBody {
     return new Vector3D(rI, rJ, rK).scale(ASTRONOMICAL_UNIT);
   }
 
+  /**
+   * Return true if argument state is in eclipse.
+   *
+   * @param j2kState J2000 state vector
+   */
   public static shadow(j2kState: J2000) {
     const { epoch, position: posSat } = j2kState;
     const posSun = SunBody.position(epoch);

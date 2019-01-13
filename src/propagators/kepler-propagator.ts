@@ -6,7 +6,7 @@ import { IPropagator } from "./propagator-interface";
 import { EpochUTC } from "../time/epoch-utc";
 
 /** Satellite ephemeris propagator, using Kepler's method. */
-export class Kepler implements IPropagator {
+export class KeplerPropagator implements IPropagator {
   /** Cache for last computed statellite state. */
   public state: J2000;
   /** Keplerian element set. */
@@ -32,7 +32,7 @@ export class Kepler implements IPropagator {
    * Restore cached state to initial propagator state. Doesn't really do much
    * for the Kepler propagator, since it doesn't rely on transient states.
    */
-  public reset(): Kepler {
+  public reset(): KeplerPropagator {
     this.state = this.elements.toJ2000();
     return this;
   }

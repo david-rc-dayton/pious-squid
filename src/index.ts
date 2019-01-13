@@ -34,11 +34,11 @@ export const math = {
 };
 
 // propagators
-import { Kepler } from "./propagators/kepler";
-import { RungeKutta4 } from "./propagators/runge-kutta-4";
+import { KeplerPropagator } from "./propagators/kepler-propagator";
+import { RungeKutta4Propagator } from "./propagators/runge-kutta-4-propagator";
 export const propagators = {
-  Kepler: Kepler,
-  RungeKutta4: RungeKutta4
+  Kepler: KeplerPropagator,
+  RungeKutta4: RungeKutta4Propagator
 };
 
 // time

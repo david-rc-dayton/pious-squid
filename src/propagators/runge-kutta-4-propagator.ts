@@ -6,7 +6,7 @@ import { EpochUTC } from "../time/epoch-utc";
 import { IPropagator } from "./propagator-interface";
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
-export class RungeKutta4 implements IPropagator {
+export class RungeKutta4Propagator implements IPropagator {
   public readonly forceModel: ForceModel;
   private readonly initState: J2000;
   private cacheState: J2000;

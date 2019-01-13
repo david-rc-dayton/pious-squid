@@ -15,7 +15,7 @@
     "clean-bundle": "npm run clean-build && npm run bundle",
     "clean": "rimraf dist bundle pious-squid-*.tgz",
     "prepack": "npm run clean-bundle",
-    "test": "mocha ./dist/test/**/*.js",
+    "test": "mocha ./test/**/*.js",
     "watch": "tsc --watch"
   },
   "keywords": [
