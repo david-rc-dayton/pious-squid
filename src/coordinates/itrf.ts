@@ -27,6 +27,7 @@ export class ITRF {
     this.velocity = velocity || Vector3D.origin();
   }
 
+  /** Convert this to a J2000 state vector object. */
   public toJ2000() {
     const { epoch, position, velocity } = this;
     const finals = DataHandler.getFinalsData(epoch.toMjd());

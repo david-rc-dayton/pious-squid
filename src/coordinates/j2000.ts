@@ -41,6 +41,7 @@ export class J2000 {
     return output.join("\n");
   }
 
+  /** Calculate this orbit's mechanical energy, in km^2/s^2 */
   private mechanicalEnergy() {
     const r = this.position.magnitude();
     const v = this.velocity.magnitude();
@@ -75,6 +76,7 @@ export class J2000 {
     return new ClassicalElements(epoch, a, e, i, o, w, v);
   }
 
+  /** Convert this to a ITRF state vector object. */
   public toITRF() {
     const { epoch, position, velocity } = this;
     const prec = EarthBody.precession(epoch);
@@ -105,6 +107,11 @@ export class J2000 {
     return new ITRF(epoch, rITRF, vITRF);
   }
 
+  /**
+   * Convert this to a RIC relative motion object.
+   *
+   * @param reference target state for reference frame
+   */
   public toRIC(reference: J2000) {
     const ru = this.position.normalized();
     const cu = this.position.cross(this.velocity).normalized();

@@ -30,8 +30,6 @@
   "author": "David RC Dayton",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^4.2.0",
-    "mocha": "^5.2.0",
     "rimraf": "^2.6.3",
     "typescript": "^3.2.2",
     "uglifyjs-webpack-plugin": "^2.1.1",

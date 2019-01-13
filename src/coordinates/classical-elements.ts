@@ -82,6 +82,7 @@ export class ClassicalElements {
     return this.meanMotion() * (86400 / TWO_PI);
   }
 
+  /** Convert this to a J2000 state vector object. */
   public toJ2000() {
     const { epoch, a, e, i, o, w, v } = this;
     const { cos, sin, sqrt } = Math;

@@ -1,4 +1,3 @@
-import { EarthBody } from "../bodies/earth-body";
 import { RAD2DEG } from "../math/constants";
 
 /** Class representing Geodetic (LLA) coordinates. */
@@ -21,13 +20,6 @@ export class Geodetic {
     this.latitude = latitude;
     this.longitude = longitude;
     this.altitude = altitude;
-  }
-
-  /** Geocentric latitude of the object. */
-  public geocentricLatitude(): number {
-    return Math.atan(
-      (1 - EarthBody.ECCENTRICITY_SQUARED) * Math.tan(this.latitude)
-    );
   }
 
   /** Return a string representation of the object. */
