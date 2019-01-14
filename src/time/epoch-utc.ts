@@ -15,6 +15,11 @@ export class EpochUTC extends AbstractEpoch {
     super(millis);
   }
 
+  /**
+   * Create a new EpochUTC object from a valid JavaScript Date string.
+   *
+   * @param dateStr
+   */
   public static fromDateString(dateStr: string) {
     return new EpochUTC(new Date(dateStr).getTime());
   }
@@ -33,28 +38,34 @@ export class EpochUTC extends AbstractEpoch {
     return new EpochUTC((this.unix + seconds) * 1000);
   }
 
+  /** Convert to UNSO Modified Julian Date. */
   public toMjd() {
     return this.toJulianDate() - 2400000.5;
   }
 
+  /** Convert to GSFC Modified Julian Date. */
   public toMjdGsfc() {
     return this.toJulianDate() - 2400000.5 - 29999.5;
   }
 
+  /** Convert to a UT1 Epoch. */
   public toUT1() {
     const { dut1 } = DataHandler.getFinalsData(this.toMjd());
     return new EpochUT1((this.unix + dut1) * 1000);
   }
 
+  /** Convert to an International Atomic Time (TAI) Epoch. */
   public toTAI() {
     const ls = DataHandler.leapSecondsOffset(this.toJulianDate());
     return new EpochTAI((this.unix + ls) * 1000);
   }
 
+  /** Convert to a Terrestrial Time (TT) Epoch. */
   public toTT() {
     return new EpochTT((this.toTAI().unix + 32.184) * 1000);
   }
 
+  /** Convert to a Barycentric Dynamical Time (TDB) Epoch. */
   public toTDB() {
     const tt = this.toTT();
     const tTT = tt.toJulianCenturies();
@@ -64,6 +75,10 @@ export class EpochUTC extends AbstractEpoch {
     return new EpochTDB((tt.unix + seconds) * 1000);
   }
 
+  /**
+   * Calculate the Greenwich Mean Sideral Time (GMST) angle for this epoch,
+   * in radians.
+   */
   public gmstAngle() {
     const t = this.toUT1().toJulianCenturies();
     const seconds = evalPoly(t, [
