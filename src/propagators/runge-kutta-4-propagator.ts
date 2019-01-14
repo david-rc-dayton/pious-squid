@@ -7,11 +7,20 @@ import { IPropagator } from "./propagator-interface";
 
 /** 4th order Runge-Kutta numerical integrator for satellite propagation. */
 export class RungeKutta4Propagator implements IPropagator {
+  /** force model */
   public readonly forceModel: ForceModel;
+  /** initial state */
   private readonly initState: J2000;
+  /** cached state */
   private cacheState: J2000;
+  /** step size (seconds) */
   private stepSize: number;
 
+  /**
+   * Create a new RungeKutta4 propagator object.
+   *
+   * @param elements J2000 state vector
+   */
   constructor(state: J2000) {
     this.initState = state;
     this.cacheState = this.initState;
@@ -20,18 +29,34 @@ export class RungeKutta4Propagator implements IPropagator {
     this.forceModel.setEarthGravity(0, 0);
   }
 
+  /** Fetch last propagated satellite state. */
   get state() {
     return this.cacheState;
   }
 
+  /**
+   * Set the integration step size.
+   *
+   * Smaller is slower, but more accurate.
+   *
+   * @param seconds step size (seconds)
+   */
   public setStepSize(seconds: number) {
     this.stepSize = Math.abs(seconds);
   }
 
+  /** Reset cached state to the initialized state. */
   public reset() {
     this.cacheState = this.initState;
   }
 
+  /**
+   * Calculate partial derivatives for integrations.
+   *
+   * @param j2kState J2000 state vector
+   * @param hArg step size argument
+   * @param kArg derivative argument
+   */
   private kFn(j2kState: J2000, hArg: number, kArg: Vector6D) {
     const epoch = j2kState.epoch.roll(hArg);
     const posvel = j2kState.position.join(j2kState.velocity);
@@ -40,6 +65,12 @@ export class RungeKutta4Propagator implements IPropagator {
     return this.forceModel.derivative(sample);
   }
 
+  /**
+   * Calculate a future state by integrating velocity and acceleration.
+   *
+   * @param j2kState J2000 state vector
+   * @param step step size (seconds)
+   */
   private integrate(j2kState: J2000, step: number) {
     const k1 = this.kFn(j2kState, 0, Vector6D.origin()).scale(step);
     const k2 = this.kFn(j2kState, step / 2, k1.scale(1 / 2)).scale(step);
@@ -55,6 +86,11 @@ export class RungeKutta4Propagator implements IPropagator {
     return new J2000(tNext, position, velocity);
   }
 
+  /**
+   * Integrate cached state to a new epoch.
+   *
+   * @param newEpoch propagation epoch
+   */
   public propagate(newEpoch: EpochUTC) {
     while (!this.cacheState.epoch.equals(newEpoch)) {
       const delta = newEpoch.difference(this.cacheState.epoch);
