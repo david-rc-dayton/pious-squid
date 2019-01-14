@@ -3,15 +3,29 @@ import { SunBody } from "../bodies/sun-body";
 import { J2000 } from "../coordinates/j2000";
 import { AccelerationForce, AccelerationMap } from "./forces-interface";
 
+/** Model of third-body gravity, for use in a ForceModel object. */
 export class ThirdBody implements AccelerationForce {
+  /** model Moon gravity, if true */
   private moonGravityFlag: boolean;
+  /** model Sun gravity, if true */
   private sunGravityFlag: boolean;
 
+  /**
+   * Create a new ThirdBody object.
+   *
+   * @param moonGravityFlag model Moon gravity, if true
+   * @param sunGravityFlag model Sun gravity, if true
+   */
   constructor(moonGravityFlag: boolean, sunGravityFlag: boolean) {
     this.moonGravityFlag = moonGravityFlag;
     this.sunGravityFlag = sunGravityFlag;
   }
 
+  /**
+   * Calculate acceleration due to the Moon's gravity.
+   *
+   * @param j2kState J2000 state vector
+   */
   private moonGravity(j2kState: J2000) {
     const rMoon = MoonBody.position(j2kState.epoch);
     const aNum = rMoon.changeOrigin(j2kState.position);
@@ -22,6 +36,11 @@ export class ThirdBody implements AccelerationForce {
     return grav.scale(MoonBody.MU);
   }
 
+  /**
+   * Calculate acceleration due to the Sun's gravity.
+   *
+   * @param j2kState J2000 state vector
+   */
   private sunGravity(j2kState: J2000) {
     const rSun = SunBody.position(j2kState.epoch);
     const aNum = rSun.changeOrigin(j2kState.position);
@@ -32,6 +51,13 @@ export class ThirdBody implements AccelerationForce {
     return grav.scale(SunBody.MU);
   }
 
+  /**
+   * Update the acceleration map argument with calculated "moon_gravity" and
+   * "sun_gravity" values, for the provided state vector.
+   *
+   * @param j2kState J2000 state vector
+   * @param accMap acceleration map (km/s^2)
+   */
   public acceleration(j2kState: J2000, accMap: AccelerationMap) {
     if (this.moonGravityFlag) {
       accMap["moon_gravity"] = this.moonGravity(j2kState);

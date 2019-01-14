@@ -7,12 +7,18 @@ import { AccelerationMap } from "./forces-interface";
 import { Vector3D } from "../math/vector-3d";
 import { Vector6D } from "../math/vector-6d";
 
+/** Object for efficiently managing acceleration forces on a spacecraft. */
 export class ForceModel {
+  /** Earth gravity model, if applicable */
   private earthGravity: EarthGravity | null;
+  /** third-body model, if applicable */
   private thirdBody: ThirdBody | null;
+  /** atmospheric drag model, if applicable */
   private atmosphericDrag: AtmosphericDrag | null;
+  /** solar radiation pressure model, if applicable */
   private solarRadiationPressure: SolarRadiationPressure | null;
 
+  /** Create a new ForceModel object. */
   constructor() {
     this.earthGravity = null;
     this.thirdBody = null;
@@ -20,6 +26,7 @@ export class ForceModel {
     this.solarRadiationPressure = null;
   }
 
+  /** Clear all current AccelerationForce models for this object. */
   public clearModel() {
     this.earthGravity = null;
     this.thirdBody = null;
@@ -27,22 +34,48 @@ export class ForceModel {
     this.solarRadiationPressure = null;
   }
 
+  /**
+   * Create and add a new EarthGravity force to this object.
+   *
+   * @param degree geopotential degree (max=70)
+   * @param order geopotential order (max=70)
+   */
   public setEarthGravity(degree: number, order: number) {
     this.earthGravity = new EarthGravity(degree, order);
   }
 
+  /**
+   * Create and add a new ThirdBody force to this object.
+   *
+   * @param moon moon gravity, if true
+   * @param sun sun gravity, if true
+   */
   public setThirdBody(moon: boolean, sun: boolean) {
     this.thirdBody = new ThirdBody(moon, sun);
   }
 
-  public setAtmosphericDrag(mass: number, area: number, dragCoeff: number) {
+  /**
+   * Create and add a new AtmosphericDrag force to this object.
+   *
+   * @param mass spacecraft mass, in kilograms
+   * @param area spacecraft area, in square meters
+   * @param dragCoeff drag coefficient (default=2.2)
+   */
+  public setAtmosphericDrag(mass: number, area: number, dragCoeff = 2.2) {
     this.atmosphericDrag = new AtmosphericDrag(mass, area, dragCoeff);
   }
 
+  /**
+   * Create and add a new SolarRadiationPressure force to this object.
+   *
+   * @param mass spacecraft mass, in kilograms
+   * @param area spacecraft area, in square meters
+   * @param reflectCoeff reflectivity coefficient (default=1.2)
+   */
   public setSolarRadiationPressure(
     mass: number,
     area: number,
-    reflectCoeff: number
+    reflectCoeff = 1.2
   ) {
     this.solarRadiationPressure = new SolarRadiationPressure(
       mass,
@@ -51,6 +84,12 @@ export class ForceModel {
     );
   }
 
+  /**
+   * Create an acceleration map argument with calculated values for each
+   * acceleration source, for the provided state vector.
+   *
+   * @param j2kState J2000 state vector
+   */
   public accelerations(j2kState: J2000) {
     const accMap: AccelerationMap = {};
     if (this.earthGravity !== null) {
@@ -68,6 +107,12 @@ export class ForceModel {
     return accMap;
   }
 
+  /**
+   * Calculate and return the 6-dimensional derivative (velocity, acceleration)
+   * for the provided state vector.
+   *
+   * @param j2kState J2000 state vector
+   */
   public derivative(j2kState: J2000) {
     const accMap = this.accelerations(j2kState);
     let accel = Vector3D.origin();

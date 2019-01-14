@@ -6,12 +6,23 @@ import { SphericalHarmonics } from "../math/spherical-harmonics";
 import { Vector3D } from "../math/vector-3d";
 import { AccelerationForce, AccelerationMap } from "./forces-interface";
 
+/** Model of Earth gravity, for use in a ForceModel object. */
 export class EarthGravity implements AccelerationForce {
+  /** model aspherical gravity, if true. */
   private earthAsphericalFlag: boolean;
+  /** geopotential degree (max=70) */
   private degree: number;
+  /** geopotential order (max=70) */
   private order: number;
+  /** spherical harmonics manager */
   private harmonics: SphericalHarmonics;
 
+  /**
+   * Create a new EarthGravity object.
+   *
+   * @param degree geopotential degree (max=70)
+   * @param order geopotential order (max=70)
+   */
   constructor(degree: number, order: number) {
     this.earthAsphericalFlag = degree >= 2;
     this.degree = degree;
@@ -19,17 +30,37 @@ export class EarthGravity implements AccelerationForce {
     this.harmonics = new SphericalHarmonics(degree);
   }
 
+  /**
+   * Calculate a cache of recurring values for the geopotential model:
+   *
+   *     [
+   *       sin(m * lambda),
+   *       cos(m * lambda),
+   *       tan(phi)
+   *     ]
+   *
+   * @param m m-index
+   * @param lambda longitude, in radians
+   * @param phi geocentric latitude, in radians
+   */
   private recurExp(
     m: number,
-    lam: number,
+    lambda: number,
     phi: number
   ): [number, number, number] {
-    var smLam = Math.sin(m * lam);
-    var cmLam = Math.cos(m * lam);
+    var smLam = Math.sin(m * lambda);
+    var cmLam = Math.cos(m * lambda);
     var mtPhi = m * Math.tan(phi);
     return [smLam, cmLam, mtPhi];
   }
 
+  /**
+   * Calculate R, Phi, and Lambda acceleration derivatives.
+   *
+   * @param phi geocentric latitude, in radians
+   * @param lambda longitude, in radians
+   * @param r radius (km)
+   */
   private calcGradient(
     phi: number,
     lambda: number,
@@ -69,12 +100,22 @@ export class EarthGravity implements AccelerationForce {
     return [dR, dPhi, dLambda];
   }
 
+  /**
+   * Calculate acceleration due to Earth's gravity, assuming a spherical Earth.
+   *
+   * @param j2kState J2000 state vector
+   */
   private earthSpherical(j2kState: J2000) {
     const { position } = j2kState;
     const rMag = position.magnitude();
     return position.scale(-EarthBody.MU / (rMag * rMag * rMag));
   }
 
+  /**
+   * Calculate the aspherical components of acceleration due to Earth's gravity.
+   *
+   * @param j2kState J2000 state vector
+   */
   private earthAspherical(j2kState: J2000) {
     const itrf = j2kState.toITRF();
     const { x: ri, y: rj, z: rk } = itrf.position;
@@ -96,6 +137,13 @@ export class EarthGravity implements AccelerationForce {
     return accVec.toJ2000().position;
   }
 
+  /**
+   * Update the acceleration map argument with a calculated "earth_gravity"
+   * value, for the provided state vector.
+   *
+   * @param j2kState J2000 state vector
+   * @param accMap acceleration map (km/s^2)
+   */
   public acceleration(j2kState: J2000, accMap: AccelerationMap) {
     accMap["earth_gravity"] = this.earthSpherical(j2kState);
     if (this.earthAsphericalFlag) {
