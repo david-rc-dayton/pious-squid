@@ -1,9 +1,9 @@
 const PiousSquid = require("..");
-const J2000 = PiousSquid.coordinates.J2000;
-const EpochUTC = PiousSquid.time.EpochUTC;
-const Vector3D = PiousSquid.math.Vector3D;
-const RungeKutta4 = PiousSquid.propagators.RungeKutta4;
-const Kepler = PiousSquid.propagators.Kepler;
+const J2000 = PiousSquid.J2000;
+const EpochUTC = PiousSquid.EpochUTC;
+const Vector3D = PiousSquid.Vector3D;
+const RungeKutta4 = PiousSquid.RungeKutta4Propagator;
+const Kepler = PiousSquid.KeplerPropagator;
 
 //==============================================================================
 // define an initial state

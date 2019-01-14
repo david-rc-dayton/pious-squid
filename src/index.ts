@@ -1,48 +1,25 @@
 // bodies
-import { MoonBody } from "./bodies/moon-body";
-import { SunBody } from "./bodies/sun-body";
-export const bodies = {
-  MoonBody: MoonBody,
-  SunBody: SunBody
-};
+export { MoonBody } from "./bodies/moon-body";
+export { SunBody } from "./bodies/sun-body";
 
 // constructs
 // (nothing yet...)
 
 // coordinates
-import { ClassicalElements } from "./coordinates/classical-elements";
-import { Geodetic } from "./coordinates/geodetic";
-import { ITRF } from "./coordinates/itrf";
-import { J2000 } from "./coordinates/j2000";
-export const coordinates = {
-  ClassicalElements: ClassicalElements,
-  Geodetic: Geodetic,
-  ITRF: ITRF,
-  J2000: J2000
-};
+export { ClassicalElements } from "./coordinates/classical-elements";
+export { Geodetic } from "./coordinates/geodetic";
+export { ITRF } from "./coordinates/itrf";
+export { J2000 } from "./coordinates/j2000";
 
 // data
-import { DataHandler } from "./data/data-handler";
-export const data = {
-  DataHandler: DataHandler
-};
+export { DataHandler } from "./data/data-handler";
 
 // math
-import { Vector3D } from "./math/vector-3d";
-export const math = {
-  Vector3D: Vector3D
-};
+export { Vector3D } from "./math/vector-3d";
 
 // propagators
-import { KeplerPropagator } from "./propagators/kepler-propagator";
-import { RungeKutta4Propagator } from "./propagators/runge-kutta-4-propagator";
-export const propagators = {
-  Kepler: KeplerPropagator,
-  RungeKutta4: RungeKutta4Propagator
-};
+export { KeplerPropagator } from "./propagators/kepler-propagator";
+export { RungeKutta4Propagator } from "./propagators/runge-kutta-4-propagator";
 
 // time
-import { EpochUTC } from "./time/epoch-utc";
-export const time = {
-  EpochUTC: EpochUTC
-};
+export { EpochUTC } from "./time/epoch-utc";
