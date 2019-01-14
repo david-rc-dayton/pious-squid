@@ -1,7 +1,7 @@
 import { EarthBody } from "../bodies/earth-body";
 import { RAD2DEG, TWO_PI } from "../math/constants";
-import { EpochUTC } from "../time/epoch-utc";
 import { Vector3D } from "../math/vector-3d";
+import { EpochUTC } from "../time/epoch-utc";
 import { J2000 } from "./j2000";
 
 /** Class representing Keplerian orbital elements. */

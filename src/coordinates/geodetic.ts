@@ -1,4 +1,8 @@
+import { EarthBody } from "../bodies/earth-body";
 import { RAD2DEG } from "../math/constants";
+import { Vector3D } from "../math/vector-3d";
+import { EpochUTC } from "../time/epoch-utc";
+import { ITRF } from "./itrf";
 
 /** Class representing Geodetic (LLA) coordinates. */
 export class Geodetic {
@@ -32,5 +36,18 @@ export class Geodetic {
       `  Altitude:  ${altitude.toFixed(3)} km`
     ];
     return output.join("\n");
+  }
+
+  public toITRF(epoch: EpochUTC) {
+    const { latitude, longitude, altitude } = this;
+    const sLat = Math.sin(latitude);
+    const cLat = Math.cos(latitude);
+    const nVal =
+      EarthBody.RADIUS_EQUATOR /
+      Math.sqrt(1 - EarthBody.ECCENTRICITY_SQUARED * sLat * sLat);
+    const rx = (nVal + altitude) * cLat * Math.cos(longitude);
+    const ry = (nVal + altitude) * cLat * Math.sin(longitude);
+    const rz = (nVal * (1 - EarthBody.ECCENTRICITY_SQUARED) + altitude) * sLat;
+    return new ITRF(epoch, new Vector3D(rx, ry, rz));
   }
 }

@@ -1,7 +1,7 @@
-import { EpochUTC } from "../time/epoch-utc";
-import { Vector3D } from "../math/vector-3d";
 import { EarthBody } from "../bodies/earth-body";
 import { DEG2RAD } from "../math/constants";
+import { Vector3D } from "../math/vector-3d";
+import { EpochUTC } from "../time/epoch-utc";
 
 export class MoonBody {
   /** Moon gravitational parameter, in km^3/s^2. */

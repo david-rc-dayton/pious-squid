@@ -1,11 +1,11 @@
-import { EarthGravity } from "./earth-gravity";
-import { ThirdBody } from "./third-body";
-import { AtmosphericDrag } from "./atmospheric-drag";
-import { SolarRadiationPressure } from "./solar-radiation-pressure";
 import { J2000 } from "../coordinates/j2000";
-import { AccelerationMap } from "./forces-interface";
 import { Vector3D } from "../math/vector-3d";
 import { Vector6D } from "../math/vector-6d";
+import { AtmosphericDrag } from "./atmospheric-drag";
+import { EarthGravity } from "./earth-gravity";
+import { AccelerationMap } from "./forces-interface";
+import { SolarRadiationPressure } from "./solar-radiation-pressure";
+import { ThirdBody } from "./third-body";
 
 /** Object for efficiently managing acceleration forces on a spacecraft. */
 export class ForceModel {

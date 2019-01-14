@@ -72,9 +72,7 @@ export class Vector6D {
     return new Vector6D(a * n, b * n, c * n, x * n, y * n, z * n);
   }
 
-  /**
-   * Split this into two Vector3D objects.
-   */
+  /** Split this into two Vector3D objects. */
   public split(): [Vector3D, Vector3D] {
     const { a, b, c, x, y, z } = this;
     return [new Vector3D(a, b, c), new Vector3D(x, y, z)];

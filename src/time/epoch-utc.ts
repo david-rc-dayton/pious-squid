@@ -1,8 +1,8 @@
-import { AbstractEpoch } from "./abstract-epoch";
-import { EpochUT1, EpochTAI, EpochTT, EpochTDB } from "./time-scales";
 import { DataHandler } from "../data/data-handler";
 import { DEG2RAD, TWO_PI } from "../math/constants";
 import { evalPoly } from "../math/operations";
+import { AbstractEpoch } from "./abstract-epoch";
+import { EpochTAI, EpochTDB, EpochTT, EpochUT1 } from "./time-scales";
 
 /** Class representing a UTC astrodynamic epoch. */
 export class EpochUTC extends AbstractEpoch {

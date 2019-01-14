@@ -1,9 +1,9 @@
-import { TWO_PI } from "../math/constants";
-import { J2000 } from "../coordinates/j2000";
 import { ClassicalElements } from "../coordinates/classical-elements";
+import { J2000 } from "../coordinates/j2000";
+import { TWO_PI } from "../math/constants";
 import { matchHalfPlane } from "../math/operations";
-import { IPropagator } from "./propagator-interface";
 import { EpochUTC } from "../time/epoch-utc";
+import { IPropagator } from "./propagator-interface";
 
 /** Satellite ephemeris propagator, using Kepler's method. */
 export class KeplerPropagator implements IPropagator {

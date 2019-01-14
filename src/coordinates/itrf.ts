@@ -4,6 +4,7 @@ import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
 import { Geodetic } from "./geodetic";
 import { J2000 } from "./j2000";
+import { LookAngle } from "./look-angle";
 
 /** Class representing ITRF Earth-Fixed coordinates. */
 export class ITRF {
@@ -79,5 +80,26 @@ export class ITRF {
     }
     var alt = r / Math.cos(lat) - sma * c;
     return new Geodetic(lat, lon, alt);
+  }
+
+  public toLookAngle(observer: Geodetic) {
+    const { latitude, longitude } = observer;
+    const { sin, cos } = Math;
+    const { x: oX, y: oY, z: oZ } = observer.toITRF(this.epoch).position;
+    const { x: tX, y: tY, z: tZ } = this.position;
+    const [rX, rY, rZ] = [tX - oX, tY - oY, tZ - oZ];
+    const s =
+      sin(latitude) * cos(longitude) * rX +
+      sin(latitude) * sin(longitude) * rY -
+      cos(latitude) * rZ;
+    const e = -sin(longitude) * rX + cos(longitude) * rY;
+    const z =
+      cos(latitude) * cos(longitude) * rX +
+      cos(latitude) * sin(longitude) * rY +
+      sin(latitude) * rZ;
+    const range = Math.sqrt(s * s + e * e + z * z);
+    const elevation = Math.asin(z / range);
+    const azimuth = Math.atan2(-e, s) + Math.PI;
+    return new LookAngle(azimuth, elevation, range);
   }
 }
