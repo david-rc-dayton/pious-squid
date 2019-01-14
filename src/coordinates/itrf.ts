@@ -60,6 +60,7 @@ export class ITRF {
     return new J2000(epoch, rJ2000, vJ2000);
   }
 
+  /** Convert to a Geodetic coordinate object. */
   public toGeodetic() {
     const {
       position: { x, y, z }

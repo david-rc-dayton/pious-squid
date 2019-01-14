@@ -79,6 +79,12 @@ export function linearInterpolate(
   return (y0 * (x1 - x) + y1 * (x - x0)) / (x1 - x0);
 }
 
+/**
+ * Copy the sign of one number, to the magnitude of another.
+ *
+ * @param magnitude
+ * @param sign
+ */
 export function copySign(magnitude: number, sign: number) {
   const m = Math.abs(magnitude);
   const s = sign >= 0 ? 1 : -1;

@@ -74,7 +74,7 @@ export class Vector3D {
    *
    * Returns a new Vector object containing the scaled state.
    *
-   * @param n a scalar value
+   * @param n scalar value
    */
   public scale(n: number): Vector3D {
     const { x, y, z } = this;
@@ -189,9 +189,38 @@ export class Vector3D {
     return this.add(delta);
   }
 
+  /**
+   * Join this and another Vector3D object into a single Vector6D object.
+   *
+   * @param v other vector
+   */
   public join(v: Vector3D) {
     const { x: a, y: b, z: c } = this;
     const { x, y, z } = v;
     return new Vector6D(a, b, c, x, y, z);
+  }
+
+  /**
+   * Determine line of sight between two vectors and the radius of a central
+   * object. Returns true if line-of-sight exists.
+   *
+   * @param v other vector
+   * @param radius central body radius
+   */
+  public sight(v: Vector3D, radius: number) {
+    const r1Mag2 = Math.pow(this.magnitude(), 2);
+    const r2Mag2 = Math.pow(v.magnitude(), 2);
+    const rDot = this.dot(v);
+    let los = false;
+    const tMin = (r1Mag2 - rDot) / (r1Mag2 + r2Mag2 - 2 * rDot);
+    if (tMin < 0 || tMin > 1) {
+      los = true;
+    } else {
+      const c = (1 - tMin) * r1Mag2 + rDot * tMin;
+      if (c >= radius * radius) {
+        los = true;
+      }
+    }
+    return los;
   }
 }

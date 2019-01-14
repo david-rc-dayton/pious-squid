@@ -16,10 +16,11 @@ export const ASEC2RAD = (1 / 60 / 60) * DEG2RAD;
 /** Astronomical Unit, in kilometers. */
 export const ASTRONOMICAL_UNIT = 149597870.0;
 
-/**  Unit for converting seconds to days. */
+/** Unit for converting seconds to days. */
 export const SEC2DAY = 1 / 60 / 60 / 24;
 
-/**  Unit for converting seconds to degrees. */
+/** Unit for converting seconds to degrees. */
 export const SEC2DEG = 1 / 60 / 60;
 
-export const SPEED_OF_LIGHT = 299792458.0;
+/** Speed of light, in km/s. */
+export const SPEED_OF_LIGHT = 299792458;

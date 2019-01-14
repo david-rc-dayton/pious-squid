@@ -5,9 +5,13 @@ import { EXPONENTIAL_ATMOSPHERE } from "./values/exponential-atmosphere";
 import { LEAP_SECONDS } from "./values/leap-seconds";
 
 interface FinalsData {
+  /** USNO modified julaian date */
   mjd: number;
+  /** polar motion x-component */
   pmX: number;
+  /** polar motion y-component */
   pmY: number;
+  /** delta ut1 time (seconds) */
   dut1: number;
 }
 

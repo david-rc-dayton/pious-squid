@@ -1,16 +1,31 @@
+/** Class for handling spherical harmonics operations. */
 export class SphericalHarmonics {
+  /** dimension */
   private d: number;
+  /** associated legendre polynomial table */
   private P: number[][];
 
+  /**
+   * Create a new SphericalHarmonics object.
+   *
+   * @param dimension degree
+   */
   constructor(dimension: number) {
     this.d = dimension;
     this.P = [];
   }
 
+  /**
+   * Fetch the associated legendre polynomial from the provided index.
+   *
+   * @param l l-index
+   * @param m m-index
+   */
   public getP(l: number, m: number) {
     return this.P[l][m] || 0;
   }
 
+  /** Reset the polynomial table to zeroes. */
   private clearTable() {
     this.P = [];
     for (let l = 0; l <= this.d; l++) {
@@ -22,6 +37,11 @@ export class SphericalHarmonics {
     }
   }
 
+  /**
+   * Build a cache of associated Legendre polynomials.
+   *
+   * @param phi geocentric latitude
+   */
   public buildCache(phi: number) {
     this.clearTable();
     const { d, P } = this;
