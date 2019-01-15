@@ -1,11 +1,9 @@
 .gitignore
+.rts2_cache_*/
 .vscode/
-bundle/
 dist/test
 examples/
 scratchpad.js
 src/
 test/
 tsconfig.json
-webpack.config.js
-dist/**/*.js.map
