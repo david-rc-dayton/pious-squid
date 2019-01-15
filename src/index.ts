@@ -1,7 +1,7 @@
 // bodies
+export { EarthBody } from "./bodies/earth-body";
 export { MoonBody } from "./bodies/moon-body";
 export { SunBody } from "./bodies/sun-body";
-export { EarthBody } from "./bodies/earth-body";
 // coordinates
 export { ClassicalElements } from "./coordinates/classical-elements";
 export { Geodetic } from "./coordinates/geodetic";

@@ -1,10 +1,10 @@
 import * as assert from "assert";
 import {
-  RungeKutta4Propagator,
-  J2000,
-  Vector3D,
   EpochUTC,
-  KeplerPropagator
+  J2000,
+  KeplerPropagator,
+  RungeKutta4Propagator,
+  Vector3D
 } from "../index";
 
 const state = new J2000(

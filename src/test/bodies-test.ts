@@ -1,12 +1,12 @@
 import * as assert from "assert";
 import {
-  J2000,
+  EarthBody,
   EpochUTC,
+  J2000,
   MoonBody,
-  SunBody,
-  Vector3D,
   RungeKutta4Propagator,
-  EarthBody
+  SunBody,
+  Vector3D
 } from "../index";
 
 const epoch = EpochUTC.fromDateString("2018-12-21T00:00:00.000Z");
@@ -58,7 +58,7 @@ describe("SunBody", () => {
 
   describe("shadow", () => {
     rk4Prop.reset();
-    rk4Prop.setStepSize(10);
+    rk4Prop.setStepSize(30);
     rk4Prop.forceModel.clearModel();
     rk4Prop.forceModel.setEarthGravity(0, 0);
     let propEpoch = epoch;

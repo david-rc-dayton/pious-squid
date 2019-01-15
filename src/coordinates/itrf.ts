@@ -28,6 +28,18 @@ export class ITRF {
     this.velocity = velocity || Vector3D.origin();
   }
 
+  /** Return a string representation of this object. */
+  public toString(): string {
+    const { epoch, position, velocity } = this;
+    const output = [
+      "[ITRF]",
+      `  Epoch:  ${epoch.toString()}`,
+      `  Position:  ${position.toString()} km`,
+      `  Velocity:  ${velocity.toString()} km/s`
+    ];
+    return output.join("\n");
+  }
+
   /** Convert this to a J2000 state vector object. */
   public toJ2000() {
     const { epoch, position, velocity } = this;

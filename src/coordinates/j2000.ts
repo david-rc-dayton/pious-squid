@@ -29,7 +29,7 @@ export class J2000 {
     this.velocity = velocity || Vector3D.origin();
   }
 
-  /** Return a string representation of the object. */
+  /** Return a string representation of this object. */
   public toString(): string {
     const { epoch, position, velocity } = this;
     const output = [
