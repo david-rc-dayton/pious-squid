@@ -37,6 +37,16 @@ export class DataHandler {
   }
 
   /**
+   * Add a new entry to the leap seconds table.
+   *
+   * @param jd julian date
+   * @param offset leap seconds offset, in seconds
+   */
+  public static addLeapSecond(jd: number, offset: number) {
+    LEAP_SECONDS.push([jd, offset]);
+  }
+
+  /**
    * Get finals data. Currently returns all values as zero.
    *
    * @param mjd USNO modified julian date

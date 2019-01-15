@@ -12,7 +12,7 @@ export interface Egm96Data {
 }
 
 /** Normalized EGM96 coefficients. */
-const EGM_96_NORMALIZED = [
+const EGM_96_NORMALIZED: [number, number, number, number][] = [
   [2, 0, -0.000484165371736, 0],
   [2, 1, -1.86987635955e-10, 1.19528012031e-9],
   [2, 2, 2.43914352398e-6, -1.40016683654e-6],

@@ -1,5 +1,18 @@
+/**a1, a2, a3, a4, a5, Ai, Bi, Ci, Di */
+export type Iau1980Data = [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number
+];
+
 /** IAU1980 coefficients. */
-export const IAU_1980 = [
+export const IAU_1980: Iau1980Data[] = [
   [0, 0, 0, 0, 1, -171996, -174.2, 92025, 8.9],
   [0, 0, 2, -2, 2, -13187, -1.6, 5736, -3.1],
   [0, 0, 2, 0, 2, -2274, -0.2, 977, -0.5],

@@ -1,5 +1,8 @@
+/** julian date, offset (seconds) */
+export type LeapSecondsData = [number, number];
+
 /** List of leap seconds by Julian Date. */
-export let LEAP_SECONDS = [
+export let LEAP_SECONDS: LeapSecondsData[] = [
   [2437300.5, 1.422818],
   [2437512.5, 1.372818],
   [2437665.5, 1.845858],
