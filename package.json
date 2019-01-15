@@ -15,7 +15,7 @@
     "clean-bundle": "npm run clean-build && npm run bundle",
     "clean": "rimraf dist bundle pious-squid-*.tgz",
     "prepack": "npm run clean-bundle",
-    "test": "mocha ./test/**/*.js",
+    "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
   },
   "keywords": [
@@ -30,10 +30,13 @@
   "author": "David RC Dayton",
   "license": "MIT",
   "devDependencies": {
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.18",
+    "mocha": "^5.2.0",
     "rimraf": "^2.6.3",
     "typescript": "^3.2.2",
     "uglifyjs-webpack-plugin": "^2.1.1",
-    "webpack": "^4.28.3",
-    "webpack-cli": "^3.2.0"
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   }
 }
