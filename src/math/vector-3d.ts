@@ -175,8 +175,7 @@ export class Vector3D {
    * @param v the other vector
    */
   public angle(v: Vector3D): number {
-    var m = this.magnitude();
-    return Math.acos(this.dot(v) / (m * m));
+    return Math.acos(this.dot(v) / (this.magnitude() * v.magnitude()));
   }
 
   /**

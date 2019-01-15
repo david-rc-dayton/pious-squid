@@ -22,7 +22,7 @@ export class EarthBody {
     EarthBody.RADIUS_EQUATOR * (1 - EarthBody.FLATTENING);
 
   /** Earth mean radius, in kilometers. */
-  public static readonly EARTH_RAD_MEAN =
+  public static readonly RADIUS_MEAN =
     (2 * EarthBody.RADIUS_EQUATOR + EarthBody.RADIUS_POLAR) / 3;
 
   /** Earth eccentricity squared. */

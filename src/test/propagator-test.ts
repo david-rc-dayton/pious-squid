@@ -21,7 +21,7 @@ const kepProp = new KeplerPropagator(state.toClassicalElements());
 describe("KeplerPropagator", () => {
   describe("two-body", () => {
     rk4Prop.reset();
-    rk4Prop.setStepSize(5);
+    rk4Prop.setStepSize(10);
     rk4Prop.forceModel.clearModel();
     rk4Prop.forceModel.setEarthGravity(0, 0);
     kepProp.reset();
@@ -36,7 +36,7 @@ describe("KeplerPropagator", () => {
 describe("RungeKutta4Propagator", () => {
   describe("high-accuracy", () => {
     rk4Prop.reset();
-    rk4Prop.setStepSize(5);
+    rk4Prop.setStepSize(10);
     rk4Prop.forceModel.clearModel();
     rk4Prop.forceModel.setEarthGravity(50, 50);
     rk4Prop.forceModel.setThirdBody(true, true);
