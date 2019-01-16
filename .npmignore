@@ -1,9 +1,10 @@
+.git
 .gitignore
-.vscode
-bundle
+.vscode/
+bundle/
 dist/test
-examples
-src
+examples/
+scratchpad.js
+src/
+test/
 tsconfig.json
-tslint.json
-webpack.config.js
