@@ -36,7 +36,11 @@ export class AtmosphericDrag implements AccelerationForce {
     const { mass, area, dragCoeff } = this;
     var density = DataHandler.getExpAtmosphericDensity(position);
     var vRel = velocity
-      .add(EarthBody.ROTATION.negate().cross(position))
+      .add(
+        EarthBody.getRotation(j2kState.epoch)
+          .negate()
+          .cross(position)
+      )
       .scale(1000);
     var fScale =
       -0.5 *

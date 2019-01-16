@@ -44,7 +44,11 @@ export class DataHandler {
    */
   public static getFinalsData(mjd: number) {
     const fmjd = Math.floor(mjd);
-    if (fmjd < FINALS[0].mjd || fmjd > FINALS[FINALS.length - 1].mjd) {
+    if (
+      FINALS.length === 0 ||
+      fmjd < FINALS[0].mjd ||
+      fmjd > FINALS[FINALS.length - 1].mjd
+    ) {
       return zeroFinal(fmjd);
     }
     let low = 0;
@@ -63,6 +67,11 @@ export class DataHandler {
     return zeroFinal(fmjd);
   }
 
+  /**
+   * Cache IERS finals.all data.
+   *
+   * @param lines list of finals.all lines
+   */
   public static setFinalsData(lines: string[]) {
     clearFinals();
     for (let line of lines) {

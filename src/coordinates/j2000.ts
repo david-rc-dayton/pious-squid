@@ -100,7 +100,11 @@ export class J2000 {
       .rot1(-epsilon);
     const ast = epoch.gmstAngle() + nut[0] * Math.cos(epsilon);
     const rPEF = rTOD.rot3(ast);
-    const vPEF = vTOD.rot3(ast).add(EarthBody.ROTATION.negate().cross(rPEF));
+    const vPEF = vTOD.rot3(ast).add(
+      EarthBody.getRotation(this.epoch)
+        .negate()
+        .cross(rPEF)
+    );
     const { pmX, pmY } = DataHandler.getFinalsData(epoch.toMjd());
     const rITRF = rPEF.rot1(-pmY).rot2(-pmX);
     const vITRF = vPEF.rot1(-pmY).rot2(-pmX);

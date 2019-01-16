@@ -52,7 +52,9 @@ export class ITRF {
     const epsilon = nut[2] + nut[1];
     const ast = epoch.gmstAngle() + nut[0] * Math.cos(epsilon);
     const rTOD = rPEF.rot3(-ast);
-    const vTOD = vPEF.add(EarthBody.ROTATION.cross(position)).rot3(-ast);
+    const vTOD = vPEF
+      .add(EarthBody.getRotation(this.epoch).cross(position))
+      .rot3(-ast);
     const rMOD = rTOD
       .rot1(epsilon)
       .rot3(nut[0])

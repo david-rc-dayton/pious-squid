@@ -3,6 +3,7 @@ import { DEG2RAD, TTASEC2RAD } from "../math/constants";
 import { evalPoly } from "../math/operations";
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
+import { DataHandler } from "../data/data-handler";
 
 export class EarthBody {
   /** Earth gravitational parameter, in km^3/s^2. */
@@ -15,7 +16,7 @@ export class EarthBody {
   public static readonly FLATTENING = 1 / 298.257;
 
   /** Earth rotation vector, in radians per second. */
-  public static readonly ROTATION = new Vector3D(0, 0, 7.2921158553e-5);
+  private static readonly ROTATION = new Vector3D(0, 0, 7.2921158553e-5);
 
   /** Earth polar radius, in kilometers. */
   public static readonly RADIUS_POLAR =
@@ -28,6 +29,20 @@ export class EarthBody {
   /** Earth eccentricity squared. */
   public static readonly ECCENTRICITY_SQUARED =
     EarthBody.FLATTENING * (2 - EarthBody.FLATTENING);
+
+  /**
+   * Return Earth's rotation vector, in radians per second.
+   *
+   * The vector is adjusted for length of day (LOD) variations, assuming IERS
+   * finals.all data is loaded in DataHandler. Otherwise, LOD corrections are
+   * ignored.
+   *
+   * @param epoch UTC epoch
+   */
+  public static getRotation(epoch: EpochUTC) {
+    const finals = DataHandler.getFinalsData(epoch.toMjd());
+    return EarthBody.ROTATION.scale(1 - finals.lod / 86400);
+  }
 
   /**
    * Calculate the [zeta, theta, zed] angles of precession, in radians.
