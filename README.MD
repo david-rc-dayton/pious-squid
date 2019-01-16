@@ -7,108 +7,184 @@ browser.
 
 ## Features
 
-+ **Coordinate Frames**
-    - Earth Centered Earth Fixed *(ECEF)*
-    - Earth Centered Inertial *(ECI)*
-    - Geodetic *(LLA)*
-    - J2000
-    - Keplerian Elements
-    - Look Angles
-    - Spherical
-    - Topocentric-Horizon *(SEZ)*
+- **Coordinate Frames**
 
-+ **Ephemeris Propagators**
-    - Keplerian *(analytic)*
-    - 4th Order Runge-Kutta *(numerical)*
-    - Interpolator *(hybrid)*
+  - Classical Orbit Elements
+  - Earth Centered Earth Fixed _(ITRF)_
+  - Geodetic
+  - J2000
+  - Look Angles
+  - Relative Motion _(RIC)_
 
-+ **Celestial Bodies**
-    - Earth Precession / Nutation
-    - Earth Atmospheric Density
-    - Moon Position
-    - Sun Position
+- **Ephemeris Propagators**
 
-+ **Time**
-    - Julian Date
-    - Leap Seconds
-    - Terrestrial Centuries
-    - Julian Centuries
-    - Greenwich Mean Sidereal Time
+  - 4th Order Runge-Kutta _(numerical)_
+  - Keplerian _(analytic)_
 
-+ **Model Forces**
-    - J2 / J3 / J4 Effect
-    - Earth Gravity
-    - Moon Gravity
-    - Sun Gravity
-    - Solar Radiation Pressure
-    - Atmospheric Drag
+- **Celestial Bodies**
+
+  - Earth Atmospheric Density
+  - Earth Precession / Nutation
+  - Moon Position
+  - Solar Eclipse
+  - Sun Position
+
+- **Epoch**
+
+  - Barycentric Dynamical Time _(TDB)_
+  - Greenwich Mean Sidereal Time
+  - International Atomic Time _(TAI)_
+  - Julian Centuries
+  - Julian Date
+  - Leap Seconds
+  - Terrestrial Time _(TT)_
+  - UTC/UT1 Time
+
+- **Force Model**
+
+  - Atmospheric Drag
+  - Earth Geopotential (70x70)
+  - Moon Gravity
+  - Solar Radiation Pressure
+  - Sun Gravity
 
 ## Install
 
-To include `pious-squid` in your *NodeJS* project:
+To include `pious-squid` in your _NodeJS_ project:
 
     npm install pious-squid --save
 
 The browser library bundles (`pious-squid.js` or `pious-squid.min.js`) can be
-found under, the 
+found under, the
 [Releases](https://github.com/david-rc-dayton/pious-squid/releases)
-tab on *GitHub*.
+tab on _GitHub_.
 
 ## Example
 
 To propagate a satellite from its position and velocity vectors:
 
 ```javascript
-// import pious-squid module
-const PiousSquid = require('pious-squid')
-const J2000 = PiousSquid.J2000
-const RungeKutta4 = PiousSquid.RungeKutta4
+const PiousSquid = require("pious-squid");
+const EpochUTC = PiousSquid.EpochUTC;
+const J2000 = PiousSquid.J2000;
+const Kepler = PiousSquid.KeplerPropagator;
+const RungeKutta4 = PiousSquid.RungeKutta4Propagator;
+const Vector3D = PiousSquid.Vector3D;
 
+//==============================================================================
+// define an initial state
+//==============================================================================
 
-// create the initial state
-let initState = new J2000(
-  Date.UTC(2010, 2, 10, 22, 53, 14, 697),  // UTC epoch
-  8228, 389, 6888,                         // position (km)
-  -0.7, 6.6, -0.6                          // velocity (km/s)
-)
+// initial state in J2000 frame
+const initialState = new J2000(
+  EpochUTC.fromDateString("2018-12-21T00:00:00.000Z"), // epoch (UTC)
+  new Vector3D(-1117.913276, 73.093299, -7000.018272), // km
+  new Vector3D(3.531365461, 6.583914964, -0.495649656) // km/s
+);
 
-console.log(initState.toString())
-//=> [J2000]
-//   Epoch:  Wed, 10 Mar 2010 22:53:14 GMT
-//   Position:  [ 8228, 389, 6888 ] km
-//   Velocity:  [ -0.7, 6.6, -0.6 ] km/s
+console.log(initialState.toString());
+// => [J2000]
+//   Epoch:  2018-12-21T00:00:00.000Z
+//   Position:  [ -1117.913276000, 73.093299000, -7000.018272000 ] km
+//   Velocity:  [ 3.531365461, 6.583914964, -0.495649656 ] km/s
 
+// real-world expected state (24-hours into the future)
+const expectedState = new J2000(
+  EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"),
+  new Vector3D(-212.125533, -2464.351601, 6625.907454),
+  new Vector3D(-3.618617698, -6.12677853, -2.38955619)
+);
 
-// initialize the propagator, changing the stepsize to 300 seconds
-let rk4Prop = new RungeKutta4(initState, { stepSize: 300 })
+console.log(expectedState.toString());
+// => [J2000]
+//   Epoch:  2018-12-22T00:00:00.000Z
+//   Position:  [ -212.125533000, -2464.351601000, 6625.907454000 ] km
+//   Velocity:  [ -3.618617698, -6.126778530, -2.389556190 ] km/s
 
-console.log(rk4Prop.toString())
-//=> [RungeKutta4]
-//   Step Size:  300 seconds
-//   Satellite Mass:  1000 kg
-//   Satellite Surface Area:  1 m^2
-//   Drag Coefficient:  2.2
-//   Reflectivity Coefficient:  1.4
-//   J2 Effect:  ENABLED
-//   J3 Effect:  ENABLED
-//   J4 Effect:  ENABLED
-//   Sun Gravity:  ENABLED
-//   Moon Gravity:  ENABLED
-//   Solar Radiation Pressure:  ENABLED
-//   Atmospheric Drag:  ENABLED
+//==============================================================================
+// propagate state vector (numerical high-accuracy)
+//==============================================================================
 
+// create a propagator using J2000 state
+const hiAccProp = new RungeKutta4(initialState);
 
-// propagate the state one day forward
-let newState = rk4Prop.propagate(Date.UTC(2010, 2, 11, 22, 53, 14, 697))
+// set step size
+hiAccProp.setStepSize(5); // seconds
 
-console.log(newState.toString())
-//=> [J2000]
-//   Epoch:  Thu, 11 Mar 2010 22:53:14 GMT
-//   Position:  [ -7924.483, -12493.015, -6492.194 ] km
-//   Velocity:  [ 2.75, -2.552, 2.332 ] km/s
+// add earth gravity
+hiAccProp.forceModel.setEarthGravity(
+  50, // degree
+  50 // order
+);
+
+// add sun & moon gravity
+hiAccProp.forceModel.setThirdBody(
+  true, // moon
+  true // sun
+);
+
+// add atmospheric drag
+hiAccProp.forceModel.setAtmosphericDrag(
+  2200, // mass (kg)
+  3.7 // area (m^2)
+);
+
+// add solar radiation pressure
+hiAccProp.forceModel.setSolarRadiationPressure(
+  2200, // mass (kg)
+  3.7 // area (m^2)
+);
+
+// propagated state (24-hours into the future)
+const resultState = hiAccProp.propagate(
+  new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z")
+);
+
+console.log(resultState.toString());
+// => [J2000]
+//   Epoch:  2018-12-22T00:00:00.000Z
+//   Position:  [ -212.131047437, -2464.369130369, 6625.895065916 ] km
+//   Velocity:  [ -3.618619800, -6.126775254, -2.389578954 ] km/s
+
+// calculate the distance between result and expected, in kilometers
+const distance = resultState.position.distance(expectedState.position);
+
+console.log((distance * 1000).toFixed(3) + " meters");
+// => 22.162 meters
+
+//==============================================================================
+// propagate state vector (numerical two-body)
+//==============================================================================
+
+const twoBodyProp = new RungeKutta4(initialState);
+twoBodyProp.forceModel.setEarthGravity(0, 0);
+twoBodyProp.propagate(new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
+
+console.log(twoBodyProp.state.toString());
+// => [J2000]
+//   Epoch:  2018-12-22T00:00:00.000Z
+//   Position:  [ -1241.886675379, -3977.873474857, 5689.561067368 ] km
+//   Velocity:  [ -3.502813706, -5.085314761, -4.303326274 ] km/s
+
+//==============================================================================
+// propagate classical elements (analytical two-body)
+//==============================================================================
+
+// convert j2000 state to classical elements
+const ceState = initialState.toClassicalElements();
+
+// create a propagator using classical elements, and propagate
+const keplerProp = new Kepler(ceState);
+keplerProp.propagate(new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
+
+console.log(keplerProp.state.toString());
+// => [J2000]
+//   Epoch:  2018-12-22T00:00:00.000Z
+//   Position:  [ -1241.885644014, -3977.871988515, 5689.562370838 ] km
+//   Velocity:  [ -3.502814112, -5.085316082, -4.303324341 ] km/s
 ```
 
-Additional examples can be found in the 
+Additional examples can be found in the
 [examples](https://github.com/david-rc-dayton/pious-squid/tree/master/examples)
 directory in the project root directory.
 

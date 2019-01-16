@@ -1,9 +1,9 @@
 const PiousSquid = require("..");
-const J2000 = PiousSquid.J2000;
 const EpochUTC = PiousSquid.EpochUTC;
-const Vector3D = PiousSquid.Vector3D;
-const RungeKutta4 = PiousSquid.RungeKutta4Propagator;
+const J2000 = PiousSquid.J2000;
 const Kepler = PiousSquid.KeplerPropagator;
+const RungeKutta4 = PiousSquid.RungeKutta4Propagator;
+const Vector3D = PiousSquid.Vector3D;
 
 //==============================================================================
 // define an initial state
@@ -13,7 +13,7 @@ const Kepler = PiousSquid.KeplerPropagator;
 const initialState = new J2000(
   EpochUTC.fromDateString("2018-12-21T00:00:00.000Z"), // epoch (UTC)
   new Vector3D(-1117.913276, 73.093299, -7000.018272), // km
-  new Vector3D(3.531365461, 6.583914964, -0.495649656) // km / s
+  new Vector3D(3.531365461, 6.583914964, -0.495649656) // km/s
 );
 
 console.log(initialState.toString());
@@ -60,14 +60,13 @@ hiAccProp.forceModel.setThirdBody(
 // add atmospheric drag
 hiAccProp.forceModel.setAtmosphericDrag(
   2200, // mass (kg)
-  3.7, // area (m^2)
-  2.2 // drag coefficient
+  3.7 // area (m^2)
 );
 
+// add solar radiation pressure
 hiAccProp.forceModel.setSolarRadiationPressure(
   2200, // mass (kg)
-  3.7, // area (m^2)
-  2.2 // drag coefficient
+  3.7 // area (m^2)
 );
 
 // propagated state (24-hours into the future)
@@ -78,14 +77,14 @@ const resultState = hiAccProp.propagate(
 console.log(resultState.toString());
 // => [J2000]
 //   Epoch:  2018-12-22T00:00:00.000Z
-//   Position:  [ -212.130731173, -2464.368826723, 6625.896064199 ] km
-//   Velocity:  [ -3.618619406, -6.126774823, -2.389577939 ] km/s
+//   Position:  [ -212.131047437, -2464.369130369, 6625.895065916 ] km
+//   Velocity:  [ -3.618619800, -6.126775254, -2.389578954 ] km/s
 
 // calculate the distance between result and expected, in kilometers
 const distance = resultState.position.distance(expectedState.position);
 
 console.log((distance * 1000).toFixed(3) + " meters");
-// => 21.295 meters
+// => 22.162 meters
 
 //==============================================================================
 // propagate state vector (numerical two-body)
