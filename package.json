@@ -1,9 +1,8 @@
 {
   "name": "pious-squid",
-  "version": "2.0.0",
+  "version": "2.0.0-snapshot",
   "description": "Orbital mechanics and satellite mission analysis library, for NodeJS and the browser.",
   "main": "./dist/pious-squid.js",
-  "source": "./src/pious-squid.ts",
   "types": "./dist/pious-squid.d.ts",
   "repository": {
     "type": "git",
@@ -11,11 +10,12 @@
   },
   "scripts": {
     "build": "tsc",
-    "bundle": "microbundle --format cjs",
+    "bundle": "browserify dist/pious-squid.js -s PiousSquid > pious-squid.js",
     "clean-build": "npm run clean && npm run build",
-    "clean-bundle": "npm run clean && npm run bundle",
-    "clean": "rimraf dist pious-squid-*.tgz .rts2_cache*",
-    "prepack": "npm run clean-bundle",
+    "clean-bundle": "npm run clean-build && npm run bundle && npm run minify",
+    "clean": "rimraf dist pious-squid-*.tgz pious-squid.js pious-squid.min.js",
+    "minify": "uglifyjs pious-squid.js > pious-squid.min.js",
+    "prepack": "npm run clean-build",
     "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
   },
@@ -33,7 +33,7 @@
   "devDependencies": {
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.18",
-    "microbundle": "^0.9.0",
+    "browserify": "^16.2.3",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.3",
     "typescript": "^3.2.2"

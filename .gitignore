@@ -1,6 +1,7 @@
-.rts2_cache_*/
 .vscode/
 dist/
 node_modules/
 pious-squid-*.tgz
+pious-squid.js
+pious-squid.min.js
 scratchpad.js
