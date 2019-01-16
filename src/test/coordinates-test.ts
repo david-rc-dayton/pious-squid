@@ -1,6 +1,6 @@
 import * as assert from "assert";
-import { J2000, Vector3D, EpochUTC, ITRF } from "../index";
 import { DataHandler } from "../data/data-handler";
+import { EpochUTC, ITRF, J2000, Vector3D } from "../index";
 
 DataHandler.setFinalsData([
   " 4 4 5 53100.00 I -0.141198 0.000079  0.331215 0.000051  I-0.4384012 0.0000027  1.5611 0.0020  I   -52.007     .409    -4.039     .198 -0.141110  0.330940 -0.4383520   -52.100    -4.100",
@@ -24,12 +24,10 @@ describe("J2000", () => {
   const testState = j2kState.toITRF();
   it("should convert to ITRF within 0.6m", () => {
     const rDist = itrfState.position.distance(testState.position) * 1000;
-    console.log(rDist);
     assert(rDist <= 0.6);
   });
   it("should convert to ITRF within 0.0004m/s", () => {
     const vDist = itrfState.velocity.distance(testState.velocity) * 1000;
-    console.log(vDist);
     assert(vDist <= 0.0004);
   });
 });
@@ -38,12 +36,10 @@ describe("ITRF", () => {
   const testState = itrfState.toJ2000();
   it("should convert to J2000 within 0.6m", () => {
     const rDist = j2kState.position.distance(testState.position) * 1000;
-    console.log(rDist);
     assert(rDist <= 0.6);
   });
   it("should convert to J2000 within 0.0004m/s", () => {
     const vDist = j2kState.velocity.distance(testState.velocity) * 1000;
-    console.log(vDist);
     assert(vDist <= 0.0004);
   });
 });
