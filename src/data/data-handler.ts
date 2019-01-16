@@ -1,19 +1,10 @@
 import { EarthBody } from "../bodies/earth-body";
+import { ASEC2RAD } from "../math/constants";
 import { Vector3D } from "../math/vector-3d";
 import { EGM_96_DENORMALIZED } from "./values/egm96";
 import { EXPONENTIAL_ATMOSPHERE } from "./values/exponential-atmosphere";
+import { clearFinals, FINALS, sortFinals, zeroFinal } from "./values/finals";
 import { LEAP_SECONDS } from "./values/leap-seconds";
-
-interface FinalsData {
-  /** USNO modified julaian date */
-  mjd: number;
-  /** polar motion x-component */
-  pmX: number;
-  /** polar motion y-component */
-  pmY: number;
-  /** delta ut1 time (seconds) */
-  dut1: number;
-}
 
 export class DataHandler {
   /**
@@ -47,13 +38,63 @@ export class DataHandler {
   }
 
   /**
-   * Get finals data. Currently returns all values as zero.
+   * Get finals data for a given MJD.
    *
    * @param mjd USNO modified julian date
    */
-  public static getFinalsData(mjd: number): FinalsData {
+  public static getFinalsData(mjd: number) {
     const fmjd = Math.floor(mjd);
-    return { mjd: fmjd, pmX: 0, pmY: 0, dut1: 0 };
+    if (fmjd < FINALS[0].mjd || fmjd > FINALS[FINALS.length - 1].mjd) {
+      return zeroFinal(fmjd);
+    }
+    let low = 0;
+    let high = FINALS.length - 1;
+    while (low <= high) {
+      const mid = (high + low) / 2;
+      const midVal = FINALS[mid].mjd;
+      if (fmjd < midVal) {
+        high = mid - 1;
+      } else if (fmjd > midVal) {
+        low = mid + 1;
+      } else {
+        return FINALS[mid];
+      }
+    }
+    return zeroFinal(fmjd);
+  }
+
+  public static setFinalsData(lines: string[]) {
+    clearFinals();
+    for (let line of lines) {
+      const tLine = line.trimRight();
+      if (tLine.length <= 68) {
+        continue;
+      }
+      const mjd = Math.floor(parseFloat(line.substring(7, 15)));
+      const pmX = parseFloat(line.substring(18, 27)) * ASEC2RAD;
+      const pmY = parseFloat(line.substring(37, 46)) * ASEC2RAD;
+      const dut1 = parseFloat(line.substring(58, 68));
+      let lod = 0;
+      let dPsi = 0;
+      let dEps = 0;
+      if (tLine.length >= 86) {
+        lod = parseFloat(line.substring(79, 86)) * 1e-3;
+      }
+      if (tLine.length >= 125) {
+        dPsi = parseFloat(line.substring(97, 106)) * ASEC2RAD;
+        dEps = parseFloat(line.substring(116, 125)) * ASEC2RAD;
+      }
+      FINALS.push({
+        mjd: mjd,
+        pmX: pmX,
+        pmY: pmY,
+        dut1: dut1,
+        lod: lod,
+        dPsi: dPsi,
+        dEps: dEps
+      });
+    }
+    sortFinals();
   }
 
   /**
