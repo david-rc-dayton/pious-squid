@@ -7,7 +7,7 @@ import {
   RungeKutta4Propagator,
   SunBody,
   Vector3D
-} from "../pious-squid";
+} from "../index";
 
 const epoch = EpochUTC.fromDateString("2018-12-21T00:00:00.000Z");
 

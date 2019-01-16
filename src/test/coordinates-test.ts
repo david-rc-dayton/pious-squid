@@ -1,5 +1,5 @@
 import * as assert from "assert";
-import { J2000, Vector3D, EpochUTC, ITRF } from "../pious-squid";
+import { J2000, Vector3D, EpochUTC, ITRF } from "../index";
 
 const j2kState = new J2000(
   EpochUTC.fromDateString("2004-04-06T07:51:28.386Z"),

@@ -5,7 +5,7 @@ import {
   KeplerPropagator,
   RungeKutta4Propagator,
   Vector3D
-} from "../pious-squid";
+} from "../index";
 
 const state = new J2000(
   EpochUTC.fromDateString("2018-12-21T00:00:00.000Z"),

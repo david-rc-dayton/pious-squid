@@ -2,15 +2,15 @@
   "name": "pious-squid",
   "version": "2.0.0-snapshot",
   "description": "Orbital mechanics and satellite mission analysis library, for NodeJS and the browser.",
-  "main": "./dist/pious-squid.js",
-  "types": "./dist/pious-squid.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/david-rc-dayton/pious-squid.git"
   },
   "scripts": {
     "build": "tsc",
-    "bundle": "browserify dist/pious-squid.js -s PiousSquid > pious-squid.js",
+    "bundle": "browserify dist/index.js -s PiousSquid > pious-squid.js",
     "clean-build": "npm run clean && npm run build",
     "clean-bundle": "npm run clean-build && npm run bundle && npm run minify",
     "clean": "rimraf dist pious-squid-*.tgz pious-squid.js pious-squid.min.js",
@@ -36,6 +36,7 @@
     "browserify": "^16.2.3",
     "mocha": "^5.2.0",
     "rimraf": "^2.6.3",
-    "typescript": "^3.2.2"
+    "typescript": "^3.2.2",
+    "uglify-js": "^3.4.9"
   }
 }
