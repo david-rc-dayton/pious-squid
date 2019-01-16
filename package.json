@@ -10,12 +10,12 @@
   },
   "scripts": {
     "build": "tsc",
-    "bundle": "browserify dist/index.js -s PiousSquid > pious-squid.js",
+    "bundle": "browserify dist/index.js -s PiousSquid -o bundle/pious-squid.js",
     "clean-build": "npm run clean && npm run build",
     "clean-bundle": "npm run clean-build && npm run bundle && npm run minify",
-    "clean": "rimraf dist pious-squid-*.tgz pious-squid.js pious-squid.min.js",
-    "minify": "uglifyjs pious-squid.js > pious-squid.min.js",
-    "prepack": "npm run clean-build",
+    "clean": "rimraf dist bundle pious-squid-*.tgz",
+    "minify": "uglifyjs bundle/pious-squid.js > bundle/pious-squid.min.js",
+    "prepack": "npm run clean-bundle",
     "test": "mocha ./dist/test/**/*.js",
     "watch": "tsc --watch"
   },
