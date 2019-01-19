@@ -49,12 +49,12 @@ export class DataHandler {
       fmjd < FINALS[0].mjd ||
       fmjd > FINALS[FINALS.length - 1].mjd
     ) {
-      return zeroFinal(fmjd);
+      return zeroFinal();
     }
     let low = 0;
     let high = FINALS.length - 1;
     while (low <= high) {
-      const mid = (high + low) / 2;
+      const mid = Math.floor((high + low) / 2);
       const midVal = FINALS[mid].mjd;
       if (fmjd < midVal) {
         high = mid - 1;
@@ -64,7 +64,7 @@ export class DataHandler {
         return FINALS[mid];
       }
     }
-    return zeroFinal(fmjd);
+    return zeroFinal();
   }
 
   /**

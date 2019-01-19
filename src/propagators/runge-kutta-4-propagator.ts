@@ -10,7 +10,7 @@ export class RungeKutta4Propagator implements IPropagator {
   /** force model */
   public readonly forceModel: ForceModel;
   /** initial state */
-  private readonly initState: J2000;
+  private initState: J2000;
   /** cached state */
   private cacheState: J2000;
   /** step size (seconds) */
@@ -43,6 +43,11 @@ export class RungeKutta4Propagator implements IPropagator {
    */
   public setStepSize(seconds: number) {
     this.stepSize = Math.abs(seconds);
+  }
+
+  public setInitState(state: J2000) {
+    this.initState = state;
+    this.reset();
   }
 
   /** Reset cached state to the initialized state. */
