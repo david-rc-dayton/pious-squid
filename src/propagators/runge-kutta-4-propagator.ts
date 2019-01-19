@@ -19,7 +19,7 @@ export class RungeKutta4Propagator implements IPropagator {
   /**
    * Create a new RungeKutta4 propagator object.
    *
-   * @param elements J2000 state vector
+   * @param state J2000 state vector
    */
   constructor(state: J2000) {
     this.initState = state;
@@ -45,6 +45,11 @@ export class RungeKutta4Propagator implements IPropagator {
     this.stepSize = Math.abs(seconds);
   }
 
+  /**
+   * Set the propagator initial state.
+   *
+   * @param state J2000 state
+   */
   public setInitState(state: J2000) {
     this.initState = state;
     this.reset();
