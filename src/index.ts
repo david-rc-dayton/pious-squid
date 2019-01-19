@@ -12,6 +12,7 @@ export { DataHandler } from "./data/data-handler";
 // math
 export { Vector3D } from "./math/vector-3d";
 // propagators
+export { InterpolatorPropagator } from "./propagators/interpolator-propagator";
 export { KeplerPropagator } from "./propagators/kepler-propagator";
 export { RungeKutta4Propagator } from "./propagators/runge-kutta-4-propagator";
 // time

@@ -29,6 +29,6 @@ export function sortFinals() {
 }
 
 /** Return a finals entry with all values set to zero. */
-export function zeroFinal(fmjd: number): FinalsData {
-  return { mjd: fmjd, pmX: 0, pmY: 0, dut1: 0, lod: 0, dPsi: 0, dEps: 0 };
+export function zeroFinal(): FinalsData {
+  return { mjd: 0, pmX: 0, pmY: 0, dut1: 0, lod: 0, dPsi: 0, dEps: 0 };
 }

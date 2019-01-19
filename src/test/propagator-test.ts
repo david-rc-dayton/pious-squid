@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import { DataHandler } from "../data/data-handler";
 import {
   EpochUTC,
   J2000,
@@ -6,7 +7,7 @@ import {
   RungeKutta4Propagator,
   Vector3D
 } from "../index";
-import { DataHandler } from "../data/data-handler";
+import { InterpolatorPropagator } from "../propagators/interpolator-propagator";
 
 DataHandler.setFinalsData([
   "181220 58472.00 I  0.111682 0.000013  0.267043 0.000011  I-0.0268992 0.0000042  0.8116 0.0029  I  -107.187    1.028    -6.992    0.043",
@@ -51,6 +52,29 @@ describe("RungeKutta4Propagator", () => {
     const expected = new Vector3D(-212.125533, -2464.351601, 6625.907454);
     it("should be within 25m of real-world ephemeris after 24 hours", () => {
       assert(expected.distance(actual) < 0.025);
+    });
+  });
+});
+
+describe("InterpolatorPropagator", () => {
+  describe("interpolate", () => {
+    const rk4Prop = new RungeKutta4Propagator(state);
+    rk4Prop.setStepSize(5);
+    rk4Prop.forceModel.setEarthGravity(50, 50);
+    rk4Prop.forceModel.setThirdBody(true, true);
+    const cacheDense = rk4Prop.step(state.epoch, 60, 86400 / 60);
+    rk4Prop.reset();
+    const cacheSparse = rk4Prop.step(state.epoch, 900, 86400 / 900);
+    const interpolator = new InterpolatorPropagator(cacheSparse);
+    interpolator.forceModel.setEarthGravity(2, 0);
+    let maxError = 0;
+    for (let cState of cacheDense) {
+      const iState = interpolator.propagate(cState.epoch);
+      const dist = cState.position.distance(iState.position);
+      maxError = Math.max(maxError, dist);
+    }
+    it("should have a maximum error of 30m", () => {
+      assert(maxError < 0.03);
     });
   });
 });
