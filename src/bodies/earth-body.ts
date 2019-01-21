@@ -62,8 +62,9 @@ export class EarthBody {
    * in radians.
    *
    * @param epoch satellite state epoch
+   * @param n number of coefficients (default=106)
    */
-  public static nutation(epoch: EpochUTC, n = 4): [number, number, number] {
+  public static nutation(epoch: EpochUTC, n = 106): [number, number, number] {
     const r = 360;
     const t = epoch.toTDB().toJulianCenturies();
     const moonAnom = evalPoly(t, [
