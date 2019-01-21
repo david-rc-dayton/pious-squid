@@ -1,9 +1,9 @@
+import { DataHandler } from "../data/data-handler";
 import { IAU_1980 } from "../data/values/iau1980";
 import { DEG2RAD, TTASEC2RAD } from "../math/constants";
 import { evalPoly } from "../math/operations";
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
-import { DataHandler } from "../data/data-handler";
 
 export class EarthBody {
   /** Earth gravitational parameter, in km^3/s^2. */

@@ -1,7 +1,7 @@
 import * as assert from "assert";
+import { TEME } from "../coordinates/teme";
 import { DataHandler } from "../data/data-handler";
 import { EpochUTC, ITRF, J2000, Vector3D } from "../index";
-import { TEME } from "../coordinates/teme";
 
 DataHandler.setFinalsData([
   " 4 4 5 53100.00 I -0.141198 0.000079  0.331215 0.000051  I-0.4384012 0.0000027  1.5611 0.0020  I   -52.007     .409    -4.039     .198 -0.141110  0.330940 -0.4383520   -52.100    -4.100",
