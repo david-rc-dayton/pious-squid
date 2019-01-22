@@ -6,6 +6,7 @@ import { EpochUTC } from "../time/epoch-utc";
 import { ClassicalElements } from "./classical-elements";
 import { ITRF } from "./itrf";
 import { RIC } from "./ric";
+import { TEME } from "./teme";
 
 /** Class representing J2000 (J2K) inertial coordinates. */
 export class J2000 {
@@ -88,17 +89,17 @@ export class J2000 {
       .rot3(-prec[0])
       .rot2(prec[1])
       .rot3(-prec[2]);
-    const nut = EarthBody.nutation(epoch);
-    const epsilon = nut[2] + nut[1];
+    const [dPsi, dEps, mEps] = EarthBody.nutation(epoch);
+    const epsilon = mEps + dEps;
     const rTOD = rMOD
-      .rot1(nut[2])
-      .rot3(-nut[0])
+      .rot1(mEps)
+      .rot3(-dPsi)
       .rot1(-epsilon);
     const vTOD = vMOD
-      .rot1(nut[2])
-      .rot3(-nut[0])
+      .rot1(mEps)
+      .rot3(-dPsi)
       .rot1(-epsilon);
-    const ast = epoch.gmstAngle() + nut[0] * Math.cos(epsilon);
+    const ast = epoch.gmstAngle() + dPsi * Math.cos(epsilon);
     const rPEF = rTOD.rot3(ast);
     const vPEF = vTOD.rot3(ast).add(
       EarthBody.getRotation(this.epoch)
@@ -109,6 +110,32 @@ export class J2000 {
     const rITRF = rPEF.rot1(-pmY).rot2(-pmX);
     const vITRF = vPEF.rot1(-pmY).rot2(-pmX);
     return new ITRF(epoch, rITRF, vITRF);
+  }
+
+  public toTEME() {
+    const { epoch, position, velocity } = this;
+    const [zeta, theta, zed] = EarthBody.precession(epoch);
+    const rMOD = position
+      .rot3(-zeta)
+      .rot2(theta)
+      .rot3(-zed);
+    const vMOD = velocity
+      .rot3(-zeta)
+      .rot2(theta)
+      .rot3(-zed);
+    const [dPsi, dEps, mEps] = EarthBody.nutation(epoch);
+    const epsilon = mEps + dEps;
+    const rTEME = rMOD
+      .rot1(mEps)
+      .rot3(-dPsi)
+      .rot1(-epsilon)
+      .rot3(dPsi * Math.cos(epsilon));
+    const vTEME = vMOD
+      .rot1(mEps)
+      .rot3(-dPsi)
+      .rot1(-epsilon)
+      .rot3(dPsi * Math.cos(epsilon));
+    return new TEME(this.epoch, rTEME, vTEME);
   }
 
   /**

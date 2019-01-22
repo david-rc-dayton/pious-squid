@@ -48,30 +48,30 @@ export class ITRF {
     const pmY = finals.pmY;
     const rPEF = position.rot2(pmX).rot1(pmY);
     const vPEF = velocity.rot2(pmX).rot1(pmY);
-    const nut = EarthBody.nutation(epoch);
-    const epsilon = nut[2] + nut[1];
-    const ast = epoch.gmstAngle() + nut[0] * Math.cos(epsilon);
+    const [dPsi, dEps, mEps] = EarthBody.nutation(epoch);
+    const epsilon = mEps + dEps;
+    const ast = epoch.gmstAngle() + dPsi * Math.cos(epsilon);
     const rTOD = rPEF.rot3(-ast);
     const vTOD = vPEF
       .add(EarthBody.getRotation(this.epoch).cross(rPEF))
       .rot3(-ast);
     const rMOD = rTOD
       .rot1(epsilon)
-      .rot3(nut[0])
-      .rot1(-nut[2]);
+      .rot3(dPsi)
+      .rot1(-mEps);
     const vMOD = vTOD
       .rot1(epsilon)
-      .rot3(nut[0])
-      .rot1(-nut[2]);
-    const prec = EarthBody.precession(epoch);
+      .rot3(dPsi)
+      .rot1(-mEps);
+    const [zeta, theta, zed] = EarthBody.precession(epoch);
     const rJ2000 = rMOD
-      .rot3(prec[2])
-      .rot2(-prec[1])
-      .rot3(prec[0]);
+      .rot3(zed)
+      .rot2(-theta)
+      .rot3(zeta);
     const vJ2000 = vMOD
-      .rot3(prec[2])
-      .rot2(-prec[1])
-      .rot3(prec[0]);
+      .rot3(zed)
+      .rot2(-theta)
+      .rot3(zeta);
     return new J2000(epoch, rJ2000, vJ2000);
   }
 
