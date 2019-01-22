@@ -14,12 +14,14 @@ browser.
   - Geodetic
   - J2000
   - Look Angles
+  - True Equator Mean Equinox _(TEME)_
   - Relative Motion _(RIC)_
 
 - **Ephemeris Propagators**
 
   - 4th Order Runge-Kutta _(numerical)_
   - Keplerian _(analytic)_
+  - Interpolator
 
 - **Celestial Bodies**
 
