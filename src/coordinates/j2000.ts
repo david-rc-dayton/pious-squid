@@ -4,17 +4,18 @@ import { TWO_PI } from "../math/constants";
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
 import { ClassicalElements } from "./classical-elements";
+import { IStateVector } from "./coordinate-interface";
 import { ITRF } from "./itrf";
 import { RIC } from "./ric";
 import { TEME } from "./teme";
 
 /** Class representing J2000 (J2K) inertial coordinates. */
-export class J2000 {
+export class J2000 implements IStateVector {
   /** Satellite state epoch. */
   public readonly epoch: EpochUTC;
-  /** Position 3-vector, in kilometers. */
+  /** Position vector, in kilometers. */
   public readonly position: Vector3D;
-  /** Velocity 3-vector, in kilometers per second. */
+  /** Velocity vector, in kilometers per second. */
   public readonly velocity: Vector3D;
 
   /**

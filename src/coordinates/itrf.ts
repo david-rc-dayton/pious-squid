@@ -2,17 +2,18 @@ import { EarthBody } from "../bodies/earth-body";
 import { DataHandler } from "../data/data-handler";
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
+import { IStateVector } from "./coordinate-interface";
 import { Geodetic } from "./geodetic";
 import { J2000 } from "./j2000";
 import { LookAngle } from "./look-angle";
 
 /** Class representing ITRF Earth-Fixed coordinates. */
-export class ITRF {
+export class ITRF implements IStateVector {
   /** Satellite state epoch. */
   public readonly epoch: EpochUTC;
-  /** Position 3-vector, in kilometers. */
+  /** Position vector, in kilometers. */
   public readonly position: Vector3D;
-  /** Velocity 3-vector, in kilometers per second. */
+  /** Velocity vector, in kilometers per second. */
   public readonly velocity: Vector3D;
 
   /**

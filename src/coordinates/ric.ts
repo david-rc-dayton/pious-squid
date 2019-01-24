@@ -1,15 +1,14 @@
 import { Vector3D } from "../math/vector-3d";
 import { EpochUTC } from "../time/epoch-utc";
+import { IStateVector } from "./coordinate-interface";
 
 /** Class representing Radial-Intrack-Crosstrack (RIC) relative coordinates. */
-export class RIC {
+export class RIC implements IStateVector {
   /** State UTC Epoch. */
   public readonly epoch: EpochUTC;
-
-  /** Relative position, in kilometers. */
+  /** Relative position vector, in kilometers. */
   public readonly position: Vector3D;
-
-  /** Relative velocity, in kilometers per second. */
+  /** Relative velocity vector, in kilometers per second. */
   public readonly velocity: Vector3D;
 
   /**
