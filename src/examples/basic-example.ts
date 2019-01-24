@@ -1,9 +1,9 @@
 import {
   EpochUTC,
+  Geodetic,
   J2000,
-  Vector3D,
   RungeKutta4Propagator,
-  Geodetic
+  Vector3D
 } from "../index";
 
 // =============================================================================
@@ -105,5 +105,6 @@ const actualState = new J2000(
 );
 console.log(finalState.toRIC(actualState).toString());
 // => [RIC]
+//   Epoch:  2018-12-22T00:00:00.000Z
 //   Position:  [ -0.005770585, -0.019208198, 0.005105235 ] km
 //   Velocity:  [ 0.000020089, 0.000006319, 0.000000117 ] km/s

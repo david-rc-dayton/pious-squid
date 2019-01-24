@@ -1,9 +1,10 @@
-const PiousSquid = require("..");
-const EpochUTC = PiousSquid.EpochUTC;
-const J2000 = PiousSquid.J2000;
-const Kepler = PiousSquid.KeplerPropagator;
-const RungeKutta4 = PiousSquid.RungeKutta4Propagator;
-const Vector3D = PiousSquid.Vector3D;
+import {
+  EpochUTC,
+  J2000,
+  KeplerPropagator,
+  RungeKutta4Propagator,
+  Vector3D
+} from "../index";
 
 //==============================================================================
 // define an initial state
@@ -40,7 +41,7 @@ console.log(expectedState.toString());
 //==============================================================================
 
 // create a propagator using J2000 state
-const hiAccProp = new RungeKutta4(initialState);
+const hiAccProp = new RungeKutta4Propagator(initialState);
 
 // set step size
 hiAccProp.setStepSize(5); // seconds
@@ -60,39 +61,41 @@ hiAccProp.forceModel.setThirdBody(
 // add atmospheric drag
 hiAccProp.forceModel.setAtmosphericDrag(
   2200, // mass (kg)
-  3.7 // area (m^2)
+  3.7, // area (m^2)
+  2.2 // drag coefficient
 );
 
 // add solar radiation pressure
 hiAccProp.forceModel.setSolarRadiationPressure(
   2200, // mass (kg)
-  3.7 // area (m^2)
+  3.7, // area (m^2)
+  1.2 // reflectivity coefficient
 );
 
 // propagated state (24-hours into the future)
 const resultState = hiAccProp.propagate(
-  new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z")
+  EpochUTC.fromDateString("2018-12-22T00:00:00.000Z")
 );
 
 console.log(resultState.toString());
 // => [J2000]
 //   Epoch:  2018-12-22T00:00:00.000Z
-//   Position:  [ -212.131047437, -2464.369130369, 6625.895065916 ] km
-//   Velocity:  [ -3.618619800, -6.126775254, -2.389578954 ] km/s
+//   Position:  [ -212.131159564, -2464.369431512, 6625.894946242 ] km
+//   Velocity:  [ -3.618619589, -6.126775239, -2.389579324 ] km/s
 
 // calculate the distance between result and expected, in kilometers
 const distance = resultState.position.distance(expectedState.position);
 
 console.log((distance * 1000).toFixed(3) + " meters");
-// => 22.162 meters
+// => 22.495 meters
 
 //==============================================================================
 // propagate state vector (numerical two-body)
 //==============================================================================
 
-const twoBodyProp = new RungeKutta4(initialState);
+const twoBodyProp = new RungeKutta4Propagator(initialState);
 twoBodyProp.forceModel.setEarthGravity(0, 0);
-twoBodyProp.propagate(new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
+twoBodyProp.propagate(EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
 
 console.log(twoBodyProp.state.toString());
 // => [J2000]
@@ -108,8 +111,8 @@ console.log(twoBodyProp.state.toString());
 const ceState = initialState.toClassicalElements();
 
 // create a propagator using classical elements, and propagate
-const keplerProp = new Kepler(ceState);
-keplerProp.propagate(new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
+const keplerProp = new KeplerPropagator(ceState);
+keplerProp.propagate(EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
 
 console.log(keplerProp.state.toString());
 // => [J2000]

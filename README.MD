@@ -187,7 +187,7 @@ console.log(keplerProp.state.toString());
 ```
 
 Additional examples can be found in the
-[examples](https://github.com/david-rc-dayton/pious-squid/tree/master/examples)
+[examples](https://github.com/david-rc-dayton/pious-squid/tree/master/src/examples)
 directory in the project root directory.
 
 ## License
