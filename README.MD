@@ -180,7 +180,7 @@ console.log(finalState.toRIC(actualState).toString());
 
 Additional examples can be found in the
 [examples](https://github.com/david-rc-dayton/pious-squid/tree/master/src/examples)
-directory in the project root directory.
+directory in the project source directory.
 
 ## License
 
