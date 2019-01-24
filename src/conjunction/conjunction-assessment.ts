@@ -3,7 +3,7 @@ import { Matrix3D } from "../math/matrix-3d";
 import { MonteCarlo } from "../math/monte-carlo";
 
 /** Class for satellite conjunction operations. */
-export class ConjunctionReport {
+export class ConjunctionAssesment {
   /**
    * Simulate possible outcomes of a satellite conjunction, using information
    * found in a Conjunction Summary Message (CSM).
@@ -15,7 +15,7 @@ export class ConjunctionReport {
    * @param sigma standard deviation
    * @param iterations number of samples
    */
-  public static simulateConjunction(
+  public static simulateConjunctionMessage(
     posA: Vector3D,
     covA: Matrix3D,
     posB: Vector3D,

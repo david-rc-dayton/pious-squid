@@ -45,10 +45,16 @@ browser.
 - **Force Model**
 
   - Atmospheric Drag
-  - Earth Geopotential (70x70)
+  - Earth Geopotential _(70x70)_
   - Moon Gravity
   - Solar Radiation Pressure
   - Sun Gravity
+
+- **Operations**
+
+  - Satellite Maneuvers
+  - Monte-Carlo Simulation
+  - Conjunction Assesment
 
 ## Install
 

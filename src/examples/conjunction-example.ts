@@ -1,4 +1,4 @@
-import { ConjunctionReport, Matrix3D, Vector3D } from "../index";
+import { ConjunctionAssesment, Matrix3D, Vector3D } from "../index";
 
 // =============================================================================
 // simulate conjunction using Conjunction Summary Message (CSM) data
@@ -21,7 +21,7 @@ const covB = new Matrix3D( // satellite covariance (meters)
 );
 
 // run a monte-carlo simulation of the conjunction and generate miss-distances
-const missDists = ConjunctionReport.simulateConjunction(
+const missDists = ConjunctionAssesment.simulateConjunctionMessage(
   posA, // asset position
   covA, // asset covariance
   posB, // satellite position
