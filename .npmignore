@@ -2,6 +2,7 @@
 .gitignore
 .vscode/
 bundle/
+dist/examples
 dist/test
 examples/
 scratchpad.js

@@ -19,4 +19,15 @@ export class RIC {
     this.relPosition = relPosition;
     this.relVelocity = relVelocity;
   }
+
+  /** Return a string representation of this object. */
+  public toString(): string {
+    const { relPosition, relVelocity } = this;
+    const output = [
+      "[RIC]",
+      `  Position:  ${relPosition.toString()} km`,
+      `  Velocity:  ${relVelocity.toString()} km/s`
+    ];
+    return output.join("\n");
+  }
 }
