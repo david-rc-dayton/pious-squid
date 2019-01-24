@@ -92,7 +92,7 @@ console.log(
     .toLookAngle(observer)
     .toString()
 );
-// [Look-Angle]
+// => [Look-Angle]
 //   Azimuth:  234.477°
 //   Elevation:  65.882°
 //   Range:  773.318 km

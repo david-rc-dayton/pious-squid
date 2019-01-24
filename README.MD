@@ -66,18 +66,18 @@ tab on _GitHub_.
 To propagate a satellite from its position and velocity vectors:
 
 ```javascript
-const PiousSquid = require("pious-squid");
-const EpochUTC = PiousSquid.EpochUTC;
-const J2000 = PiousSquid.J2000;
-const Kepler = PiousSquid.KeplerPropagator;
-const RungeKutta4 = PiousSquid.RungeKutta4Propagator;
-const Vector3D = PiousSquid.Vector3D;
+import {
+  EpochUTC,
+  Geodetic,
+  J2000,
+  RungeKutta4Propagator,
+  Vector3D
+} from "pious-squid";
 
-//==============================================================================
-// define an initial state
-//==============================================================================
+// =============================================================================
+// set initial state in J2000 frame
+// =============================================================================
 
-// initial state in J2000 frame
 const initialState = new J2000(
   EpochUTC.fromDateString("2018-12-21T00:00:00.000Z"), // epoch (UTC)
   new Vector3D(-1117.913276, 73.093299, -7000.018272), // km
@@ -90,100 +90,92 @@ console.log(initialState.toString());
 //   Position:  [ -1117.913276000, 73.093299000, -7000.018272000 ] km
 //   Velocity:  [ 3.531365461, 6.583914964, -0.495649656 ] km/s
 
-// real-world expected state (24-hours into the future)
-const expectedState = new J2000(
-  EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"),
-  new Vector3D(-212.125533, -2464.351601, 6625.907454),
-  new Vector3D(-3.618617698, -6.12677853, -2.38955619)
-);
+// =============================================================================
+// create a propagator object
+// =============================================================================
 
-console.log(expectedState.toString());
-// => [J2000]
-//   Epoch:  2018-12-22T00:00:00.000Z
-//   Position:  [ -212.125533000, -2464.351601000, 6625.907454000 ] km
-//   Velocity:  [ -3.618617698, -6.126778530, -2.389556190 ] km/s
+const propagator = new RungeKutta4Propagator(initialState);
 
-//==============================================================================
-// propagate state vector (numerical high-accuracy)
-//==============================================================================
+// set the step size
+propagator.setStepSize(5); // seconds
 
-// create a propagator using J2000 state
-const hiAccProp = new RungeKutta4(initialState);
-
-// set step size
-hiAccProp.setStepSize(5); // seconds
-
-// add earth gravity
-hiAccProp.forceModel.setEarthGravity(
+// add Earth gravity acceleration
+propagator.forceModel.setEarthGravity(
   50, // degree
   50 // order
 );
 
-// add sun & moon gravity
-hiAccProp.forceModel.setThirdBody(
-  true, // moon
-  true // sun
+// add third-body acceleration
+propagator.forceModel.setThirdBody(
+  true, // moon gravity
+  true // sun gravity
 );
 
-// add atmospheric drag
-hiAccProp.forceModel.setAtmosphericDrag(
-  2200, // mass (kg)
-  3.7 // area (m^2)
+// =============================================================================
+// propagate ephemeris to a future time
+// =============================================================================
+
+const finalState = propagator.propagate(
+  EpochUTC.fromDateString("2018-12-22T00:00:00.000Z")
 );
 
-// add solar radiation pressure
-hiAccProp.forceModel.setSolarRadiationPressure(
-  2200, // mass (kg)
-  3.7 // area (m^2)
-);
-
-// propagated state (24-hours into the future)
-const resultState = hiAccProp.propagate(
-  new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z")
-);
-
-console.log(resultState.toString());
+console.log(finalState.toString());
 // => [J2000]
 //   Epoch:  2018-12-22T00:00:00.000Z
-//   Position:  [ -212.131047437, -2464.369130369, 6625.895065916 ] km
-//   Velocity:  [ -3.618619800, -6.126775254, -2.389578954 ] km/s
+//   Position:  [ -212.111629987, -2464.336270508, 6625.907441304 ] km
+//   Velocity:  [ -3.618621245, -6.126790740, -2.389539402 ] km/s
 
-// calculate the distance between result and expected, in kilometers
-const distance = resultState.position.distance(expectedState.position);
+// =============================================================================
+// display information about the propagated state
+// =============================================================================
 
-console.log((distance * 1000).toFixed(3) + " meters");
-// => 22.162 meters
-
-//==============================================================================
-// propagate state vector (numerical two-body)
-//==============================================================================
-
-const twoBodyProp = new RungeKutta4(initialState);
-twoBodyProp.forceModel.setEarthGravity(0, 0);
-twoBodyProp.propagate(new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
-
-console.log(twoBodyProp.state.toString());
-// => [J2000]
+// Earth-fixed coordinates
+console.log(finalState.toITRF().toString());
+// => [ITRF]
 //   Epoch:  2018-12-22T00:00:00.000Z
-//   Position:  [ -1241.886675379, -3977.873474857, 5689.561067368 ] km
-//   Velocity:  [ -3.502813706, -5.085314761, -4.303326274 ] km/s
+//   Position:  [ -2463.105532067, 235.348124556, 6625.580458844 ] km
+//   Velocity:  [ -6.093169860, 3.821763334, -2.395927109 ] km/s
 
-//==============================================================================
-// propagate classical elements (analytical two-body)
-//==============================================================================
+// geodetic coordinates
+console.log(
+  finalState
+    .toITRF()
+    .toGeodetic()
+    .toString()
+);
+// => [Geodetic]
+//   Latitude:  69.635°
+//   Longitude:  174.542°
+//   Altitude:  713.165 km
 
-// convert j2000 state to classical elements
-const ceState = initialState.toClassicalElements();
+// look angle from ground observer
+const observer = new Geodetic(
+  71.218 * (Math.PI / 180), // latitude (radians)
+  180.508 * (Math.PI / 180), // longitude (radians)
+  0.325 // altitude (km)
+);
+console.log(
+  finalState
+    .toITRF()
+    .toLookAngle(observer)
+    .toString()
+);
+// => [Look-Angle]
+//   Azimuth:  234.477°
+//   Elevation:  65.882°
+//   Range:  773.318 km
 
-// create a propagator using classical elements, and propagate
-const keplerProp = new Kepler(ceState);
-keplerProp.propagate(new EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"));
-
-console.log(keplerProp.state.toString());
-// => [J2000]
+// relative position
+const actualState = new J2000(
+  EpochUTC.fromDateString("2018-12-22T00:00:00.000Z"),
+  new Vector3D(-212.125533, -2464.351601, 6625.907454),
+  new Vector3D(-3.618617698, -6.12677853, -2.38955619)
+);
+console.log(finalState.toRIC(actualState).toString());
+// => [RIC]
 //   Epoch:  2018-12-22T00:00:00.000Z
-//   Position:  [ -1241.885644014, -3977.871988515, 5689.562370838 ] km
-//   Velocity:  [ -3.502814112, -5.085316082, -4.303324341 ] km/s
+//   Position:  [ -0.005770585, -0.019208198, 0.005105235 ] km
+//   Velocity:  [ 0.000020089, 0.000006319, 0.000000117 ] km/s
 ```
 
 Additional examples can be found in the
