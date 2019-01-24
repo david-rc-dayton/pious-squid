@@ -146,16 +146,20 @@ export class J2000 implements IStateVector {
    * @param reference target state for reference frame
    */
   public toRIC(reference: J2000) {
-    const ru = this.position.normalized();
-    const cu = this.position.cross(this.velocity).normalized();
-    const iu = cu.cross(ru);
+    return RIC.fromJ2kState(this, reference);
+  }
 
-    const dp = this.position.changeOrigin(reference.position);
-    const dv = this.velocity.changeOrigin(reference.velocity);
-    return new RIC(
-      this.epoch,
-      new Vector3D(ru.dot(dp), iu.dot(dp), cu.dot(dp)),
-      new Vector3D(ru.dot(dv), iu.dot(dv), cu.dot(dv))
-    );
+  /**
+   * Apply an instantaneous delta-V to this state.
+   *
+   * Returns a new state object.
+   *
+   * @param radial radial delta-V (km/s)
+   * @param intrack intrack delta-V (km/s)
+   * @param crosstrack crosstrack delta-V (km/s)
+   */
+  public maneuver(radial: number, intrack: number, crosstrack: number) {
+    const ric = this.toRIC(this);
+    return ric.addVelocity(radial, intrack, crosstrack).toJ2000();
   }
 }

@@ -97,6 +97,11 @@ export class ITRF implements IStateVector {
     return new Geodetic(lat, lon, alt);
   }
 
+  /**
+   * Calculate the look angle between an observer and this.
+   *
+   * @param observer geodetic coordinates
+   */
   public toLookAngle(observer: Geodetic) {
     const { latitude, longitude } = observer;
     const { sin, cos } = Math;

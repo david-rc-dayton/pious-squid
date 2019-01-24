@@ -90,3 +90,33 @@ export function copySign(magnitude: number, sign: number) {
   const s = sign >= 0 ? 1 : -1;
   return s * m;
 }
+
+/**
+ * Calculate the mean of the input array.
+ *
+ * @param values an array of numbers
+ */
+export function mean(values: number[]) {
+  const n = values.length;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    sum += values[i];
+  }
+  return sum / n;
+}
+
+/**
+ * Calculate the standard deviation of the input array.
+ *
+ * @param values an array of numbers
+ */
+export function standardDeviation(values: number[]) {
+  const mu = mean(values);
+  const n = values.length;
+  let sum = 0;
+  for (let i = 0; i < n; i++) {
+    const sub = values[i] - mu;
+    sum += sub * sub;
+  }
+  return Math.sqrt((1 / n) * sum);
+}
