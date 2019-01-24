@@ -1,3 +1,5 @@
+import { RAD2DEG } from "../math/constants";
+
 /** Class representing look angles. */
 export class LookAngle {
   /** Azimuth angle, in radians. */
@@ -18,5 +20,17 @@ export class LookAngle {
     this.azimuth = azimuth;
     this.elevation = elevation;
     this.range = range;
+  }
+
+  /** Return a string representation of the object. */
+  public toString(): string {
+    const { azimuth, elevation, range } = this;
+    const output = [
+      "[Look-Angle]",
+      `  Azimuth:  ${(azimuth * RAD2DEG).toFixed(3)}\u00b0`,
+      `  Elevation:  ${(elevation * RAD2DEG).toFixed(3)}\u00b0`,
+      `  Range:  ${range.toFixed(3)} km`
+    ];
+    return output.join("\n");
   }
 }

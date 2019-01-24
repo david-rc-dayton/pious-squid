@@ -112,6 +112,7 @@ export class J2000 {
     return new ITRF(epoch, rITRF, vITRF);
   }
 
+  /** Convert this to a TEME state vector object. */
   public toTEME() {
     const { epoch, position, velocity } = this;
     const [zeta, theta, zed] = EarthBody.precession(epoch);
@@ -151,6 +152,7 @@ export class J2000 {
     const dp = this.position.changeOrigin(reference.position);
     const dv = this.velocity.changeOrigin(reference.velocity);
     return new RIC(
+      this.epoch,
       new Vector3D(ru.dot(dp), iu.dot(dp), cu.dot(dp)),
       new Vector3D(ru.dot(dv), iu.dot(dv), cu.dot(dv))
     );
