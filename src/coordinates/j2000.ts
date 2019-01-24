@@ -149,6 +149,15 @@ export class J2000 implements IStateVector {
     return RIC.fromJ2kState(this, reference);
   }
 
+  /**
+   * Apply an instantaneous delta-V to this state.
+   *
+   * Returns a new state object.
+   *
+   * @param radial radial delta-V (km/s)
+   * @param intrack intrack delta-V (km/s)
+   * @param crosstrack crosstrack delta-V (km/s)
+   */
   public maneuver(radial: number, intrack: number, crosstrack: number) {
     const ric = this.toRIC(this);
     return ric.addVelocity(radial, intrack, crosstrack).toJ2000();

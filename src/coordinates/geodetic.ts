@@ -38,6 +38,11 @@ export class Geodetic {
     return output.join("\n");
   }
 
+  /**
+   * Convert this to an ITRF coordinate object.
+   *
+   * @param epoch UTC epoch
+   */
   public toITRF(epoch: EpochUTC) {
     const { latitude, longitude, altitude } = this;
     const sLat = Math.sin(latitude);

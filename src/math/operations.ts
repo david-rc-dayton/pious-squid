@@ -105,6 +105,11 @@ export function mean(values: number[]) {
   return sum / n;
 }
 
+/**
+ * Calculate the standard deviation of the input array.
+ *
+ * @param values an array of numbers
+ */
 export function standardDeviation(values: number[]) {
   const mu = mean(values);
   const n = values.length;
@@ -114,9 +119,4 @@ export function standardDeviation(values: number[]) {
     sum += sub * sub;
   }
   return Math.sqrt((1 / n) * sum);
-}
-
-export function median(values: number[]) {
-  const tArray = values.concat().sort();
-  return tArray[Math.floor(tArray.length / 2)];
 }

@@ -43,6 +43,14 @@ export class RIC implements IStateVector {
     return output.join("\n");
   }
 
+  /**
+   * Create a RIC state for a J2000 state, relative to another J2000 state.
+   *
+   * This handles caching appropriate data for RIC to J2000 conversion.
+   *
+   * @param state J2000 state vector
+   * @param reference target state for reference frame
+   */
   public static fromJ2kState(state: J2000, reference: J2000) {
     const ru = state.position.normalized();
     const cu = state.position.cross(state.velocity).normalized();
@@ -61,8 +69,9 @@ export class RIC implements IStateVector {
     return ric;
   }
 
+  /** Convert this to a J2000 state vector object. */
   public toJ2000() {
-    this.matrix = this.matrix || Matrix3D.zeroes();
+    this.matrix = this.matrix || Matrix3D.zeros();
     this.reference =
       this.reference ||
       new J2000(this.epoch, Vector3D.origin(), Vector3D.origin());
@@ -76,6 +85,13 @@ export class RIC implements IStateVector {
     );
   }
 
+  /**
+   * Create a new RIC object, with adjusted velocity.
+   *
+   * @param radial radial delta-V (km/s)
+   * @param intrack intrack delta-V (km/s)
+   * @param crosstrack crosstrack delta-V (km/s)
+   */
   public addVelocity(radial: number, intrack: number, crosstrack: number) {
     const deltaV = new Vector3D(radial, intrack, crosstrack);
     const ric = new RIC(this.epoch, this.position, this.velocity.add(deltaV));

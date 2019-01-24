@@ -1,15 +1,26 @@
 import { Vector3D } from "./vector-3d";
 
+/** Internal Matrix3D storage format. */
 export type Matrix3DValues = [Vector3D, Vector3D, Vector3D];
 
+/** Class representing a 3x3 matrix. */
 export class Matrix3D {
+  /** matrix data */
   private readonly matrix: Matrix3DValues;
 
+  /**
+   * Create a new Matrix3D object.
+   *
+   * @param a first row
+   * @param b second row
+   * @param c third row
+   */
   constructor(a: Vector3D, b: Vector3D, c: Vector3D) {
     this.matrix = [a, b, c];
   }
 
-  public static zeroes() {
+  /** Create a new object, containing all zeros. */
+  public static zeros() {
     return new Matrix3D(
       Vector3D.origin(),
       Vector3D.origin(),
@@ -17,7 +28,7 @@ export class Matrix3D {
     );
   }
 
-  /** Return a string representation of this vector. */
+  /** Return a string representation of this matrix. */
   public toString(): string {
     const a0Str = this.get(0, 0).toExponential(9);
     const a1Str = this.get(0, 1).toExponential(9);
@@ -35,6 +46,12 @@ export class Matrix3D {
     ].join("\n");
   }
 
+  /**
+   * Get matrix data by index.
+   *
+   * @param row row index (0-2)
+   * @param column column index (0-2)
+   */
   public get(row: number, column: number) {
     const rowVal = this.matrix[row];
     if (column === 0) {
@@ -47,6 +64,11 @@ export class Matrix3D {
     return 0;
   }
 
+  /**
+   * Linearly scale all matrix values by a number.
+   *
+   * @param n scalar
+   */
   public scale(n: number) {
     return new Matrix3D(
       this.matrix[0].scale(n),
@@ -55,6 +77,7 @@ export class Matrix3D {
     );
   }
 
+  /** Calculate and return the transpose of this matrix. */
   public transpose() {
     const a = new Vector3D(this.get(0, 0), this.get(1, 0), this.get(2, 0));
     const b = new Vector3D(this.get(0, 1), this.get(1, 1), this.get(2, 1));
@@ -62,11 +85,17 @@ export class Matrix3D {
     return new Matrix3D(a, b, c);
   }
 
+  /**
+   * Multiply this by the vector argument.
+   *
+   * @param v 3-vector
+   */
   public multiplyVector3D(v: Vector3D) {
     const { matrix } = this;
     return new Vector3D(matrix[0].dot(v), matrix[1].dot(v), matrix[2].dot(v));
   }
 
+  /** Return the Cholesky decomposition of this matrix. */
   public cholesky() {
     const a = this;
     const l = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
